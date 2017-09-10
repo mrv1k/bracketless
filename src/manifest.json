@@ -1,0 +1,20 @@
+{
+  "name": "Bracketless",
+  "description": "Collapse text between the brackets",
+  "version": "0.1.0",
+  "permissions": [
+    "activeTab",
+    "contextMenus"
+  ],
+  "background": {
+    "persistent": false,
+    "scripts": ["index.js"]
+  },
+  "browser_action": {
+    "default_icon": "pause.png",
+    "default_title": "Pause collapsing"
+  },
+  "author": "Viktor Khotimchenko",
+  "homepage_url": "https://github.com/mrv1k/bracketless#readme",
+  "manifest_version": 2
+}
