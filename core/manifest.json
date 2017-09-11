@@ -1,0 +1,26 @@
+{
+  "name": "Bracketless",
+  "version": "0.1.0",
+
+  "description": "Collapse text between the brackets",
+  "homepage_url": "https://github.com/mrv1k/bracketless#readme",
+  "author": "Viktor Khotimchenko",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "permissions": ["activeTab"],
+  "background": {
+    "scripts": ["src/bg/background.js"],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_icon": "icons/pause.png",
+    "default_title": "Pause collapsing"
+  },
+  "options_page"  : "src/options/index.html",
+
+  "manifest_version": 2
+}

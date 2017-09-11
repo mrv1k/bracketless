@@ -6,9 +6,9 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
   if (!attachedTabs[tabId]) {
     attachedTabs[tabId] = 'collapsed';
-    chrome.tabs.executeScript({file: 'collapse.js'});
+    chrome.tabs.executeScript({file: 'src/bg/collapse.js'});
   } else if (attachedTabs[tabId]) {
     delete attachedTabs[tabId];
-    chrome.tabs.executeScript({file: 'expand.js'});
+    chrome.tabs.executeScript({file: 'src/bg/expand.js'});
   }
 });
