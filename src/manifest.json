@@ -11,7 +11,7 @@
     "scripts": ["index.js"]
   },
   "browser_action": {
-    "default_icon": "pause.png",
+    "default_icon": "./assets/pause.png",
     "default_title": "Pause collapsing"
   },
   "author": "Viktor Khotimchenko",
