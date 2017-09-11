@@ -17,8 +17,8 @@
     "persistent": false
   },
   "browser_action": {
-    "default_icon": "icons/pause.png",
-    "default_title": "Pause collapsing"
+    "default_icon": "icons/continue.png",
+    "default_title": "Enable collapsing"
   },
   "options_page"  : "src/options/index.html",
 
