@@ -1,32 +1,37 @@
-function nativeSelector() {
+// RegExp test cases here: http://regexr.com/3go12
+
+function injectHTML() {
   // select everything in the body except <script>, <style>, <a>, <code>, <pre>
   const elements = document.querySelectorAll('body *:not(script):not(style):not(a):not(code):not(pre)');
 
-  let results = [];
-  let child;
-  let parentNumber = 0;
   for (let i = 0; i < elements.length; i++) {
-    child = elements[i].childNodes[0];
+    if (elements[i].hasChildNodes()) {
+      elements[i].childNodes.forEach(function (el) {
+        if (el.nodeType === Node.TEXT_NODE && el.nodeValue.match(/(\()([A-Z .,!?:"'`\\/&-]{10,100})\w*(\))/ig)) {
+          
+          let text = el.nodeValue.substring(el.nodeValue.indexOf('(') + 1, el.nodeValue.indexOf(')'));          
+          let regEx = new RegExp(text.replace(/[.,!?:"'`\\/&-()]/g, '\\$&')); // escape allowed characters + ()
+          
+          // data-bracketless=""  some symbols break layout, replace/change RegExp allowed symbols
+          /* eslint-disable quotes */
+          let htmlSafeText = text.replace(/&/g, '&amp;').replace(/"/g, "'");
+          /* eslint-enable quotes  */
 
-    // view RegExp test cases here: http://regexr.com/3go12
-    // Node.TEXT_NODE = 3
-    if (elements[i].hasChildNodes() && child.nodeType === Node.TEXT_NODE &&
-      child.nodeValue.match(/(\()([A-Z .,!?:"'`\\/&-]{4,})\w*(\))/ig)) {
-      let bracketsText = child.nodeValue.substring(child.nodeValue.indexOf('(') + 1, child.nodeValue.indexOf(')'));
-      let customRegExp = new RegExp(bracketsText);
-
-      elements[i].innerHTML = child.nodeValue.replace(customRegExp, `<bracket-less>${bracketsText}</bracket-less>`);
-      elements[i].classList.add('extension-bracketless-parent', 'extension-bracketless-parent-' + parentNumber);
-      parentNumber++;
-
-      results.push({ bracketsText: bracketsText, fullText: child.nodeValue });
+          el.parentNode.innerHTML = el.parentNode.innerHTML.replace(regEx,
+            `<bracket-less data-bracketless="${htmlSafeText}">${text}</bracket-less>`);
+        }
+      });
     }
-    // (i.e., $99.99) @ https://github.com/getify/You-Dont-Know-JS/blob/master/up%20%26%20going/ch1.md
-    // bug, gets matched. numbers shouldn't match
+    // so that script can be injected once
+    return true;
   }
-  return results;
+  // BUGS
+  // ignores text: "... (i.e., $99.99), ... (plus taxes) to buy it."
+  // @ https://github.com/getify/You-Dont-Know-JS/blob/master/up%20%26%20going/ch1.md#values--types
+
+  // (see Chapter 2). Loops (see "Loops") 
+  // incorrectly grabs text: "see Chapter 2", and "). Loops ("
+  // @ https://github.com/getify/You-Dont-Know-JS/blob/master/up%20%26%20going/ch1.md#loops and go up
 }
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  sendResponse(nativeSelector());
-});
+injectHTML();
