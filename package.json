@@ -1,6 +1,6 @@
 {
   "name": "bracketless",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A Chrome extension that collapses text between the brackets",
   "main": "index.js",
   "scripts": {
