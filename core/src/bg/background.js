@@ -9,20 +9,20 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 
   // https://developer.chrome.com/extensions/content_scripts#pi
   if (!scriptInjected) {
-    chrome.tabs.executeScript(tabId, { file: 'src/bg/textcontent.js' }, function (response) {
+    chrome.tabs.executeScript(tabId, { file: 'src/bg/injecthtml.js' }, function (response) {
       scriptInjected = response;
     });
-  }  
+  }
 
   if (!attachedTabs[tabId]) {
     attachedTabs[tabId] = 'collapsed';
     chrome.browserAction.setIcon({ tabId: tabId, path: 'icons/pause.png' });
     chrome.browserAction.setTitle({ tabId: tabId, title: 'Pause collapsing' });
-    chrome.tabs.sendMessage(tabId, { collapse: false });    
+    chrome.tabs.sendMessage(tabId, { collapse: false });
   } else if (attachedTabs[tabId]) {
     delete attachedTabs[tabId];
     chrome.browserAction.setIcon({ tabId: tabId, path: 'icons/continue.png' });
     chrome.browserAction.setTitle({ tabId: tabId, title: 'Enable collapsing' });
-    chrome.tabs.sendMessage(tabId, { collapse: true });    
+    chrome.tabs.sendMessage(tabId, { collapse: true });
   }
 });
