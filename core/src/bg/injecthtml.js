@@ -22,9 +22,9 @@ function injectHTML() {
         }
       });
     }
-    // so that script can be injected once
-    return true;
+    // so that script can be injected once    
   }
+  return true;
   // BUGS
   // ignores text: "... (i.e., $99.99), ... (plus taxes) to buy it."
   // @ https://github.com/getify/You-Dont-Know-JS/blob/master/up%20%26%20going/ch1.md#values--types
