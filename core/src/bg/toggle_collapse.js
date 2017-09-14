@@ -1,13 +1,24 @@
+const elements = document.querySelectorAll('bracket-less');
+
+// when paused will collapse text to (...)
+// when playing doesn't cause trouble
+
+elements.forEach(el => el.addEventListener('mouseover', function displayText () {
+  el.innerHTML = this.dataset.bracketless;
+}));
+elements.forEach(el => el.addEventListener('mouseout', function displayText () {
+  el.innerHTML = '...';
+}));
+
+
 function toggleCollapse(state) {
-  const bracketless = document.querySelectorAll('bracket-less');
-  console.log(bracketless);
   if (state.collapse) {
-    console.log('collapsed');
+    elements.forEach(el => el.innerHTML = '...');
   } else {
-    console.log('not collapsed');
-  }  
+    elements.forEach(el => el.innerHTML = el.dataset.bracketless);
+  }
 }
 
-chrome.runtime.onMessage.addListener(function(state, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (state, sender, sendResponse) {
   sendResponse(toggleCollapse(state));
 });
