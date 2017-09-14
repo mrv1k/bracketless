@@ -5,26 +5,27 @@ let scriptInjected = false;
 
 // Called when the user clicks on the browser action.
 chrome.browserAction.onClicked.addListener(function (tab) {
-  let tabId = tab.id;
-
+  let tabId = tab.id;  
+  
   // https://developer.chrome.com/extensions/content_scripts#pi
   if (!scriptInjected) {
     chrome.tabs.executeScript(tabId, { file: 'src/bg/injecthtml.js' }, function (response) {
       scriptInjected = response;
       chrome.browserAction.setIcon({ tabId: tabId, path: 'icons/continue.png' });
       chrome.browserAction.setTitle({ tabId: tabId, title: 'Enable collapsing' });
+      chrome.tabs.executeScript(tabId, { file: 'src/bg/toggle_collapse.js' });
     });
   } else {
-    if (!attachedTabs[tabId]) {
+    if (!attachedTabs[tabId]) {      
       attachedTabs[tabId] = 'collapsed';
       chrome.browserAction.setIcon({ tabId: tabId, path: 'icons/pause.png' });
       chrome.browserAction.setTitle({ tabId: tabId, title: 'Pause collapsing' });
-      chrome.tabs.sendMessage(tabId, { collapse: false });
+      chrome.tabs.sendMessage(tabId, { collapse: true });
     } else if (attachedTabs[tabId]) {
       delete attachedTabs[tabId];
       chrome.browserAction.setIcon({ tabId: tabId, path: 'icons/continue.png' });
       chrome.browserAction.setTitle({ tabId: tabId, title: 'Enable collapsing' });
-      chrome.tabs.sendMessage(tabId, { collapse: true });
+      chrome.tabs.sendMessage(tabId, { collapse: false });
     }
   }
 });
