@@ -1,27 +1,28 @@
+// Global variables only exist for the life of the page, so they get reset
+// each time the page is unloaded.
 let attachedTabs = {};
-let textContentArr;
+let scriptInjected = false;
+
 // Called when the user clicks on the browser action.
 chrome.browserAction.onClicked.addListener(function (tab) {
   let tabId = tab.id;
 
   // https://developer.chrome.com/extensions/content_scripts#pi
-  chrome.tabs.executeScript(tabId, { file: 'src/bg/textcontent.js' }, function () {
-    chrome.tabs.sendMessage(tabId, {}, function (response) {
-      textContentArr = response;
-      console.log(textContentArr);
+  if (!scriptInjected) {
+    chrome.tabs.executeScript(tabId, { file: 'src/bg/textcontent.js' }, function (response) {
+      scriptInjected = response;
     });
-  });
+  }  
 
   if (!attachedTabs[tabId]) {
     attachedTabs[tabId] = 'collapsed';
     chrome.browserAction.setIcon({ tabId: tabId, path: 'icons/pause.png' });
     chrome.browserAction.setTitle({ tabId: tabId, title: 'Pause collapsing' });
-    chrome.tabs.executeScript({ file: 'src/bg/collapse.js' });
-
+    chrome.tabs.sendMessage(tabId, { collapse: false });    
   } else if (attachedTabs[tabId]) {
     delete attachedTabs[tabId];
     chrome.browserAction.setIcon({ tabId: tabId, path: 'icons/continue.png' });
     chrome.browserAction.setTitle({ tabId: tabId, title: 'Enable collapsing' });
-    chrome.tabs.executeScript({ file: 'src/bg/expand.js' });
+    chrome.tabs.sendMessage(tabId, { collapse: true });    
   }
 });
