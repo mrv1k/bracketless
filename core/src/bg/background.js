@@ -11,6 +11,8 @@ chrome.browserAction.onClicked.addListener(function (tab) {
   if (!scriptInjected) {
     chrome.tabs.executeScript(tabId, { file: 'src/bg/injecthtml.js' }, function (response) {
       scriptInjected = response;
+      chrome.browserAction.setIcon({ tabId: tabId, path: 'icons/continue.png' });
+      chrome.browserAction.setTitle({ tabId: tabId, title: 'Enable collapsing' });
     });
   } else {
     if (!attachedTabs[tabId]) {

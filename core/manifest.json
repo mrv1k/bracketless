@@ -17,8 +17,8 @@
     "persistent": false
   },
   "browser_action": {
-    "default_icon": "icons/continue.png",
-    "default_title": "Enable collapsing"
+    "default_icon": "icons/activate.png",
+    "default_title": "Activate collapsing for the page"
   },
   "options_page"  : "src/options/index.html",
 
