@@ -1,21 +1,25 @@
 const elements = document.querySelectorAll('bracket-less');
 
+const mouseoverEvt = new Event('mouseover');
+const mouseoutEvt = new Event('mouseout');
 // when paused will collapse text to (...)
 // when playing doesn't cause trouble
 
-elements.forEach(el => el.addEventListener('mouseover', function displayText () {
-  el.innerHTML = this.dataset.bracketless;
-}));
-elements.forEach(el => el.addEventListener('mouseout', function displayText () {
-  el.innerHTML = '...';
-}));
+function displayText() {
+  this.innerHTML = this.dataset.bracketless;
+}
+function hideText() {
+  this.innerHTML = '...';
+}
 
+elements.forEach(el => el.addEventListener('mouseover', displayText.bind(el)), false);
+elements.forEach(el => el.addEventListener('mouseout', hideText.bind(el)), false);
 
 function toggleCollapse(state) {
-  if (state.collapse) {
-    elements.forEach(el => el.innerHTML = '...');
-  } else {
-    elements.forEach(el => el.innerHTML = el.dataset.bracketless);
+  if (state.collapse) { // play -> text collapsed
+    elements.forEach(el => el.dispatchEvent(mouseoutEvt));
+  } else { // pause -> text displayed
+    elements.forEach(el => el.dispatchEvent(mouseoverEvt));
   }
 }
 
