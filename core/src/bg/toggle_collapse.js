@@ -1,7 +1,15 @@
 const elements = document.querySelectorAll('bracket-less');
 
-// when paused will collapse text to (...)
-// when playing doesn't cause trouble
+function expandBrackets() {
+  this.innerHTML = this.dataset.bracketless;
+  this.classList.remove('bracket-less');
+}
+function collapseBrackets() {
+  this.innerHTML = '...';
+  this.classList.add('bracket-less');
+}
+elements.forEach(el => el.addEventListener('click', expandBrackets.bind(el)));
+elements.forEach(el => el.addEventListener('dblclick', collapseBrackets.bind(el)));
 
 function toggleCollapse(state) {
   if (state.collapse) { // play -> text collapsed
