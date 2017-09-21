@@ -17,5 +17,10 @@
   "bugs": {
     "url": "https://github.com/mrv1k/bracketless/issues"
   },
-  "homepage": "https://github.com/mrv1k/bracketless#readme"
+  "homepage": "https://github.com/mrv1k/bracketless#readme",
+  "devDependencies": {
+    "eslint": "^4.7.1",
+    "eslint-config-airbnb-base": "^12.0.0",
+    "eslint-plugin-import": "^2.7.0"
+  }
 }
