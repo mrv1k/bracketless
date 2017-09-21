@@ -1,6 +1,6 @@
 {
   "name": "Bracketless",
-  "version": "0.3.0",
+  "version": "0.4.0",
 
   "description": "Collapse text between the brackets",
   "homepage_url": "https://github.com/mrv1k/bracketless#readme",
@@ -10,7 +10,6 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  // "activeTab" grants the "tabs" permission temporarily
   "permissions": ["activeTab"],
   "background": {
     "scripts": ["src/bg/background.js"],

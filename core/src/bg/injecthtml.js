@@ -22,16 +22,16 @@ function injectHTML() {
         }
       });
     }
-    // so that script can be injected once
   }
+  // so that script will be injected once
   return true;
-  // BUGS
-  // ignores text: "... (i.e., $99.99), ... (plus taxes) to buy it."
-  // @ https://github.com/getify/You-Dont-Know-JS/blob/master/up%20%26%20going/ch1.md#values--types
-
-  // (see Chapter 2). Loops (see "Loops")
-  // incorrectly grabs text: "see Chapter 2", and "). Loops ("
-  // @ https://github.com/getify/You-Dont-Know-JS/blob/master/up%20%26%20going/ch1.md#loops and go up
 }
-
 injectHTML();
+
+// BUGS
+// ignores text: "... (i.e., $99.99), ... (plus taxes) to buy it."
+// @ https://github.com/getify/You-Dont-Know-JS/blob/master/up%20%26%20going/ch1.md#values--types
+
+// (see Chapter 2). Loops (see "Loops")
+// incorrectly grabs text: "see Chapter 2", and "). Loops ("
+// @ https://github.com/getify/You-Dont-Know-JS/blob/master/up%20%26%20going/ch1.md#loops and go up
