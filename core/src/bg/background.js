@@ -11,6 +11,7 @@ chrome.browserAction.onClicked.addListener((tab) => {
       scriptInjected = response;
       chrome.browserAction.setIcon({ tabId, path: 'icons/continue.png' });
       chrome.browserAction.setTitle({ tabId, title: 'Enable collapsing' });
+      chrome.tabs.insertCSS(tabId, { file: 'css/toggle.css' });
       chrome.tabs.executeScript(tabId, { file: 'src/bg/toggle_collapse.js' });
     });
   } else if (!attachedTabs[tabId]) {

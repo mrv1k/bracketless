@@ -1,0 +1,17 @@
+.bracket-less {
+  font-size: 0;
+}
+
+.bracket-less::after {
+  content: '...';
+  font-size: 1rem;
+}
+
+.bracket-less:hover {
+  content: attr('data-bracketless');
+  font-size: inherit;
+}
+
+.bracket-less:hover::after {
+  content: '';
+}
