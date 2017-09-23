@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Bracketless Options</title>
+</head>
+
+<body>
+  <p>Hey how's going? Want to change some settings?</p>
+
+  <label>
+    Lower matching limit
+    <input type="number" id="lowerlimit" value="10"/>
+  </label>
+  <br>
+  <label>
+    Upper matching limit
+    <input type="number" id="upperlimit" value="100"/>
+  </label>
+  <br>
+
+  <label>
+    <input type="checkbox" id="autoactivate">
+    Autoactivate
+  </label>
+  <label>
+    <input type="checkbox" id="autoplay">
+    Autoplay
+  </label>
+
+  <div id="status">Status div - will be used later by storage</div>
+  <button id="save">Save</button>
+
+  <script src="options.js"></script>
+</body>
+
+</html>
