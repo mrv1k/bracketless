@@ -22,7 +22,7 @@
     "default_title": "Activate collapsing for the page"
   },
   "options_ui": {
-    "page": "src/options/index.html",
+    "page": "src/options/options.html",
     "chrome_style": true
   },
   "manifest_version": 2
