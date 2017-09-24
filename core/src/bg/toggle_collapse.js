@@ -2,11 +2,11 @@ const elements = document.querySelectorAll('bracket-less');
 
 function expandBrackets() {
   this.innerHTML = this.dataset.bracketless;
-  this.classList.remove('bracket-less');
+  this.classList.toggle('bracket-less');
 }
 function collapseBrackets() {
   this.innerHTML = '...';
-  this.classList.add('bracket-less');
+  this.classList.toggle('bracket-less');
 }
 elements.forEach(el => el.addEventListener('click', expandBrackets.bind(el)));
 elements.forEach(el => el.addEventListener('dblclick', collapseBrackets.bind(el)));
