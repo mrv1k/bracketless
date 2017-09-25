@@ -46,3 +46,25 @@ function resetOptions() {
 document.addEventListener('DOMContentLoaded', restoreOptions);
 document.getElementById('save').addEventListener('click', saveOptions);
 document.getElementById('reset').addEventListener('click', resetOptions);
+
+document.getElementById('autoActivate').addEventListener('change', function requestPermissions() {
+  if (this.checked) {
+    chrome.permissions.request({
+      permissions: ['tabs'],
+      origins: ['http://*/', 'https://*/'],
+    }, (granted) => {
+      if (granted) {
+        console.info('granted');
+      } else {
+        console.error('declined');
+      }
+    });
+  } else {
+    chrome.permissions.contains({
+      permissions: ['tabs'],
+      origins: ['http://*/', 'https://*/'],
+    }, (result) => {
+      console.log(result);
+    });
+  }
+});
