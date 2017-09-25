@@ -1,15 +1,16 @@
 // RegExp test cases here: http://regexr.com/3gqin
 
-function injectHTML() {
+function injectHTML(options) {
   // select everything in the body except <script>, <style>, <a>, <code>, <pre>
   const elements = document.querySelectorAll('body *:not(script):not(style):not(a):not(code):not(pre)');
+  const {
+    lowerRegexLimit, upperRegexLimit,
+  } = options;
 
-  const userLowerLimit = 10;
-  const userUpperLimit = 100;
+  // generate regex using with custom upper and lower character limits
   // eslint-disable-next-line no-useless-escape
-  const generatedRegexTest = `(\\()([A-Z .,!?:"'\`\\\/&-]{${userLowerLimit},${userUpperLimit}})\\w*(\\))`;
-  // generatedRegexTest =  /(\()([A-Z .,!?:"'`\\\/&-]{num,num})\w*(\))/gi
-  const inBracketsRegex = new RegExp(generatedRegexTest, 'gi');
+  const genRegexStr = `(\\()([A-Z .,!?:"'\`\\\/&-]{${lowerRegexLimit},${upperRegexLimit}})\\w*(\\))`;
+  const inBracketsRegex = new RegExp(genRegexStr, 'gi');
 
   for (let i = 0; i < elements.length; i += 1) {
     if (elements[i].hasChildNodes()) {
@@ -30,15 +31,21 @@ function injectHTML() {
       });
     }
   }
-  // so that script will be injected once
+}
+
+// default values
+function getOptions() {
+  chrome.storage.sync.get({
+    lowerRegexLimit: 10,
+    upperRegexLimit: 100,
+    autoActivate: false,
+    autoPlay: false,
+  }, options => injectHTML(options));
+}
+
+function done() {
+  getOptions();
   return true;
 }
-injectHTML();
 
-// RegExp BUGS
-// ignores text: "... (i.e., $99.99), ... (plus taxes) to buy it."
-// @ https://github.com/getify/You-Dont-Know-JS/blob/master/up%20%26%20going/ch1.md#values--types
-
-// (see Chapter 2). Loops (see "Loops")
-// incorrectly grabs text: "see Chapter 2", and "). Loops ("
-// @ https://github.com/getify/You-Dont-Know-JS/blob/master/up%20%26%20going/ch1.md#loops and go up
+done();
