@@ -3,17 +3,38 @@
 const activeTabs = {};
 const injected = {};
 
+function load(tabId) {
+  chrome.tabs.executeScript(tabId, { file: 'src/bg/injecthtml.js' }, (response) => {
+    injected[tabId] = response;
+    chrome.browserAction.setIcon({ tabId, path: 'icons/continue.png' });
+    chrome.browserAction.setTitle({ tabId, title: 'Enable collapsing' });
+    chrome.tabs.insertCSS(tabId, { file: 'css/toggle.css' });
+    chrome.tabs.executeScript(tabId, { file: 'src/bg/toggle_collapse.js' });
+  });
+}
+
+function preload() {
+  chrome.permissions.contains({
+    permissions: ['tabs'],
+    origins: ['http://*/', 'https://*/'],
+  }, (result) => {
+    if (result) {
+      chrome.storage.sync.get(null, (options) => {
+        if (options.autoActivate) {
+          chrome.tabs.query({ active: true }, tabs => load(tabs[0].id));
+        }
+      });
+    } else {
+      alert('Permission has been denied.');
+    }
+  });
+}
+
 // Called when the user clicks on the browser action.
 chrome.browserAction.onClicked.addListener((tab) => {
   const tabId = tab.id;
   if (!injected[tabId]) {
-    chrome.tabs.executeScript(tabId, { file: 'src/bg/injecthtml.js' }, (response) => {
-      injected[tabId] = response;
-      chrome.browserAction.setIcon({ tabId, path: 'icons/continue.png' });
-      chrome.browserAction.setTitle({ tabId, title: 'Enable collapsing' });
-      chrome.tabs.insertCSS(tabId, { file: 'css/toggle.css' });
-      chrome.tabs.executeScript(tabId, { file: 'src/bg/toggle_collapse.js' });
-    });
+    load(tabId);
   } else if (!activeTabs[tabId]) {
     activeTabs[tabId] = true;
     chrome.browserAction.setIcon({ tabId, path: 'icons/pause.png' });
@@ -26,3 +47,6 @@ chrome.browserAction.onClicked.addListener((tab) => {
     chrome.tabs.sendMessage(tabId, { collapse: false });
   }
 });
+
+// preload script if user granted tabs permission from options page
+document.addEventListener('DOMContentLoaded', preload);
