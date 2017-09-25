@@ -6,8 +6,8 @@ const injected = {};
 function load(tabId) {
   chrome.tabs.executeScript(tabId, { file: 'src/bg/injecthtml.js' }, (response) => {
     injected[tabId] = response;
-    chrome.browserAction.setIcon({ tabId, path: 'icons/continue.png' });
-    chrome.browserAction.setTitle({ tabId, title: 'Enable collapsing' });
+    chrome.browserAction.setIcon({ tabId, path: 'icons/play.png' });
+    chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
     chrome.tabs.insertCSS(tabId, { file: 'css/toggle.css' });
     chrome.tabs.executeScript(tabId, { file: 'src/bg/toggle_collapse.js' });
   });
@@ -42,8 +42,8 @@ chrome.browserAction.onClicked.addListener((tab) => {
     chrome.tabs.sendMessage(tabId, { collapse: true });
   } else if (activeTabs[tabId]) {
     activeTabs[tabId] = false;
-    chrome.browserAction.setIcon({ tabId, path: 'icons/continue.png' });
-    chrome.browserAction.setTitle({ tabId, title: 'Enable collapsing' });
+    chrome.browserAction.setIcon({ tabId, path: 'icons/play.png' });
+    chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
     chrome.tabs.sendMessage(tabId, { collapse: false });
   }
 });
