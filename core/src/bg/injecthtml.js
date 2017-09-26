@@ -1,16 +1,16 @@
 // RegExp test cases here: http://regexr.com/3gqin
 
-function injectHTML(options) {
-  // select everything in the body except <script>, <style>, <a>, <code>, <pre>
-  const elements = document.querySelectorAll('body *:not(script):not(style):not(a):not(code):not(pre)');
-  const {
-    lowerRegexLimit, upperRegexLimit,
-  } = options;
-
+function genBracketsRegex(options) {
+  const { lowerRegexLimit, upperRegexLimit } = options;
   // generate regex using with custom upper and lower character limits
   // eslint-disable-next-line no-useless-escape
   const genRegexStr = `(\\()([A-Z .,!?:"'\`\\\/&-]{${lowerRegexLimit},${upperRegexLimit}})\\w*(\\))`;
-  const inBracketsRegex = new RegExp(genRegexStr, 'gi');
+  return new RegExp(genRegexStr, 'gi');  
+}
+
+function injectHTML(options) {
+  const elements = document.querySelectorAll('body *:not(script):not(style):not(a):not(code):not(pre)');
+  const inBracketsRegex = genBracketsRegex(options);
 
   for (let i = 0; i < elements.length; i += 1) {
     if (elements[i].hasChildNodes()) {
