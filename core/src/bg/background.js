@@ -24,10 +24,22 @@ function preload() {
           chrome.tabs.query({ active: true }, tabs => load(tabs[0].id));
         }
       });
-    } else {
-      alert('Permission has been denied.');
     }
+    // else {
+    //   alert('Permission has been denied.');
+    // }
   });
+}
+
+function playPause(tabId, action) {
+  console.log(chrome.tabs);
+  let message = action === 'play' ? 'Pause collapsing' : 'Collapse brackets';
+  let collapse = action === 'play' ? true : false;
+
+  activeTabs[tabId] = collapse;
+  chrome.browserAction.setIcon({ tabId, path: `icons/${action}.png` });
+  chrome.browserAction.setTitle({ tabId, title: message });
+  chrome.tabs.sendMessage(tabId, { collapse: collapse });
 }
 
 // Called when the user clicks on the browser action.
@@ -36,15 +48,9 @@ chrome.browserAction.onClicked.addListener((tab) => {
   if (!injected[tabId]) {
     load(tabId);
   } else if (!activeTabs[tabId]) {
-    activeTabs[tabId] = true;
-    chrome.browserAction.setIcon({ tabId, path: 'icons/pause.png' });
-    chrome.browserAction.setTitle({ tabId, title: 'Pause collapsing' });
-    chrome.tabs.sendMessage(tabId, { collapse: true });
+    playPause(tabId, 'play');
   } else if (activeTabs[tabId]) {
-    activeTabs[tabId] = false;
-    chrome.browserAction.setIcon({ tabId, path: 'icons/play.png' });
-    chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
-    chrome.tabs.sendMessage(tabId, { collapse: false });
+    playPause(tabId, 'pause');
   }
 });
 
