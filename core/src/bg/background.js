@@ -13,24 +13,6 @@ function load(tabId) {
   });
 }
 
-function preload() {
-  chrome.permissions.contains({
-    permissions: ['tabs'],
-    origins: ['http://*/', 'https://*/'],
-  }, (result) => {
-    if (result) {
-      chrome.storage.sync.get(null, (options) => {
-        if (options.autoLoad) {
-          chrome.tabs.query({ active: true }, tabs => load(tabs[0].id));
-        }
-      });
-    }
-    // else {
-    //   alert('Permission has been denied.');
-    // }
-  });
-}
-
 function playPause(tabId, action) {
   const state = action === 'play' ?
     { message: 'Pause collapsing', collapse: true } : { message: 'Collapse brackets', collapse: false };
@@ -53,5 +35,27 @@ chrome.browserAction.onClicked.addListener((tab) => {
   }
 });
 
+// optional functionality
+function autoAction() {
+  chrome.permissions.contains({
+    permissions: ['tabs'],
+    origins: ['http://*/', 'https://*/'],
+  }, (result) => {
+    if (result) {
+      chrome.storage.sync.get(null, (options) => {
+        if (options.autoLoad) {
+          chrome.tabs.query({ active: true }, tabs => load(tabs[0].id));
+        }
+        if (options.autoPlay) {
+          chrome.tabs.query({ active: true }, tabs => playPause(tabs[0].id, 'play'));
+        }
+      });
+    }
+    // else {
+    //   alert('Permission has been denied.');
+    // }
+  });
+}
+
 // preload script if user granted tabs permission from options page
-document.addEventListener('DOMContentLoaded', preload);
+document.addEventListener('DOMContentLoaded', autoAction);
