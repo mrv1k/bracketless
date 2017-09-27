@@ -1,13 +1,13 @@
 function saveOptions() {
   const lowerRegexLimit = document.getElementById('lowerLimit').value;
   const upperRegexLimit = document.getElementById('upperLimit').value;
-  const autoActivate = document.getElementById('autoActivate').checked;
+  const autoLoad = document.getElementById('autoLoad').checked;
   const autoPlay = document.getElementById('autoPlay').checked;
 
   chrome.storage.sync.set({
     lowerRegexLimit,
     upperRegexLimit,
-    autoActivate,
+    autoLoad,
     autoPlay,
   }, () => {
     // Update status and let the user know options were saved
@@ -20,14 +20,14 @@ function saveOptions() {
 function restoreOptions() {
   // default values
   chrome.storage.sync.get({
-    lowerRegexLimit: 10,
-    upperRegexLimit: 100,
-    autoActivate: false,
+    lowerRegexLimit: 13,
+    upperRegexLimit: 255,
+    autoLoad: false,
     autoPlay: false,
   }, (items) => {
     document.getElementById('lowerLimit').value = items.lowerRegexLimit;
     document.getElementById('upperLimit').value = items.upperRegexLimit;
-    document.getElementById('autoActivate').checked = items.autoActivate;
+    document.getElementById('autoLoad').checked = items.autoLoad;
     document.getElementById('autoPlay').checked = items.autoPlay;
   });
 }
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', restoreOptions);
 document.getElementById('save').addEventListener('click', saveOptions);
 document.getElementById('reset').addEventListener('click', resetOptions);
 
-document.getElementById('autoActivate').addEventListener('change', function requestPermissions() {
+document.getElementById('autoLoad').addEventListener('change', function requestPermissions() {
   if (this.checked) {
     chrome.permissions.request({
       permissions: ['tabs'],

@@ -13,22 +13,23 @@
 
   <label>
     Lower matching limit
-    <input type="number" id="lowerLimit" value="10"/>
+    <input type="number" id="lowerLimit" value="13"/>
   </label>
   <br>
   <label>
     Upper matching limit
-    <input type="number" id="upperLimit" value="100"/>
+    <input type="number" id="upperLimit" value="255"/>
   </label>
   <br>
 
   <label>
-    <input type="checkbox" id="autoActivate">
-    Autoactivate
+    <input type="checkbox" id="autoLoad">
+    Automatically load extension on a page.
+    Warning: requires extra permission.
   </label>
   <label>
     <input type="checkbox" id="autoPlay">
-    Autoplay
+    Autoplay (requires autoload)
   </label>
 
   <div id="status"></div>

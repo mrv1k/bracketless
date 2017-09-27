@@ -5,7 +5,7 @@ function genBracketsRegex(options) {
   // generate regex using with custom upper and lower character limits
   // eslint-disable-next-line no-useless-escape
   const genRegexStr = `(\\()([A-Z .,!?:"'\`\\\/&-]{${lowerRegexLimit},${upperRegexLimit}})\\w*(\\))`;
-  return new RegExp(genRegexStr, 'gi');  
+  return new RegExp(genRegexStr, 'gi');
 }
 
 function injectHTML(options) {
@@ -38,7 +38,7 @@ function getOptions() {
   chrome.storage.sync.get({
     lowerRegexLimit: 10,
     upperRegexLimit: 100,
-    autoActivate: false,
+    autoLoad: false,
     autoPlay: false,
   }, options => injectHTML(options));
 }
