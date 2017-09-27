@@ -32,14 +32,13 @@ function preload() {
 }
 
 function playPause(tabId, action) {
-  console.log(chrome.tabs);
-  let message = action === 'play' ? 'Pause collapsing' : 'Collapse brackets';
-  let collapse = action === 'play' ? true : false;
+  const state = action === 'play' ?
+    { message: 'Pause collapsing', collapse: true } : { message: 'Collapse brackets', collapse: false };
 
-  activeTabs[tabId] = collapse;
+  activeTabs[tabId] = state.collapse;
   chrome.browserAction.setIcon({ tabId, path: `icons/${action}.png` });
-  chrome.browserAction.setTitle({ tabId, title: message });
-  chrome.tabs.sendMessage(tabId, { collapse: collapse });
+  chrome.browserAction.setTitle({ tabId, title: state.message });
+  chrome.tabs.sendMessage(tabId, { collapse: state.collapse });
 }
 
 // Called when the user clicks on the browser action.
@@ -56,3 +55,4 @@ chrome.browserAction.onClicked.addListener((tab) => {
 
 // preload script if user granted tabs permission from options page
 document.addEventListener('DOMContentLoaded', preload);
+
