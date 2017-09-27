@@ -1,6 +1,6 @@
 // Global variables only exist for the life of the page, so they get reset
 // each time the page is unloaded.
-const activeTabs = {};
+const loadedTabs = {};
 const injected = {};
 
 function load(tabId) {
@@ -20,7 +20,7 @@ function preload() {
   }, (result) => {
     if (result) {
       chrome.storage.sync.get(null, (options) => {
-        if (options.autoActivate) {
+        if (options.autoLoad) {
           chrome.tabs.query({ active: true }, tabs => load(tabs[0].id));
         }
       });
@@ -35,7 +35,7 @@ function playPause(tabId, action) {
   const state = action === 'play' ?
     { message: 'Pause collapsing', collapse: true } : { message: 'Collapse brackets', collapse: false };
 
-  activeTabs[tabId] = state.collapse;
+  loadedTabs[tabId] = state.collapse;
   chrome.browserAction.setIcon({ tabId, path: `icons/${action}.png` });
   chrome.browserAction.setTitle({ tabId, title: state.message });
   chrome.tabs.sendMessage(tabId, { collapse: state.collapse });
@@ -46,13 +46,12 @@ chrome.browserAction.onClicked.addListener((tab) => {
   const tabId = tab.id;
   if (!injected[tabId]) {
     load(tabId);
-  } else if (!activeTabs[tabId]) {
+  } else if (!loadedTabs[tabId]) {
     playPause(tabId, 'play');
-  } else if (activeTabs[tabId]) {
+  } else if (loadedTabs[tabId]) {
     playPause(tabId, 'pause');
   }
 });
 
 // preload script if user granted tabs permission from options page
 document.addEventListener('DOMContentLoaded', preload);
-
