@@ -1,40 +1,39 @@
-function saveOptions() {
-  const lowerRegexLimit = document.getElementById('lowerLimit').value;
-  const upperRegexLimit = document.getElementById('upperLimit').value;
-  const autoLoad = document.getElementById('autoLoad').checked;
-  const autoPlay = document.getElementById('autoPlay').checked;
-
-  chrome.storage.sync.set({
-    lowerRegexLimit,
-    upperRegexLimit,
-    autoLoad,
-    autoPlay,
-  }, () => {
-    // Update status and let the user know options were saved
-    const status = document.getElementById('status');
-    status.textContent = 'Options saved.';
-    setTimeout(() => { status.textContent = ''; }, 1000);
-  });
-}
+const lowerLimitNum = document.querySelector('#lowerLimit');
+const upperLimitNum = document.querySelector('#upperLimit');
+const autoLoadBool = document.querySelector('#autoLoad');
+const autoPlayBool = document.querySelector('#autoPlay');
 
 function restoreOptions() {
-  // default values
   chrome.storage.sync.get({
     lowerRegexLimit: 13,
     upperRegexLimit: 255,
     autoLoad: false,
     autoPlay: false,
   }, (items) => {
-    document.getElementById('lowerLimit').value = items.lowerRegexLimit;
-    document.getElementById('upperLimit').value = items.upperRegexLimit;
-    document.getElementById('autoLoad').checked = items.autoLoad;
-    document.getElementById('autoPlay').checked = items.autoPlay;
+    lowerLimitNum.value = items.lowerRegexLimit;
+    upperLimitNum.value = items.upperRegexLimit;
+    autoLoadBool.checked = items.autoLoad;
+    autoPlayBool.checked = items.autoPlay;
+  });
+}
+
+function saveOptions() {
+  chrome.storage.sync.set({
+    lowerRegexLimit: lowerLimitNum.value,
+    upperRegexLimit: upperLimitNum.value,
+    autoLoad: autoLoadBool.checked,
+    autoPlay: autoPlayBool.checked,
+  }, () => {
+    // Update status and let the user know options were saved
+    const status = document.querySelector('#status');
+    status.textContent = 'Options saved.';
+    setTimeout(() => { status.textContent = ''; }, 1000);
   });
 }
 
 function resetOptions() {
   chrome.storage.sync.clear(() => {
-    const status = document.getElementById('status');
+    const status = document.querySelector('#status');
     status.textContent = 'Options reset.';
     setTimeout(() => {
       status.textContent = '';
@@ -44,8 +43,8 @@ function resetOptions() {
 }
 
 document.addEventListener('DOMContentLoaded', restoreOptions);
-document.getElementById('save').addEventListener('click', saveOptions);
-document.getElementById('reset').addEventListener('click', resetOptions);
+document.querySelector('#save').addEventListener('click', saveOptions);
+document.querySelector('#reset').addEventListener('click', resetOptions);
 
 document.getElementById('autoLoad').addEventListener('change', function requestPermissions() {
   if (this.checked) {
@@ -54,17 +53,10 @@ document.getElementById('autoLoad').addEventListener('change', function requestP
       origins: ['http://*/', 'https://*/'],
     }, (granted) => {
       if (granted) {
-        console.info('granted');
+        console.info('granted, send a message to reload background script');
       } else {
-        console.error('declined');
+        console.error('declined, turn off html toggle mark');
       }
-    });
-  } else {
-    chrome.permissions.contains({
-      permissions: ['tabs'],
-      origins: ['http://*/', 'https://*/'],
-    }, (result) => {
-      console.log(result);
     });
   }
 });
