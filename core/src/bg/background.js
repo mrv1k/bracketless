@@ -10,7 +10,6 @@ function syncDefaultOptions() {
     }
   });
 }
-syncDefaultOptions();
 
 const loadedTabs = {};
 const injected = {};
@@ -42,11 +41,8 @@ function setUpContextMenus() {
     title: 'Bracketless action',
   });
 }
-setUpContextMenus();
 
-// Called when the user clicks on the browser action.
-chrome.browserAction.onClicked.addListener((tab) => {
-  const tabId = tab.id;
+function listenerAction(tabId) {
   if (!injected[tabId]) {
     load(tabId);
   } else if (!loadedTabs[tabId]) {
@@ -54,17 +50,14 @@ chrome.browserAction.onClicked.addListener((tab) => {
   } else if (loadedTabs[tabId]) {
     doAction(tabId, 'pause');
   }
-});
+}
 
-chrome.contextMenus.onClicked.addListener((_, tab) => {
-  const tabId = tab.id;
-  if (!injected[tabId]) {
-    load(tabId);
-  } else if (!loadedTabs[tabId]) {
-    doAction(tabId, 'play');
-  } else if (loadedTabs[tabId]) {
-    doAction(tabId, 'pause');
-  }
+// When the extension gets installed, set up the context menus
+chrome.runtime.onInstalled.addListener(() => {
+  syncDefaultOptions();
+  setUpContextMenus();
+  chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
+  chrome.contextMenus.onClicked.addListener((_, tab) => listenerAction(tab.id));
 });
 
 // activate play pause update?
@@ -86,11 +79,8 @@ function autoAction() {
         }
       });
     }
-    // else {
-    //   alert('Permission has been denied.');
-    // }
   });
 }
 
-// preload script if user granted tabs permission from options page
+// !BROKEN! preload script if user granted tabs permission from options page
 document.addEventListener('DOMContentLoaded', autoAction);
