@@ -27,10 +27,11 @@ function load(tabId) {
 
 function playPause(tabId, action) {
   const state = action === 'play' ?
-    { message: 'Pause collapsing', collapse: true } : { message: 'Collapse brackets', collapse: false };
+    { message: 'Pause collapsing', collapse: true, icon: 'pause' } :
+    { message: 'Collapse brackets', collapse: false, icon: 'play' };
 
   loadedTabs[tabId] = state.collapse;
-  chrome.browserAction.setIcon({ tabId, path: `icons/${action}.png` });
+  chrome.browserAction.setIcon({ tabId, path: `icons/${state.icon}.png` });
   chrome.browserAction.setTitle({ tabId, title: state.message });
   chrome.tabs.sendMessage(tabId, { collapse: state.collapse });
 }
