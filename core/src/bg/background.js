@@ -25,7 +25,7 @@ function load(tabId) {
   });
 }
 
-function playPause(tabId, action) {
+function doAction(tabId, action) {
   const state = action === 'play' ?
     { message: 'Pause collapsing', collapse: true, icon: 'pause' } :
     { message: 'Collapse brackets', collapse: false, icon: 'play' };
@@ -42,9 +42,9 @@ chrome.browserAction.onClicked.addListener((tab) => {
   if (!injected[tabId]) {
     load(tabId);
   } else if (!loadedTabs[tabId]) {
-    playPause(tabId, 'play');
+    doAction(tabId, 'play');
   } else if (loadedTabs[tabId]) {
-    playPause(tabId, 'pause');
+    doAction(tabId, 'pause');
   }
 });
 
@@ -60,7 +60,7 @@ function autoAction() {
           chrome.tabs.query({ active: true }, tabs => load(tabs[0].id));
         }
         if (options.autoPlay) {
-          chrome.tabs.query({ active: true }, tabs => playPause(tabs[0].id, 'play'));
+          chrome.tabs.query({ active: true }, tabs => doAction(tabs[0].id, 'play'));
         }
       });
     }
