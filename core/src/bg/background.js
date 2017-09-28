@@ -36,6 +36,14 @@ function doAction(tabId, action) {
   chrome.tabs.sendMessage(tabId, { collapse: state.collapse });
 }
 
+function setUpContextMenus() {
+  chrome.contextMenus.create({
+    id: 'bracketless',
+    title: 'Bracketless action',
+  });
+}
+setUpContextMenus();
+
 // Called when the user clicks on the browser action.
 chrome.browserAction.onClicked.addListener((tab) => {
   const tabId = tab.id;
@@ -47,6 +55,20 @@ chrome.browserAction.onClicked.addListener((tab) => {
     doAction(tabId, 'pause');
   }
 });
+
+chrome.contextMenus.onClicked.addListener((_, tab) => {
+  const tabId = tab.id;
+  if (!injected[tabId]) {
+    load(tabId);
+  } else if (!loadedTabs[tabId]) {
+    doAction(tabId, 'play');
+  } else if (loadedTabs[tabId]) {
+    doAction(tabId, 'pause');
+  }
+});
+
+// activate play pause update?
+// chrome.contextMenus.update();
 
 // optional functionality
 function autoAction() {

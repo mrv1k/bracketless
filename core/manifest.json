@@ -11,7 +11,8 @@
   },
   "permissions": [
     "activeTab",
-    "storage"
+    "storage",
+    "contextMenus"
   ],
   "optional_permissions": [
     "tabs",
