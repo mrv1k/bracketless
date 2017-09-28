@@ -16,7 +16,7 @@ const loadedTabs = {};
 const injected = {};
 
 function load(tabId) {
-  chrome.tabs.executeScript(tabId, { file: 'src/bg/injecthtml.js' }, (response) => {
+  chrome.tabs.executeScript(tabId, { file: 'src/bg/bracketless.js' }, (response) => {
     injected[tabId] = response;
     chrome.browserAction.setIcon({ tabId, path: 'icons/play.png' });
     chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
