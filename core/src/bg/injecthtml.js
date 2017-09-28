@@ -1,10 +1,9 @@
-// RegExp test cases here: http://regexr.com/3gqin
+// Regex test cases here: http://regexr.com/3grj5
 
 function genBracketsRegex(options) {
   const { lowerRegexLimit, upperRegexLimit } = options;
   // generate regex using with custom upper and lower character limits
-  // eslint-disable-next-line no-useless-escape
-  const genRegexStr = `(\\()([A-Z .,!?:"'\`\\\/&-]{${lowerRegexLimit},${upperRegexLimit}})\\w*(\\))`;
+  const genRegexStr = `(\\()([A-Z .,!?:"'\`\\\\/&+-]{${lowerRegexLimit},${upperRegexLimit}})\\w*(\\))`;
   return new RegExp(genRegexStr, 'gi');
 }
 
@@ -18,8 +17,8 @@ function injectHTML(options) {
         if (el.nodeType === Node.TEXT_NODE && el.nodeValue.match(inBracketsRegex)) {
           const text = el.nodeValue.substring(el.nodeValue.indexOf('(') + 1, el.nodeValue.indexOf(')'));
 
-          // escape allowed characters and "(", ")" to make it RegExp safe
-          const matchedTextRegex = new RegExp(text.replace(/[.,!?:"'`\\/&-()]/g, '\\$&'));
+          // escape allowed characters and "(", ")" to make it Regex safe
+          const matchedTextRegex = new RegExp(text.replace(/[.,!?:"'`\\/&-(+)]/g, '\\$&'));
 
           // replace symbols that break html layout: data-bracketless=""this" breaks"
           const htmlSafeText = text.replace(/&/g, '&amp;').replace(/"/g, "'");
