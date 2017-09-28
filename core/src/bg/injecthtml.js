@@ -1,15 +1,12 @@
 // Regex test cases here: http://regexr.com/3grj5
-
-function genBracketsRegex(options) {
-  const { lowerRegexLimit, upperRegexLimit } = options;
-  // generate regex using with custom upper and lower character limits
-  const genRegexStr = `(\\()([A-Z .,!?:"'\`\\\\/&+-]{${lowerRegexLimit},${upperRegexLimit}})\\w*(\\))`;
+function genLimitedRegex(options) {
+  const genRegexStr = `(\\()([A-Z .,!?:"'\`\\\\/&+-]{${options.lowerRegexLimit},${options.upperRegexLimit}})\\w*(\\))`;
   return new RegExp(genRegexStr, 'gi');
 }
 
-function injectHTML(options) {
+function injectTag(options) {
   const elements = document.querySelectorAll('body *:not(script):not(style):not(a):not(code):not(pre)');
-  const inBracketsRegex = genBracketsRegex(options);
+  const inBracketsRegex = genLimitedRegex(options);
 
   for (let i = 0; i < elements.length; i += 1) {
     if (elements[i].hasChildNodes()) {
@@ -32,19 +29,13 @@ function injectHTML(options) {
   }
 }
 
-// default values
 function getOptions() {
-  chrome.storage.sync.get({
-    lowerRegexLimit: 10,
-    upperRegexLimit: 100,
-    autoLoad: false,
-    autoPlay: false,
-  }, options => injectHTML(options));
+  chrome.storage.sync.get(null, options => injectTag(options));
 }
 
-function done() {
+function init() {
   getOptions();
   return true;
 }
 
-done();
+init();
