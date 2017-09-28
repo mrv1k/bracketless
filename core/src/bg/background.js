@@ -1,5 +1,17 @@
-// Global variables only exist for the life of the page, so they get reset
-// each time the page is unloaded.
+function syncDefaultOptions() {
+  chrome.storage.sync.getBytesInUse(null, (bytes) => {
+    if (bytes === 0) {
+      chrome.storage.sync.set({
+        lowerRegexLimit: 13,
+        upperRegexLimit: 255,
+        autoLoad: false,
+        autoPlay: false,
+      });
+    }
+  });
+}
+syncDefaultOptions();
+
 const loadedTabs = {};
 const injected = {};
 
