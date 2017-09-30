@@ -64,23 +64,23 @@ chrome.runtime.onInstalled.addListener(() => {
 // chrome.contextMenus.update();
 
 // optional functionality
-function autoAction() {
-  chrome.permissions.contains({
-    permissions: ['tabs'],
-    origins: ['http://*/', 'https://*/'],
-  }, (result) => {
-    if (result) {
-      chrome.storage.sync.get(null, (options) => {
-        if (options.autoLoad) {
-          chrome.tabs.query({ active: true }, tabs => load(tabs[0].id));
-        }
-        if (options.autoPlay) {
-          chrome.tabs.query({ active: true }, tabs => doAction(tabs[0].id, 'play'));
-        }
-      });
-    }
-  });
-}
+// function autoAction() {
+//   chrome.permissions.contains({
+//     permissions: ['tabs'],
+//     origins: ['http://*/', 'https://*/'],
+//   }, (result) => {
+//     if (result) {
+//       chrome.storage.sync.get(null, (options) => {
+//         if (options.autoLoad) {
+//           chrome.tabs.query({ active: true }, tabs => load(tabs[0].id));
+//         }
+//         if (options.autoPlay) {
+//           chrome.tabs.query({ active: true }, tabs => doAction(tabs[0].id, 'play'));
+//         }
+//       });
+//     }
+//   });
+// }
 
 // !BROKEN! preload script if user granted tabs permission from options page
-document.addEventListener('DOMContentLoaded', autoAction);
+// document.addEventListener('DOMContentLoaded', autoAction);
