@@ -60,6 +60,15 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.onClicked.addListener((_, tab) => listenerAction(tab.id));
 });
 
+function optionsResponse(w) {
+  console.log(w);
+}
+
+chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
+  console.warn(request, sender, sendResponse);
+  sendResponse(optionsResponse(request));
+});
+
 // activate play pause update?
 // chrome.contextMenus.update();
 
