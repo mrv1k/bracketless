@@ -53,8 +53,7 @@ document.getElementById('autoLoad').addEventListener('change', function requestP
       origins: ['http://*/', 'https://*/'],
     }, (granted) => {
       if (granted) {
-        console.info('granted, send a message to reload background script');
-        chrome.runtime.sendMessage({ granted });
+        console.info('granted, save to settings as there is no toggling off YET');
       } else {
         console.error('declined, turn off html toggle mark');
       }

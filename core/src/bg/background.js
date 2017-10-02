@@ -61,7 +61,12 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.onClicked.addListener((_, tab) => listenerAction(tab.id));
 });
 
-// optional functionality (requires optional permissions)
+function optionalPermsCheck() {
+  return new Promise(resolve => chrome.permissions.contains({
+    permissions: ['tabs'],
+    origins: ['http://*/', 'https://*/'],
+  }, granted => resolve(granted)));
+}
 function autoAction(tabId) {
   chrome.storage.sync.get(null, (options) => {
     if (options.autoLoad) load(tabId);
@@ -69,14 +74,14 @@ function autoAction(tabId) {
     // if (options.autoPlay) doAction(tabId, 'play');
   });
 }
+function optionalActions() {
+  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    // regex to filter chrome browser pages (e.g. chrome settings)
+    if (changeInfo.status === 'complete' && tab.active && !/(chrome)(?:[/:-])/.test(tab.url)) {
+      autoAction(tabId);
+    }
+  });
+}
 
-chrome.runtime.onMessage.addListener((permission) => {
-  if (permission) { // boolean granted permission
-    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-      // regex to filter chrome browser pages (e.g. chrome settings)
-      if (changeInfo.status === 'complete' && tab.active && !/(chrome)(?:[/:-])/.test(tab.url)) {
-        autoAction(tabId);
-      }
-    });
-  }
-});
+optionalPermsCheck()
+  .then(optionalActions);
