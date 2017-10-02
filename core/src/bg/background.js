@@ -41,6 +41,8 @@ function setUpContextMenus() {
     title: 'Bracketless action',
   });
 }
+// activate play pause update?
+// chrome.contextMenus.update();
 
 function listenerAction(tabId) {
   if (!injected[tabId]) {
@@ -52,7 +54,6 @@ function listenerAction(tabId) {
   }
 }
 
-// When the extension gets installed, set up the context menus
 chrome.runtime.onInstalled.addListener(() => {
   syncDefaultOptions();
   setUpContextMenus();
@@ -60,36 +61,22 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.onClicked.addListener((_, tab) => listenerAction(tab.id));
 });
 
-function optionsResponse(w) {
-  console.log(w);
+// optional functionality (requires optional permissions)
+function autoAction(tabId) {
+  chrome.storage.sync.get(null, (options) => {
+    if (options.autoLoad) load(tabId);
+    // doesn't work, something related to sending or receiving a message
+    // if (options.autoPlay) doAction(tabId, 'play');
+  });
 }
 
-chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
-  console.warn(request, sender, sendResponse);
-  sendResponse(optionsResponse(request));
+chrome.runtime.onMessage.addListener((permission) => {
+  if (permission) { // boolean granted permission
+    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+      // regex to filter chrome browser pages (e.g. chrome settings)
+      if (changeInfo.status === 'complete' && tab.active && !/(chrome)(?:[/:-])/.test(tab.url)) {
+        autoAction(tabId);
+      }
+    });
+  }
 });
-
-// activate play pause update?
-// chrome.contextMenus.update();
-
-// optional functionality
-// function autoAction() {
-//   chrome.permissions.contains({
-//     permissions: ['tabs'],
-//     origins: ['http://*/', 'https://*/'],
-//   }, (result) => {
-//     if (result) {
-//       chrome.storage.sync.get(null, (options) => {
-//         if (options.autoLoad) {
-//           chrome.tabs.query({ active: true }, tabs => load(tabs[0].id));
-//         }
-//         if (options.autoPlay) {
-//           chrome.tabs.query({ active: true }, tabs => doAction(tabs[0].id, 'play'));
-//         }
-//       });
-//     }
-//   });
-// }
-
-// !BROKEN! preload script if user granted tabs permission from options page
-// document.addEventListener('DOMContentLoaded', autoAction);

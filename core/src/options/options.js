@@ -54,9 +54,7 @@ document.getElementById('autoLoad').addEventListener('change', function requestP
     }, (granted) => {
       if (granted) {
         console.info('granted, send a message to reload background script');
-        chrome.extension.sendMessage({ test: 'object' }, (response) => {
-          console.log(response);
-        });
+        chrome.runtime.sendMessage({ granted });
       } else {
         console.error('declined, turn off html toggle mark');
       }
