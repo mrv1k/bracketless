@@ -66,7 +66,8 @@ function autoAction(tabPerm) {
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.status === 'complete' && tab.active && !/(chrome)(?:[/:-])/.test(tab.url)) {
       chrome.storage.sync.get(null, (options) => {
-        if (options.autoLoad) load(tabId);
+        // race condition, needs to get fixed
+        if (options.autoLoad) listenerAction(tabId);
         if (options.autoPlay) listenerAction(tabId);
       });
     }
@@ -79,6 +80,8 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
   chrome.contextMenus.onClicked.addListener((_, tab) => listenerAction(tab.id));
   optionalPermsCheck()
-    .then(autoAction);
+    .then((value) => {
+      autoAction(value);
+    });
 });
 
