@@ -15,12 +15,15 @@ const activeTabs = {};
 const loadedTabs = {};
 
 function load(tabId) {
-  chrome.tabs.executeScript(tabId, { file: 'src/bg/bracketless.js' }, (response) => {
-    [loadedTabs[tabId]] = response;
-    chrome.browserAction.setIcon({ tabId, path: 'icons/play.png' });
-    chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
-    chrome.tabs.insertCSS(tabId, { file: 'css/toggle.css' });
-    chrome.tabs.executeScript(tabId, { file: 'src/bg/toggle_collapse.js' });
+  return new Promise((resolve) => {
+    chrome.tabs.executeScript(tabId, { file: 'src/bg/bracketless.js' }, (response) => {
+      chrome.browserAction.setIcon({ tabId, path: 'icons/play.png' });
+      chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
+      chrome.tabs.insertCSS(tabId, { file: 'css/toggle.css' });
+      chrome.tabs.executeScript(tabId, { file: 'src/bg/toggle_collapse.js' }, () => {
+        resolve([loadedTabs[tabId]] = response);
+      });
+    });
   });
 }
 
@@ -54,21 +57,24 @@ function listenerAction(tabId) {
 }
 
 function optionalPermsCheck() {
-  return new Promise(resolve => chrome.permissions.contains({
+  return new Promise((resolve, reject) => chrome.permissions.contains({
     permissions: ['tabs'],
     origins: ['http://*/', 'https://*/'],
-  }, granted => resolve(granted)));
+  }, (permission) => {
+    if (permission) resolve(permission);
+    else reject(new Error(`Tabs at any origins was not granted. Permission: ${permission}`));
+  }));
 }
 
-function autoAction(tabPerm) {
-  if (!tabPerm) return; // if permission false, return
-
+function autoAction() {
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.status === 'complete' && tab.active && !/(chrome)(?:[/:-])/.test(tab.url)) {
       chrome.storage.sync.get(null, (options) => {
-        // race condition, needs to get fixed
-        if (options.autoLoad) listenerAction(tabId);
-        if (options.autoPlay) listenerAction(tabId);
+        if (options.autoLoad && options.autoPlay === false) load(tabId);
+        if (options.autoLoad && options.autoPlay) {
+          load(tabId)
+            .then(() => doAction(tabId, 'play'));
+        }
       });
     }
   });
@@ -80,8 +86,5 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
   chrome.contextMenus.onClicked.addListener((_, tab) => listenerAction(tab.id));
   optionalPermsCheck()
-    .then((value) => {
-      autoAction(value);
-    });
+    .then(autoAction);
 });
-
