@@ -11,6 +11,13 @@ function syncDefaultOptions() {
   });
 }
 
+function setUpContextMenus() {
+  chrome.contextMenus.create({ id: 'bracketless', title: 'Load bracketless' });
+}
+function updateContextMenus(text) {
+  chrome.contextMenus.update('bracketless', { title: text });
+}
+
 const activeTabs = {};
 const loadedTabs = {};
 
@@ -19,6 +26,7 @@ function load(tabId) {
     chrome.tabs.executeScript(tabId, { file: 'src/bg/bracketless.js' }, (response) => {
       chrome.browserAction.setIcon({ tabId, path: 'icons/play.png' });
       chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
+      updateContextMenus('Collapse brackets');
       chrome.tabs.insertCSS(tabId, { file: 'css/toggle.css' });
       chrome.tabs.executeScript(tabId, { file: 'src/bg/toggle_collapse.js' }, () => {
         resolve([loadedTabs[tabId]] = response);
@@ -35,16 +43,8 @@ function doAction(tabId, action) {
   chrome.browserAction.setIcon({ tabId, path: `icons/${state.icon}.png` });
   chrome.browserAction.setTitle({ tabId, title: state.message });
   chrome.tabs.sendMessage(tabId, { collapse: state.collapse });
+  updateContextMenus(state.message);
 }
-
-function setUpContextMenus() {
-  chrome.contextMenus.create({
-    id: 'bracketless',
-    title: 'Bracketless action',
-  });
-}
-// activate play pause update?
-// chrome.contextMenus.update();
 
 function listenerAction(tabId) {
   if (!loadedTabs[tabId]) {
