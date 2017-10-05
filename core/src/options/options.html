@@ -29,17 +29,15 @@
   </label>
   <br>
 
+  <p class="disclaimer">To do an automatic action chrome requires an extra permission (i.e. do an action without user interaction)</p>
   <label>
-    Requires extra permissions.
-    <!-- TODO: Toggling off revokes permissions. -->
-    <br>
     <input type="checkbox" id="autoLoad">
-    Autoload
+    Autoload <span class="note">(requires an extra permission)</span>
   </label>
   <br>
   <label>
-    <input type="checkbox" id="autoPlay" disabled>
-    Autoplay (requires autoload)
+    <input type="checkbox" id="autoPlay">
+    Autoplay <span class="note">(autoload required)</span>
   </label>
 
   <div id="status"></div>
