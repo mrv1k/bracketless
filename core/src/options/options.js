@@ -51,17 +51,31 @@ document.addEventListener('DOMContentLoaded', restoreOptions);
 saveBtn.addEventListener('click', saveOptions);
 document.querySelector('#reset').addEventListener('click', resetOptions);
 
-document.getElementById('autoLoad').addEventListener('change', function requestPermissions() {
-  if (this.checked) {
-    chrome.permissions.request({
-      permissions: ['tabs'],
-      origins: ['http://*/', 'https://*/'],
-    }, (granted) => {
-      if (granted) {
-        console.info('granted, save to settings as there is no toggling off YET');
-      } else {
-        console.error('declined, turn off html toggle mark');
-      }
-    });
-  }
-});
+function requestPermissions(p) {
+  chrome.permissions.request(p, (granted) => {
+    if (granted) {
+      console.info('granted');
+    } else {
+      console.log('declined');
+    }
+  });
+}
+
+function removePermission(p) {
+  chrome.permissions.remove(p, (removed) => {
+    if (removed) {
+      console.info('removed');
+    }
+  });
+}
+
+function permissionHandler() {
+  const tabPerm = {
+    permissions: ['tabs'],
+    origins: ['http://*/', 'https://*/'],
+  };
+  if (this.checked) requestPermissions(tabPerm);
+  else removePermission(tabPerm);
+}
+
+autoLoadBool.addEventListener('change', permissionHandler);
