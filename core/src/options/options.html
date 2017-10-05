@@ -6,29 +6,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Bracketless Options</title>
+  <style>
+    input:invalid {
+      border: 1px solid red;
+    }
+
+    input:valid {
+      border: 1px solid green;
+    }
+  </style>
 </head>
 
 <body>
-  <p>Hey how's going? Want to change some settings?</p>
-
   <label>
     Lower matching limit
-    <input type="number" id="lowerLimit" value="13"/>
+    <input type="text" id="lowerLimit" required pattern="^[1-9]\d{0,2}$" title="Positive numbers from 1 to 999"/>
   </label>
   <br>
   <label>
     Upper matching limit
-    <input type="number" id="upperLimit" value="255"/>
+    <input type="text" id="upperLimit" required pattern="^[1-9]\d{0,2}$" title="Positive numbers from 1 to 999"/>
   </label>
   <br>
 
   <label>
+    Requires extra permissions.
+    <!-- TODO: Toggling off revokes permissions. -->
+    <br>
     <input type="checkbox" id="autoLoad">
-    Automatically load extension on a page.
-    Warning: requires extra permission.
+    Autoload
   </label>
+  <br>
   <label>
-    <input type="checkbox" id="autoPlay">
+    <input type="checkbox" id="autoPlay" disabled>
     Autoplay (requires autoload)
   </label>
 
