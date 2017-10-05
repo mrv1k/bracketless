@@ -2,6 +2,20 @@ const lowerLimitNum = document.querySelector('#lowerLimit');
 const upperLimitNum = document.querySelector('#upperLimit');
 const autoLoadBool = document.querySelector('#autoLoad');
 const autoPlayBool = document.querySelector('#autoPlay');
+const status = document.querySelector('#status');
+const saveBtn = document.querySelector('#save');
+
+function validateInput() {
+  const invalid = document.querySelectorAll('input:invalid');
+  if (invalid.length > 0) saveBtn.setAttribute('disabled', true);
+  else saveBtn.removeAttribute('disabled');
+}
+
+function setStatusText(text, timeout = 1000, cb) {
+  status.textContent = text;
+  setTimeout(() => { status.textContent = ''; }, timeout);
+  if (cb) cb();
+}
 
 function restoreOptions() {
   chrome.storage.sync.get({
@@ -23,27 +37,18 @@ function saveOptions() {
     upperRegexLimit: upperLimitNum.value,
     autoLoad: autoLoadBool.checked,
     autoPlay: autoPlayBool.checked,
-  }, () => {
-    // Update status and let the user know options were saved
-    const status = document.querySelector('#status');
-    status.textContent = 'Options saved.';
-    setTimeout(() => { status.textContent = ''; }, 1000);
-  });
+  }, setStatusText('Options saved.'));
 }
 
 function resetOptions() {
-  chrome.storage.sync.clear(() => {
-    const status = document.querySelector('#status');
-    status.textContent = 'Options reset.';
-    setTimeout(() => {
-      status.textContent = '';
-      restoreOptions();
-    }, 1500);
-  });
+  chrome.storage.sync.clear(setStatusText('Options reset.', 1500, restoreOptions));
 }
 
+lowerLimitNum.addEventListener('input', validateInput);
+upperLimitNum.addEventListener('input', validateInput);
 document.addEventListener('DOMContentLoaded', restoreOptions);
-document.querySelector('#save').addEventListener('click', saveOptions);
+
+saveBtn.addEventListener('click', saveOptions);
 document.querySelector('#reset').addEventListener('click', resetOptions);
 
 document.getElementById('autoLoad').addEventListener('change', function requestPermissions() {
