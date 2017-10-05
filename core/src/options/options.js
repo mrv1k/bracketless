@@ -5,10 +5,10 @@ const autoPlayBool = document.querySelector('#autoPlay');
 const status = document.querySelector('#status');
 const saveBtn = document.querySelector('#save');
 
-function validateInput() {
-  const invalid = document.querySelectorAll('input:invalid');
-  if (invalid.length > 0) saveBtn.setAttribute('disabled', true);
-  else saveBtn.removeAttribute('disabled');
+function validateNumInput() {
+  if (!this.checkValidity() || (Number(lowerLimitNum.value) > Number(upperLimitNum.value))) {
+    saveBtn.setAttribute('disabled', true);
+  } else { saveBtn.removeAttribute('disabled'); }
 }
 
 function setStatusText(text, timeout = 1000, cb) {
@@ -44,8 +44,8 @@ function resetOptions() {
   chrome.storage.sync.clear(setStatusText('Options reset.', 1500, restoreOptions));
 }
 
-lowerLimitNum.addEventListener('input', validateInput);
-upperLimitNum.addEventListener('input', validateInput);
+lowerLimitNum.addEventListener('input', validateNumInput);
+upperLimitNum.addEventListener('input', validateNumInput);
 document.addEventListener('DOMContentLoaded', restoreOptions);
 
 saveBtn.addEventListener('click', saveOptions);
