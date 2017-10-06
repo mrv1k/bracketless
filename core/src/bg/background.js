@@ -68,7 +68,9 @@ function optionalPermsCheck() {
 
 function autoAction() {
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (changeInfo.status === 'complete' && tab.active && !/(chrome)(?:[/:-])/.test(tab.url)) {
+    // if loaded or chrome browser page
+    if (loadedTabs[tabId] || /(chrome)(?:[/:-])/.test(tab.url)) return;
+    if (changeInfo.status === 'complete' && tab.active) {
       chrome.storage.sync.get(null, (options) => {
         if (options.autoLoad && options.autoPlay === false) load(tabId);
         if (options.autoLoad && options.autoPlay) {
