@@ -11,7 +11,7 @@ function validateNumInput() {
   } else { saveBtn.removeAttribute('disabled'); }
 }
 
-function setStatusText(text, timeout = 1000, cb) {
+function setStatusText(text, timeout = 2000, cb) {
   status.textContent = text;
   setTimeout(() => { status.textContent = ''; }, timeout);
   if (cb) cb();
@@ -52,6 +52,7 @@ function requestPermissions(permission) {
     if (granted) {
       autoLoadBool.nextElementSibling.textContent = '(permission granted)';
       autoPlayBool.removeAttribute('disabled');
+      setStatusText('Don\'t forget to save!', 7000);
     } else {
       autoLoadBool.nextElementSibling.textContent = '(permission denied)';
       autoLoadBool.checked = false;
@@ -64,6 +65,7 @@ function removePermission(permission) {
   chrome.permissions.remove(permission, (removed) => {
     if (removed) {
       autoLoadBool.nextElementSibling.textContent = '(permission removed)';
+      setStatusText('Don\'t forget to save!', 7000);
       autoPlayBool.checked = false;
       autoPlayBool.setAttribute('disabled', true);
     }

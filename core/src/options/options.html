@@ -18,29 +18,23 @@
 </head>
 
 <body>
-  <label>
-    Lower matching limit
-    <input type="text" id="lowerLimit" required pattern="^[1-9]\d{0,2}$" title="Positive numbers from 1 to 999"/>
-  </label>
+  <label for="lowerLimit">Lower matching limit</label>
+  <input type="text" id="lowerLimit" required pattern="^[1-9]\d{0,2}$" title="Positive numbers from 1 to 999" />
   <br>
-  <label>
-    Upper matching limit
-    <input type="text" id="upperLimit" required pattern="^[1-9]\d{0,2}$" title="Positive numbers from 1 to 999"/>
-  </label>
-  <br>
-
+  <label for="upperLimit">Upper matching limit</label>
+  <input type="text" id="upperLimit" required pattern="^[1-9]\d{0,2}$" title="Positive numbers from 1 to 999" />
+  <hr>
   <p class="disclaimer">To do an automatic action chrome requires an extra permission (i.e. do an action without user interaction)</p>
-  <label>
-    <input type="checkbox" id="autoLoad">
-    Autoload <span class="note">(requires an extra permission)</span>
+  <hr>
+  <label><input type="checkbox" id="autoLoad"> Autoload
+    <span class="note">(requires an extra permission)</span>
   </label>
   <br>
-  <label>
-    <input type="checkbox" id="autoPlay">
-    Autoplay <span class="note">(autoload required)</span>
+  <label for="autoPlay"><input type="checkbox" id="autoPlay"> Autoplay
+    <span class="note">(autoload required)</span>
   </label>
 
-  <div id="status"></div>
+  <h1 id="status"></h1>
   <button id="save">Save</button>
   <button id="reset">Reset</button>
 
