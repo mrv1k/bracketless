@@ -11,14 +11,14 @@ function injectTag(options) {
   for (let i = 0; i < elements.length; i += 1) {
     if (elements[i].hasChildNodes()) {
       elements[i].childNodes.forEach((el) => {
-        if (el.nodeType === Node.TEXT_NODE && el.nodeValue.match(inBracketsRegex)) {
+        if (el.nodeType === Node.TEXT_NODE && inBracketsRegex.test(el.textContent)) {
           const text = el.nodeValue.substring(el.nodeValue.indexOf('(') + 1, el.nodeValue.indexOf(')'));
 
           // escape allowed characters and "(", ")" to make it Regex safe
           const matchedTextRegex = new RegExp(text.replace(/[.,!?:"'`\\/&-(+)]/g, '\\$&'));
 
           // replace symbols that break html layout: data-bracketless=""this" breaks"
-          const htmlSafeText = text.replace(/&/g, '&amp;').replace(/"/g, "'");
+          const htmlSafeText = text.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 
           // eslint-disable-next-line no-param-reassign
           el.parentNode.innerHTML = el.parentNode.innerHTML
