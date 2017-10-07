@@ -62,7 +62,7 @@ function optionalPermsCheck() {
     origins: ['http://*/', 'https://*/'],
   }, (permission) => {
     if (permission) resolve(permission);
-    else reject(new Error(`Tabs at any origins was not granted. Permission: ${permission}`));
+    else reject(new Error(`Custom Bracketless Error. Tabs at any origins was not granted. Permission: ${permission}`));
   }));
 }
 
@@ -88,5 +88,5 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
   chrome.contextMenus.onClicked.addListener((_, tab) => listenerAction(tab.id));
   optionalPermsCheck()
-    .then(autoAction);
+    .then(autoAction, e => console.warn(e)); // no permission, just ignore?
 });
