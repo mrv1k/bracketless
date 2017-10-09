@@ -20,15 +20,13 @@ function testForBrackets(node, regex, parent) {
 }
 
 // Regex test cases here: https://regexr.com/3gtlq
-function genLimitedRegex(options) {
+function genBracketsRegex(options) {
   const genRegexStr = `(\\()([A-Z .,!?:"'\`\\\\/\\&+-]\\d?){${options.lowerRegexLimit},${options.upperRegexLimit}}(\\))`;
   return new RegExp(genRegexStr, 'gi');
 }
 
-function getNodes(options) {
+function iterateNodes(inBracketsRegex) {
   const parents = document.querySelectorAll('body *:not(script):not(style):not(a):not(code):not(pre)');
-  const inBracketsRegex = genLimitedRegex(options);
-
   for (let i = 0; i < parents.length; i += 1) {
     if (parents[i].hasChildNodes()) {
       parents[i].childNodes.forEach((child) => {
@@ -39,7 +37,10 @@ function getNodes(options) {
 }
 
 function getOptions() {
-  chrome.storage.sync.get(null, options => getNodes(options));
+  chrome.storage.sync.get(null, (options) => {
+    const bracketsRegex = genBracketsRegex(options);
+    iterateNodes(bracketsRegex);
+  });
 }
 
 function init() {
