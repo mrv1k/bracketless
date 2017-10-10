@@ -19,15 +19,37 @@ function testForBrackets(node, regex, parent) {
   }
 }
 
-function iterateNodes(inBracketsRegex) {
-  const parents = document.querySelectorAll('body *:not(script):not(style):not(a):not(code):not(pre)');
-  for (let i = 0; i < parents.length; i += 1) {
-    if (parents[i].hasChildNodes()) {
-      parents[i].childNodes.forEach((child) => {
-        testForBrackets(child, inBracketsRegex, parents[i]);
-      });
+function nativeTreeWalker(bracketsRegex) {
+  const ignoredTags = ['A', 'PRE', 'CODE', 'SCRIPT', 'STYLE'];
+  // only accept nodes that have allowed text and are not in ignored tag
+  const filter = {
+    acceptNode(node) {
+      if (bracketsRegex.test(node.data) && !ignoredTags.includes(node.parentNode.tagName)) {
+        return NodeFilter.FILTER_ACCEPT;
+      }
+      return NodeFilter.FILTER_SKIP;
+    },
+  };
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, filter);
+  walker.nextNode(); // first element is the root element!
+  const nodes = [walker.currentNode]; // store one value immediately so length is not 0
+  const sameParent = [];
+
+  while (walker.nextNode()) {
+    const prev = nodes[nodes.length - 1];
+    const cur = walker.currentNode;
+    if (cur.parentNode.isSameNode(prev.parentNode)) {
+      // empty? add prev element
+      if (!sameParent.length) sameParent.push(prev);
+      sameParent.push(cur);
+    } else {
+      // if not empty replace last single elem and empty
+      if (sameParent.length) nodes[nodes.length - 1] = sameParent.splice(0);
+      nodes.push(cur);
     }
   }
+  console.log(nodes);
+  return { nodesArr: nodes, regex: bracketsRegex };
 }
 
 // Regex test cases here: https://regexr.com/3gtlq
@@ -44,5 +66,5 @@ function getOptions() {
 
 getOptions()
   .then(genBracketsRegex)
-  .then(iterateNodes)
+  .then(nativeTreeWalker)
   .catch();
