@@ -12,17 +12,11 @@ function testForBrackets(node, regex, parent) {
     if (textArr.length > 1) { // multiple brackets in one node
       const replica = parent.cloneNode(true);
       textArr.forEach(text => injectTag(text, replica));
-      parent.outerHTML = replica.outerHTML;
+      parent.outerHTML = replica.outerHTML; // outerHTML just to differentiate with innerHTML
     } else { // single brackets
       injectTag(textArr[0], parent);
     }
   }
-}
-
-// Regex test cases here: https://regexr.com/3gtlq
-function genBracketsRegex(options) {
-  const genRegexStr = `(\\()([A-Z .,!?:"'\`\\\\/\\&+-]\\d?){${options.lowerRegexLimit},${options.upperRegexLimit}}(\\))`;
-  return new RegExp(genRegexStr, 'gi');
 }
 
 function iterateNodes(inBracketsRegex) {
@@ -36,16 +30,19 @@ function iterateNodes(inBracketsRegex) {
   }
 }
 
+// Regex test cases here: https://regexr.com/3gtlq
+function genBracketsRegex(options) {
+  const genRegexStr = `(\\()([A-Z .,!?:"'\`\\\\/\\&+-]\\d?){${options.lowerRegexLimit},${options.upperRegexLimit}}(\\))`;
+  return new RegExp(genRegexStr, 'gi');
+}
+
 function getOptions() {
-  chrome.storage.sync.get(null, (options) => {
-    const bracketsRegex = genBracketsRegex(options);
-    iterateNodes(bracketsRegex);
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(null, options => resolve(options));
   });
 }
 
-function init() {
-  getOptions();
-  return true;
-}
-
-init();
+getOptions()
+  .then(genBracketsRegex)
+  .then(iterateNodes)
+  .catch();
