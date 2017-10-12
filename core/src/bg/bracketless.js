@@ -1,38 +1,41 @@
 /* eslint-disable no-param-reassign */
-function genTag(text, parent, single = false) {
-  const dataSafeText = text.replace(/&/g, '&amp;').replace(/"/g, '&quot;'); // so it doesn't break html layout
+function injectTag(text, tag, target) {
   const replaceRegex = new RegExp(text.replace(/[.,!?:"'`\\/&-(+)]/g, '\\$&')); // to match exactly that text
-  const tag = `<bracket-less data-bracketless="${dataSafeText}">${text}</bracket-less>`;
-  if (single) return parent.innerHTML.replace(replaceRegex, tag);
-  parent.innerHTML = parent.innerHTML.replace(replaceRegex, tag);
-  return undefined;
+  target.innerHTML = target.innerHTML.replace(replaceRegex, tag);
 }
 
-function singleHandler(textNode, regex) {
+function genTag(text) {
+  const dataSafeText = text.replace(/&/g, '&amp;').replace(/"/g, '&quot;'); // so it doesn't break html layout
+  return `<bracket-less data-bracketless="${dataSafeText}">${text}</bracket-less>`;
+}
+
+function singleHandler(textNode, regex, multipleClone) {
   const textArr = textNode.textContent.match(regex);
-  // multiple brackets in one text node
-  if (textArr.length > 1) {
-    const replica = textNode.parentNode.cloneNode(true);
-    textArr.forEach(text => genTag(text, replica));
-    return replica;
+  const parent = multipleClone || textNode.parentNode;
+
+  if (textArr.length > 1) { // multiple brackets
+    const replica = multipleClone ? parent : parent.cloneNode(true);
+    textArr.forEach((text) => { injectTag(text, genTag(text, replica), replica); });
+    parent.innerHTML = replica.innerHTML;
+  } else { // single bracket
+    injectTag(textArr[0], genTag(textArr[0]), parent);
   }
-  // single bracket in one text node
-  return genTag(textArr[0], textNode.parentNode, true);
 }
 
-function multipleHandler() {
+function multipleHandler(textNodes, regex) {
+  const parentClone = textNodes[0].parentNode.cloneNode(true);
+  textNodes.forEach((siblingText) => {
+    singleHandler(siblingText, regex, parentClone);
+  });
+  textNodes[0].parentNode.innerHTML = parentClone.innerHTML;
 }
 
 function iterateNodes(walkerObj) {
-  // obj.nodesArr = [elem, [elem, elem], elem, elem];
   walkerObj.nodesArr.forEach((textNode) => {
-    // complex multiple elements structure
-    let tagInjection;
     if (Array.isArray(textNode)) {
-      multipleHandler();
-    } else { // simple single structure
-      tagInjection = singleHandler(textNode, walkerObj.regex);
-      textNode.parentNode.innerHTML = tagInjection;
+      multipleHandler(textNode, walkerObj.regex);
+    } else {
+      singleHandler(textNode, walkerObj.regex);
     }
   });
 }
