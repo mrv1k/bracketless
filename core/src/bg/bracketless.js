@@ -1,22 +1,40 @@
 /* eslint-disable no-param-reassign */
-function injectTag(text, el) {
+function genTag(text, parent, single = false) {
   const dataSafeText = text.replace(/&/g, '&amp;').replace(/"/g, '&quot;'); // so it doesn't break html layout
   const replaceRegex = new RegExp(text.replace(/[.,!?:"'`\\/&-(+)]/g, '\\$&')); // to match exactly that text
   const tag = `<bracket-less data-bracketless="${dataSafeText}">${text}</bracket-less>`;
-  el.innerHTML = el.innerHTML.replace(replaceRegex, tag);
+  if (single) return parent.innerHTML.replace(replaceRegex, tag);
+  parent.innerHTML = parent.innerHTML.replace(replaceRegex, tag);
+  return undefined;
 }
 
-function testForBrackets(node, regex, parent) {
-  if (node.nodeType === Node.TEXT_NODE && regex.test(node.textContent)) {
-    const textArr = node.textContent.match(regex);
-    if (textArr.length > 1) { // multiple brackets in one node
-      const replica = parent.cloneNode(true);
-      textArr.forEach(text => injectTag(text, replica));
-      parent.outerHTML = replica.outerHTML; // outerHTML just to differentiate with innerHTML
-    } else { // single brackets
-      injectTag(textArr[0], parent);
-    }
+function singleHandler(textNode, regex) {
+  const textArr = textNode.textContent.match(regex);
+  // multiple brackets in one text node
+  if (textArr.length > 1) {
+    const replica = textNode.parentNode.cloneNode(true);
+    textArr.forEach(text => genTag(text, replica));
+    return replica;
   }
+  // single bracket in one text node
+  return genTag(textArr[0], textNode.parentNode, true);
+}
+
+function multipleHandler() {
+}
+
+function iterateNodes(walkerObj) {
+  // obj.nodesArr = [elem, [elem, elem], elem, elem];
+  walkerObj.nodesArr.forEach((textNode) => {
+    // complex multiple elements structure
+    let tagInjection;
+    if (Array.isArray(textNode)) {
+      multipleHandler();
+    } else { // simple single structure
+      tagInjection = singleHandler(textNode, walkerObj.regex);
+      textNode.parentNode.innerHTML = tagInjection;
+    }
+  });
 }
 
 function nativeTreeWalker(bracketsRegex) {
@@ -48,7 +66,6 @@ function nativeTreeWalker(bracketsRegex) {
       nodes.push(cur);
     }
   }
-  console.log(nodes);
   return { nodesArr: nodes, regex: bracketsRegex };
 }
 
@@ -67,4 +84,5 @@ function getOptions() {
 getOptions()
   .then(genBracketsRegex)
   .then(nativeTreeWalker)
+  .then(iterateNodes)
   .catch();
