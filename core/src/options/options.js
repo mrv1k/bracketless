@@ -19,13 +19,13 @@ function setStatusText(text, timeout = 2000, cb) {
 
 function restoreOptions() {
   chrome.storage.sync.get({
-    lowerRegexLimit: 13,
-    upperRegexLimit: 255,
+    lowLimit: 13,
+    upLimit: 255,
     autoLoad: false,
     autoPlay: false,
   }, (items) => {
-    lowerLimitNum.value = items.lowerRegexLimit;
-    upperLimitNum.value = items.upperRegexLimit;
+    lowerLimitNum.value = items.lowLimit;
+    upperLimitNum.value = items.upLimit;
     autoLoadBool.checked = items.autoLoad;
     autoPlayBool.checked = items.autoPlay;
 
@@ -36,8 +36,8 @@ function restoreOptions() {
 
 function saveOptions() {
   chrome.storage.sync.set({
-    lowerRegexLimit: lowerLimitNum.value,
-    upperRegexLimit: upperLimitNum.value,
+    lowLimit: lowerLimitNum.value,
+    upLimit: upperLimitNum.value,
     autoLoad: autoLoadBool.checked,
     autoPlay: autoPlayBool.checked,
   }, setStatusText('Options saved.'));

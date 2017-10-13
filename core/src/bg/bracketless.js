@@ -10,7 +10,7 @@ function getOptions() {
 
 // Regex test cases here: https://regexr.com/3gtlq
 function genBracketsRegex(options) {
-  const genRegexStr = `(\\()([A-Z .,!?:"'\`\\\\/\\&+-]\\d?){${options.lowerRegexLimit},${options.upperRegexLimit}}(\\))`;
+  const genRegexStr = `(\\()([A-Z .,!?:"'\`\\\\/\\&+-]\\d?){${options.lowLimit},${options.upLimit}}(\\))`;
   regex = new RegExp(genRegexStr, 'gi');
   return regex;
 }

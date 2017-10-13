@@ -2,8 +2,8 @@ function syncDefaultOptions() {
   chrome.storage.sync.getBytesInUse(null, (bytes) => {
     if (bytes === 0) {
       chrome.storage.sync.set({
-        lowerRegexLimit: 13,
-        upperRegexLimit: 255,
+        lowLimit: 13,
+        upLimit: 255,
         autoLoad: false,
         autoPlay: false,
       });
@@ -62,7 +62,7 @@ function optionalPermsCheck() {
     origins: ['http://*/', 'https://*/'],
   }, (permission) => {
     if (permission) resolve(permission);
-    else reject(new Error(`Custom Bracketless Error. Tabs at any origins was not granted. Permission: ${permission}`));
+    else reject(new Error(`Bracketless. Tabs at any origins was denied. Permission: ${permission}`));
   }));
 }
 
