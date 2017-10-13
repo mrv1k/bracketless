@@ -1,15 +1,31 @@
 /* eslint-disable no-param-reassign */
-function injectTag(text, tag, target) {
-  const replaceRegex = new RegExp(text.replace(/[.,!?:"'`\\/&-(+)]/g, '\\$&')); // to match exactly that text
-  target.innerHTML = target.innerHTML.replace(replaceRegex, tag);
+let regex; // make global as it's used by both single and multiHandler
+
+function getOptions() {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(null, options => resolve(options));
+  });
 }
+
+// Regex test cases here: https://regexr.com/3gtlq
+function genBracketsRegex(options) {
+  const genRegexStr = `(\\()([A-Z .,!?:"'\`\\\\/\\&+-]\\d?){${options.lowerRegexLimit},${options.upperRegexLimit}}(\\))`;
+  regex = new RegExp(genRegexStr, 'gi');
+  return regex;
+}
+
 
 function genTag(text) {
   const dataSafeText = text.replace(/&/g, '&amp;').replace(/"/g, '&quot;'); // so it doesn't break html layout
   return `<bracket-less data-bracketless="${dataSafeText}">${text}</bracket-less>`;
 }
 
-function singleHandler(textNode, regex, multipleClone) {
+function injectTag(text, tag, target) {
+  const replaceRegex = new RegExp(text.replace(/[.,!?:"'`\\/&-(+)]/g, '\\$&')); // to match exactly that text
+  target.innerHTML = target.innerHTML.replace(replaceRegex, tag);
+}
+
+function singleHandler(textNode, multipleClone) {
   const textArr = textNode.textContent.match(regex);
   const parent = multipleClone || textNode.parentNode;
 
@@ -22,20 +38,20 @@ function singleHandler(textNode, regex, multipleClone) {
   }
 }
 
-function multipleHandler(textNodes, regex) {
+function multipleHandler(textNodes) {
   const parentClone = textNodes[0].parentNode.cloneNode(true);
   textNodes.forEach((siblingText) => {
-    singleHandler(siblingText, regex, parentClone);
+    singleHandler(siblingText, parentClone);
   });
   textNodes[0].parentNode.innerHTML = parentClone.innerHTML;
 }
 
-function iterateNodes(walkerObj) {
-  walkerObj.nodesArr.forEach((textNode) => {
+function iterateNodes(nodesArr) {
+  nodesArr.forEach((textNode) => {
     if (Array.isArray(textNode)) {
-      multipleHandler(textNode, walkerObj.regex);
+      multipleHandler(textNode);
     } else {
-      singleHandler(textNode, walkerObj.regex);
+      singleHandler(textNode);
     }
   });
 }
@@ -69,23 +85,12 @@ function nativeTreeWalker(bracketsRegex) {
       nodes.push(cur);
     }
   }
-  return { nodesArr: nodes, regex: bracketsRegex };
+  return nodes;
 }
 
-// Regex test cases here: https://regexr.com/3gtlq
-function genBracketsRegex(options) {
-  const genRegexStr = `(\\()([A-Z .,!?:"'\`\\\\/\\&+-]\\d?){${options.lowerRegexLimit},${options.upperRegexLimit}}(\\))`;
-  return new RegExp(genRegexStr, 'gi');
-}
+const regexPr = getOptions()
+  .then(genBracketsRegex);
 
-function getOptions() {
-  return new Promise((resolve) => {
-    chrome.storage.sync.get(null, options => resolve(options));
-  });
-}
-
-getOptions()
-  .then(genBracketsRegex)
+regexPr
   .then(nativeTreeWalker)
-  .then(iterateNodes)
-  .catch();
+  .then(iterateNodes);
