@@ -32,9 +32,13 @@ function singleHandler(textNode, multiClone) {
 
   if (textArr.length > 1) { // multiple brackets
     const replica = multiClone ? parent : parent.cloneNode(true);
-    textArr.forEach((text) => { injectTag(text, genTag(text, replica), replica); });
+    textArr.forEach((text) => {
+      text = text.slice(1, -1);
+      injectTag(text, genTag(text, replica), replica);
+    });
     parent.innerHTML = replica.innerHTML;
   } else { // single bracket
+    textArr[0] = textArr[0].slice(1, -1); // slice brackets
     injectTag(textArr[0], genTag(textArr[0]), parent);
   }
 }
