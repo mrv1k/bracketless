@@ -13,8 +13,10 @@ function validateNumInput() {
 
 function setStatusText(text, timeout = 2000, cb) {
   status.textContent = text;
-  setTimeout(() => { status.textContent = ''; }, timeout);
-  if (cb) cb();
+  setTimeout(() => {
+    status.textContent = '';
+    if (cb) cb();
+  }, timeout);
 }
 
 function restoreOptions() {
@@ -40,11 +42,11 @@ function saveOptions() {
     upLimit: upperLimitNum.value,
     autoLoad: autoLoadBool.checked,
     autoPlay: autoPlayBool.checked,
-  }, setStatusText('Options saved.'));
+  }, setStatusText.bind(null, 'Options saved.'));
 }
 
 function resetOptions() {
-  chrome.storage.sync.clear(setStatusText('Options reset.', 1500, restoreOptions));
+  chrome.storage.sync.clear(setStatusText.bind(null, 'Options reset.', 1500, restoreOptions));
 }
 
 function requestPermissions(permission) {
