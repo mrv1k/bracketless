@@ -1,4 +1,5 @@
 /* eslint-disable no-param-reassign */
+
 let regex; // make global as it's used by both single and multiHandler
 
 function getOptions() {
@@ -25,12 +26,12 @@ function injectTag(text, tag, target) {
   target.innerHTML = target.innerHTML.replace(replaceRegex, tag);
 }
 
-function singleHandler(textNode, multipleClone) {
+function singleHandler(textNode, multiClone) {
   const textArr = textNode.textContent.match(regex);
-  const parent = multipleClone || textNode.parentNode;
+  const parent = multiClone || textNode.parentNode;
 
   if (textArr.length > 1) { // multiple brackets
-    const replica = multipleClone ? parent : parent.cloneNode(true);
+    const replica = multiClone ? parent : parent.cloneNode(true);
     textArr.forEach((text) => { injectTag(text, genTag(text, replica), replica); });
     parent.innerHTML = replica.innerHTML;
   } else { // single bracket
@@ -38,7 +39,7 @@ function singleHandler(textNode, multipleClone) {
   }
 }
 
-function multipleHandler(textNodes) {
+function multiHandler(textNodes) {
   const parentClone = textNodes[0].parentNode.cloneNode(true);
   textNodes.forEach((siblingText) => {
     singleHandler(siblingText, parentClone);
@@ -49,7 +50,7 @@ function multipleHandler(textNodes) {
 function iterateNodes(nodesArr) {
   nodesArr.forEach((textNode) => {
     if (Array.isArray(textNode)) {
-      multipleHandler(textNode);
+      multiHandler(textNode);
     } else {
       singleHandler(textNode);
     }
