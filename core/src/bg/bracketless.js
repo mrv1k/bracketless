@@ -8,9 +8,9 @@ function getOptions() {
   });
 }
 
-// Regex test cases here: https://regexr.com/3gtlq
+// Regex test cases here: https://regexr.com/3gv3c
 function genBracketsRegex(options) {
-  const genRegexStr = `(\\()([A-Z .,!?:"'\`\\\\/\\&+-]\\d?){${options.lowLimit},${options.upLimit}}(\\))`;
+  const genRegexStr = `(?:\\()([A-Z .,!?:"'\`\\\\/\\&+-]\\d?){${options.lowLimit},${options.upLimit}}(?:\\))`;
   regex = new RegExp(genRegexStr, 'gi');
   return regex;
 }
