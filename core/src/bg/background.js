@@ -27,8 +27,8 @@ function load(tabId) {
       chrome.browserAction.setIcon({ tabId, path: 'icons/play.png' });
       chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
       updateContextMenus('Collapse brackets');
-      chrome.tabs.insertCSS(tabId, { file: 'css/toggle.css' });
-      chrome.tabs.executeScript(tabId, { file: 'src/bg/toggle_collapse.js' }, () => {
+      chrome.tabs.insertCSS(tabId, { file: 'css/action.css' });
+      chrome.tabs.executeScript(tabId, { file: 'src/bg/action.js' }, () => {
         resolve(loadedTabs[tabId] = true);
       });
     });
