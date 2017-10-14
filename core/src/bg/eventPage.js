@@ -23,12 +23,12 @@ const loadedTabs = {};
 
 function load(tabId) {
   return new Promise((resolve) => {
-    chrome.tabs.executeScript(tabId, { file: 'src/bg/bracketless.js' }, () => {
+    chrome.tabs.executeScript(tabId, { file: 'src/bracketless.js' }, () => {
       chrome.browserAction.setIcon({ tabId, path: 'icons/play.png' });
       chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
       updateContextMenus('Collapse brackets');
       chrome.tabs.insertCSS(tabId, { file: 'css/action.css' });
-      chrome.tabs.executeScript(tabId, { file: 'src/bg/action.js' }, () => {
+      chrome.tabs.executeScript(tabId, { file: 'src/action.js' }, () => {
         resolve(loadedTabs[tabId] = true);
       });
     });
