@@ -1,10 +1,12 @@
 const elements = document.querySelectorAll('bracket-less');
 
-function doAction() {
-  this.classList.toggle('bracket-less');
+function doAction(e) {
+  if (e.target.tagName !== 'BRACKET-LESS') return;
+  e.target.classList.toggle('bracket-less');
+  e.stopPropagation();
 }
 
-elements.forEach(el => el.addEventListener('click', doAction.bind(el)));
+document.body.addEventListener('click', doAction);
 
 function toggleCollapse(state) {
   if (state.collapse) { // play -> text collapsed
