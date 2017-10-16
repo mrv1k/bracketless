@@ -1,15 +1,14 @@
 const elements = document.querySelectorAll('bracket-less');
 
-function expandBrackets() {
-  this.innerHTML = this.dataset.bracketless;
-  this.classList.toggle('bracket-less');
+function doAction(e) {
+  e.stopPropagation();
+
+  if (e.target.tagName !== 'BRACKET-LESS') return;
+
+  e.target.classList.toggle('bracket-less');
 }
-function collapseBrackets() {
-  this.innerHTML = '...';
-  this.classList.toggle('bracket-less');
-}
-elements.forEach(el => el.addEventListener('click', expandBrackets.bind(el)));
-elements.forEach(el => el.addEventListener('dblclick', collapseBrackets.bind(el)));
+
+document.body.addEventListener('click', doAction);
 
 function toggleCollapse(state) {
   if (state.collapse) { // play -> text collapsed
@@ -19,6 +18,4 @@ function toggleCollapse(state) {
   }
 }
 
-chrome.runtime.onMessage.addListener((state, sender, sendResponse) => {
-  sendResponse(toggleCollapse(state));
-});
+chrome.runtime.onMessage.addListener(state => toggleCollapse(state));
