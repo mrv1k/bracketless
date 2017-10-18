@@ -12,10 +12,10 @@ function syncDefaultOptions() {
 }
 
 function setUpContextMenus() {
-  chrome.contextMenus.create({ id: 'bracketless', title: 'Load bracketless' });
+  chrome.contextMenus.create({ id: 'bracketless', title: 'DEV: CLEAN LOCAL STORAGE 0' });
 }
 function updateContextMenus(text) {
-  chrome.contextMenus.update('bracketless', { title: text });
+  chrome.contextMenus.update('bracketless', { title: 'DEV: CLEAN LOCAL STORAGE 1' });
 }
 
 function getState(tabId) {
@@ -42,25 +42,9 @@ function setState(tabId, state, value) {
     } else {
       console.log('setState else');
       resolve();
-      // getState(tabId)
-      //   .then((result) => {
-      //     console.log('resulto!', result);
-      //     const active = result[tabId];
-      //     active[result] = value;
-      //     chrome.storage.local.set(active);
-      //     // return active;
-      //   });
-      // .then((active) => {
-      //   return new Promise((resolve) => {
-      //     chrome.storage.local.set(active, () => resolve());
-      //   });
-      // });
     }
   });
 }
-
-// const loadedTabs = {};
-// const activeTabs = {};
 
 function load(tabId) {
   return new Promise((resolve) => {
@@ -71,8 +55,7 @@ function load(tabId) {
       chrome.tabs.insertCSS(tabId, { file: 'css/action.css' });
       chrome.tabs.executeScript(tabId, { file: 'src/action.js' }, () => {
         setState(tabId, 'loaded', true)
-          .then(() => resolve());
-        // loadedTabs[tabId] = true -> tabId: {loaded: true, active: false}
+          .then(() => resolve()); // 322: {loaded: true}
       });
     });
   });
@@ -91,27 +74,11 @@ function doAction(tabId, action) {
 }
 
 function listenerAction(tabId) {
-  // load(tabId)
-  //   .then(() => doAction(tabId, 'play'))
-  //   .then(() => getState(tabId))
-  //   .then((result) => {
-  //     console.log('last', result);
-  //     chrome.storage.local.clear();
-  //   });
-
-  // if (!loadedTabs[tabId]) {
-  // load(tabId);
-  // } else if (!activeTabs[tabId]) {
-  // doAction(tabId, 'play');
-  // getTabStates().then((v) => { console.log('listener', v); });
-  // } else if (activeTabs[tabId]) {
-  //   doAction(tabId, 'pause');
-  // }
   getState(tabId)
     .then((tabState) => {
       console.log('LA', tabState);
 
-      if (undefined) {
+      if (!tabState) {
         load(tabId);
         console.log('not loaded, load');
       } else if (!tabState.active) {
@@ -121,8 +88,7 @@ function listenerAction(tabId) {
         doAction(tabId, 'pause');
         console.log('loaded active, pause');
       }
-    })
-    .then(() => chrome.storage.local.clear());
+    });
 }
 
 function optionalPermsCheck() {
@@ -155,7 +121,8 @@ chrome.runtime.onInstalled.addListener(() => {
   syncDefaultOptions();
   setUpContextMenus();
   chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
-  chrome.contextMenus.onClicked.addListener((_, tab) => listenerAction(tab.id));
+  // ! MODIFY FOR DEV ONLY! CLEAN UP FOR TESTING
+  chrome.contextMenus.onClicked.addListener((_, tab) => chrome.storage.local.clear());
   // optionalPermsCheck()
   //   .then(autoAction, e => console.warn(e)); // no permission, just ignore?
 });
