@@ -18,12 +18,12 @@ function updateContextMenus(text) {
   chrome.contextMenus.update('bracketless', { title: text });
 }
 
-function getTabStates() {
+function getState(tabId) {
   return new Promise((resolve) => {
-    chrome.storage.local.get(null, (states) => {
-      console.log('getTabStates');
-      console.log(states);
-      resolve(states);
+    chrome.storage.local.get(tabId.toString(), (state) => {
+      console.log('getTabStates itself');
+      console.log(state[tabId]);
+      resolve(state[tabId]);
     });
   });
 }
@@ -31,24 +31,32 @@ function getTabStates() {
 // setState(tabId, 'loaded', true);
 // setState(tabId, 'active', state.collapse);
 function setState(tabId, state, value) {
-  console.log('setState F', tabId, state, value);
-  if (state === 'loaded') {
-    const init = {};
-    const proxy = {};
-    proxy[state] = value; // {loaded: true}
-    init[tabId] = proxy; // {451: proxy[state]} -> {451: {loaded: true}}
-    chrome.storage.local.set(init);
-    // {451: {loaded: true}}
-  } else {
-    getTabStates()
-      .then((states) => {
-        console.log(states[tabId]);
-        states[tabId][state] = value;
-        console.log(states[tabId]);
-      });
-  }
-
-  // chrome.storage.local.clear();
+  console.log('F', tabId, state, value);
+  return new Promise((resolve) => {
+    if (state === 'loaded') {
+      const init = {};
+      const proxy = {};
+      proxy[state] = value; // {loaded: true}
+      init[tabId] = proxy; // {451: {loaded: true}}
+      chrome.storage.local.set(init, () => resolve());
+    } else {
+      console.log('setState else');
+      resolve();
+      // getState(tabId)
+      //   .then((result) => {
+      //     console.log('resulto!', result);
+      //     const active = result[tabId];
+      //     active[result] = value;
+      //     chrome.storage.local.set(active);
+      //     // return active;
+      //   });
+      // .then((active) => {
+      //   return new Promise((resolve) => {
+      //     chrome.storage.local.set(active, () => resolve());
+      //   });
+      // });
+    }
+  });
 }
 
 // const loadedTabs = {};
@@ -62,8 +70,8 @@ function load(tabId) {
       updateContextMenus('Collapse brackets');
       chrome.tabs.insertCSS(tabId, { file: 'css/action.css' });
       chrome.tabs.executeScript(tabId, { file: 'src/action.js' }, () => {
-        setState(tabId, 'loaded', true);
-        resolve();
+        setState(tabId, 'loaded', true)
+          .then(() => resolve());
         // loadedTabs[tabId] = true -> tabId: {loaded: true, active: false}
       });
     });
@@ -82,20 +90,14 @@ function doAction(tabId, action) {
   updateContextMenus(state.message);
 }
 
-// getTabStates()
-//   .then((s) => {
-//     console.log(s[tabId]);
-//     console.log(s[tabId].loaded);
-//     console.log(s[tabId].active);
-//   });
-
 function listenerAction(tabId) {
-  load(tabId)
-    .then(() => doAction(tabId, 'play'))
-    .then(() => getTabStates())
-    .then((s) => {
-      console.log(s);
-    });
+  // load(tabId)
+  //   .then(() => doAction(tabId, 'play'))
+  //   .then(() => getState(tabId))
+  //   .then((result) => {
+  //     console.log('last', result);
+  //     chrome.storage.local.clear();
+  //   });
 
   // if (!loadedTabs[tabId]) {
   // load(tabId);
@@ -105,14 +107,22 @@ function listenerAction(tabId) {
   // } else if (activeTabs[tabId]) {
   //   doAction(tabId, 'pause');
   // }
+  getState(tabId)
+    .then((tabState) => {
+      console.log('LA', tabState);
 
-  // if (getTabStates().then(s => !s[tabId].loaded)) {
-  // not loaded, load
-  // } else if (getTabStates().then(s => !s[tabId].active)) {
-  // loaded not active, play
-  // } else if (getTabStates().then(s => s[tabId].active)) {
-  // loaded active, pause
-  // }
+      if (undefined) {
+        load(tabId);
+        console.log('not loaded, load');
+      } else if (!tabState.active) {
+        doAction(tabId, 'play');
+        console.log('loaded not active, play');
+      } else if (tabState.active) {
+        doAction(tabId, 'pause');
+        console.log('loaded active, pause');
+      }
+    })
+    .then(() => chrome.storage.local.clear());
 }
 
 function optionalPermsCheck() {
