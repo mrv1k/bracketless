@@ -28,17 +28,9 @@ function getState(tabId) {
   });
 }
 
-function setLoadState(tabId) {
-  console.warn('setLoadState');
-  console.log(tabId);
-  return new Promise((resolve) => {
-    chrome.storage.local.set({ [tabId]: false }, () => resolve());
-  });
-}
-
-function setActiveState(tabId, tabState, value) {
-  console.warn('setActiveState');
-  console.log(tabState, value);
+function setState(tabId, value) {
+  console.warn('setState');
+  console.log(tabId, value);
   return new Promise((resolve) => {
     chrome.storage.local.set({ [tabId]: value }, () => resolve());
   });
@@ -52,14 +44,14 @@ function load(tabId) {
       // updateContextMenus('Collapse brackets');
       chrome.tabs.insertCSS(tabId, { file: 'css/action.css' });
       chrome.tabs.executeScript(tabId, { file: 'src/action.js' }, () => {
-        setLoadState(tabId)
-          .then(() => resolve('load resolved')); // { 322: {} }
+        setState(tabId, false) // { 322: false }
+          .then(() => resolve('load resolved'));
       });
     });
   });
 }
 
-function doAction(tabId, tabState, action) {
+function doAction(tabId, action) {
   return new Promise((resolve) => {
     const state = action === 'play' ?
       { message: 'Pause collapsing', collapse: true, icon: 'pause' } :
@@ -70,8 +62,8 @@ function doAction(tabId, tabState, action) {
     chrome.tabs.sendMessage(tabId, { collapse: state.collapse }, (response) => {
       console.warn('doAction sendMessage responseFn');
       console.log(response);
-      setActiveState(tabId, tabState, state.collapse)
-        .then(() => { resolve(`action resolved: ${action}`); }); // { 322: {active: bool}
+      setState(tabId, state.collapse) // { 322: bool}
+        .then(() => { resolve(`action resolved: ${action}`); });
     });
   });
 }
@@ -83,19 +75,14 @@ function listenerAction(tabId) {
       console.log(tabState);
 
       if (tabState === undefined) {
-        console.warn('not loaded, load');
-        console.log(tabState, '->', !tabState);
+        console.log('not loaded, load');
         return load(tabId);
-
       } else if (tabState === false) {
-        console.warn('loaded not active, play');
-        console.log(tabState, '->', !tabState.active);
-        return doAction(tabId, tabState, 'play');
-
+        console.log('loaded not active, play');
+        return doAction(tabId, 'play');
       } else if (tabState === true) {
-        console.warn('loaded active, pause');
-        console.log(tabState, '->', 'doesn\`t use bool reverse');
-        return doAction(tabId, tabState, 'pause');
+        console.log('loaded active, pause');
+        return doAction(tabId, 'pause');
       }
       return Promise.reject(new Error('listenerAction if else didn\'t work'));
     })
