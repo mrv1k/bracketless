@@ -36,6 +36,14 @@ function setState(tabId, value) {
   });
 }
 
+function removeState(tabId) {
+  console.warn('removeState');
+  console.log(tabId);
+  return new Promise((resolve) => {
+    chrome.storage.local.remove(tabId.toString(), () => resolve());
+  });
+}
+
 function load(tabId) {
   return new Promise((resolve) => {
     chrome.tabs.executeScript(tabId, { file: 'src/bracketless.js' }, () => {
@@ -141,6 +149,18 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     // localClear();
     localGetAll();
   }
+});
+
+// integer tabId, object removeInfo
+chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
+  getState(tabId).then((diz) => {
+    if (diz === undefined) {
+      console.log('I have no power over hea.');
+    } else {
+      console.log('FEEL THE POWER!');
+      removeState(tabId);
+    }
+  });
 });
 
 chrome.runtime.onInstalled.addListener(() => {
