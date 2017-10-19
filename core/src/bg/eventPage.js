@@ -12,7 +12,7 @@ function syncDefaultOptions() {
 }
 
 function setUpContextMenus() {
-  chrome.contextMenus.create({ id: 'bracketless', title: 'Load bracketless' });
+  chrome.contextMenus.create({ id: 'bracketless', title: 'local.clear()' });
 }
 function updateContextMenus(text) {
   chrome.contextMenus.update('bracketless', { title: text });
@@ -46,7 +46,7 @@ function load(tabId) {
     chrome.tabs.executeScript(tabId, { file: 'src/bracketless.js' }, () => {
       chrome.browserAction.setIcon({ tabId, path: 'icons/play.png' });
       chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
-      updateContextMenus('Collapse brackets');
+      // updateContextMenus('Collapse brackets');
       chrome.tabs.insertCSS(tabId, { file: 'css/action.css' });
       chrome.tabs.executeScript(tabId, { file: 'src/action.js' }, () => {
         setLoadState(tabId)
@@ -65,7 +65,7 @@ function doAction(tabId, tabState, action) {
   // chrome.tabs.sendMessage(tabId, { collapse: state.collapse });
 
   setActiveState(tabState, state.collapse);
-  updateContextMenus(state.message);
+  // updateContextMenus(state.message);
   return `action resolved: ${state.message}`;
 }
 
@@ -124,19 +124,28 @@ function autoAction() {
   });
 }
 
-// !PRODUCTION BREAKING! Quality of life for dev-t
+
+function localClear() {
+  chrome.storage.local.clear(() => {
+    chrome.storage.local.get(null, (cleared) => {
+      console.warn('local.clear()');
+      console.log(cleared);
+    });
+  });
+}
+
+function localGetAll() {
+  chrome.storage.local.get(null, (all) => {
+    console.warn('local.get(null)');
+    console.log(all);
+  });
+}
+
+// !PRODUCTION BREAKING! Dev QoL (Quality of Life)
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete' && tab.active) {
-    // chrome.storage.local.clear(() => {
-    //   chrome.storage.local.get(null, (cleaned) => {
-    //     console.warn('local.clear()');
-    //     console.log(cleaned);
-    //   });
-    // });
-    chrome.storage.local.get(null, (all) => {
-      console.warn('local.get(ALL)');
-      console.log(all);
-    });
+    // localClear();
+    localGetAll();
   }
 });
 
@@ -144,7 +153,7 @@ chrome.runtime.onInstalled.addListener(() => {
   syncDefaultOptions();
   setUpContextMenus();
   chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
-  chrome.contextMenus.onClicked.addListener((_, tab) => listenerAction(tab.id));
+  chrome.contextMenus.onClicked.addListener((_, tab) => localClear());
   // optionalPermsCheck()
   //   .then(autoAction, e => console.warn(e)); // no permission, just ignore?
 });
