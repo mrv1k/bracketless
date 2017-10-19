@@ -12,10 +12,10 @@ function syncDefaultOptions() {
 }
 
 function setUpContextMenus() {
-  chrome.contextMenus.create({ id: 'bracketless', title: 'DEV: CLEAN LOCAL STORAGE 0' });
+  chrome.contextMenus.create({ id: 'bracketless', title: 'Load bracketless' });
 }
 function updateContextMenus(text) {
-  chrome.contextMenus.update('bracketless', { title: 'DEV: CLEAN LOCAL STORAGE 1' });
+  chrome.contextMenus.update('bracketless', { title: text });
 }
 
 function getState(tabId) {
@@ -117,12 +117,23 @@ function autoAction() {
   });
 }
 
+// !PRODUCTION BREAKING! Quality of life for dev-t
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === 'complete' && tab.active) {
+    chrome.storage.local.clear(() => {
+      chrome.storage.local.get(null, (cleaned) => {
+        console.warn('local.clear()');
+        console.log(cleaned);
+      });
+    });
+  }
+});
+
 chrome.runtime.onInstalled.addListener(() => {
   syncDefaultOptions();
   setUpContextMenus();
   chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
-  // ! MODIFY FOR DEV ONLY! CLEAN UP FOR TESTING
-  chrome.contextMenus.onClicked.addListener((_, tab) => chrome.storage.local.clear());
+  chrome.contextMenus.onClicked.addListener((_, tab) => listenerAction(tab.id));
   // optionalPermsCheck()
   //   .then(autoAction, e => console.warn(e)); // no permission, just ignore?
 });
