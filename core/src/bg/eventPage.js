@@ -28,23 +28,23 @@ function getState(tabId) {
   });
 }
 
-// setState(tabId, 'loaded', true);
+// setState(tabId, 'load', true);
 // setState(tabId, 'active', state.collapse);
 function setState(tabId, state, value) {
   console.warn('setState');
   console.log(tabId, state, value);
   return new Promise((resolve) => {
-    if (state === 'loaded') {
+    if (state === 'load') {
       console.warn('set IF');
-      const init = {};
-      const proxy = {};
-      proxy[state] = value; // {loaded: true}
-      init[tabId] = proxy; // {451: {loaded: true}}
-      console.log(init);
-      chrome.storage.local.set(init, () => resolve());
+      console.log({ [tabId]: {} });
+      chrome.storage.local.set({ [tabId]: {} }, () => resolve());
     } else {
       console.warn('set ELSE');
-      console.log();
+      // const proxy = {};
+      // proxy[state] = value; // {loaded: true}
+      // init[tabId] = proxy; // {451: {loaded: true}}
+      // chrome.storage.local.set(init, () => resolve());
+      // console.log();
       resolve();
     }
   });
@@ -58,8 +58,8 @@ function load(tabId) {
       updateContextMenus('Collapse brackets');
       chrome.tabs.insertCSS(tabId, { file: 'css/action.css' });
       chrome.tabs.executeScript(tabId, { file: 'src/action.js' }, () => {
-        setState(tabId, 'loaded', true)
-          .then(() => resolve()); // 322: {loaded: true}
+        setState(tabId, 'load')
+          .then(() => resolve('load resolved')); // { 322: {} }
       });
     });
   });
@@ -130,11 +130,15 @@ function autoAction() {
 // !PRODUCTION BREAKING! Quality of life for dev-t
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete' && tab.active) {
-    chrome.storage.local.clear(() => {
-      chrome.storage.local.get(null, (cleaned) => {
-        console.warn('local.clear()');
-        console.log(cleaned);
-      });
+    // chrome.storage.local.clear(() => {
+    //   chrome.storage.local.get(null, (cleaned) => {
+    //     console.warn('local.clear()');
+    //     console.log(cleaned);
+    //   });
+    // });
+    chrome.storage.local.get(null, (all) => {
+      console.warn('local.get(ALL)');
+      console.log(all);
     });
   }
 });
