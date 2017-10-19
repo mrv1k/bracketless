@@ -54,15 +54,15 @@ function load(tabId) {
 function doAction(tabId, action) {
   return new Promise((resolve) => {
     const state = action === 'play' ?
-      { message: 'Pause collapsing', collapse: true, icon: 'pause' } :
-      { message: 'Collapse brackets', collapse: false, icon: 'play' };
+      { message: 'Pause collapsing', active: true, icon: 'pause' } :
+      { message: 'Collapse brackets', active: false, icon: 'play' };
     chrome.browserAction.setIcon({ tabId, path: `icons/${state.icon}.png` });
     chrome.browserAction.setTitle({ tabId, title: state.message });
     // updateContextMenus(state.message);
-    chrome.tabs.sendMessage(tabId, { collapse: state.collapse }, (response) => {
+    chrome.tabs.sendMessage(tabId, { active: state.active }, (response) => {
       console.warn('doAction sendMessage responseFn');
       console.log(response);
-      setState(tabId, state.collapse) // { 322: bool}
+      setState(tabId, state.active) // { 322: bool}
         .then(() => { resolve(`action resolved: ${action}`); });
     });
   });

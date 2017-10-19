@@ -11,7 +11,7 @@ function doAction(e) {
 document.body.addEventListener('click', doAction);
 
 function toggleCollapse(state) {
-  if (state.collapse) { // play -> text collapsed
+  if (state.active) { // play -> text collapsed
     elements.forEach(el => el.classList.add('bracket-less'));
   } else { // pause -> text displayed
     elements.forEach(el => el.classList.remove('bracket-less'));
