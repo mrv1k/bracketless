@@ -36,9 +36,14 @@ function setLoadState(tabId) {
   });
 }
 
-function setActiveState(tabState, value) {
+function setActiveState(tabId, tabState, value) {
   console.warn('setActiveState');
-  console.log(value);
+  const activeTabState = tabState;
+  activeTabState.active = value;
+  console.log(activeTabState);
+  return new Promise((resolve) => {
+    chrome.storage.local.set({ [tabId]: activeTabState }, () => resolve());
+  });
 }
 
 function load(tabId) {
@@ -67,8 +72,8 @@ function doAction(tabId, tabState, action) {
     chrome.tabs.sendMessage(tabId, { collapse: state.collapse }, (response) => {
       console.warn('doAction sendMessage responseFn');
       console.log(response);
-      setActiveState(tabState, state.collapse);
-      resolve(`action resolved: ${action}`);
+      setActiveState(tabId, tabState, state.collapse)
+        .then(() => { resolve(`action resolved: ${action}`); }); // { 322: {active: bool}
     });
   });
 }
