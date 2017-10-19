@@ -32,17 +32,15 @@ function setLoadState(tabId) {
   console.warn('setLoadState');
   console.log(tabId);
   return new Promise((resolve) => {
-    chrome.storage.local.set({ [tabId]: {} }, () => resolve());
+    chrome.storage.local.set({ [tabId]: false }, () => resolve());
   });
 }
 
 function setActiveState(tabId, tabState, value) {
   console.warn('setActiveState');
-  const activeTabState = tabState;
-  activeTabState.active = value;
-  console.log(activeTabState);
+  console.log(tabState, value);
   return new Promise((resolve) => {
-    chrome.storage.local.set({ [tabId]: activeTabState }, () => resolve());
+    chrome.storage.local.set({ [tabId]: value }, () => resolve());
   });
 }
 
@@ -84,19 +82,19 @@ function listenerAction(tabId) {
       console.warn('getState.then()');
       console.log(tabState);
 
-      if (!tabState) {
+      if (tabState === undefined) {
         console.warn('not loaded, load');
         console.log(tabState, '->', !tabState);
         return load(tabId);
 
-      } else if (!tabState.active) {
+      } else if (tabState === false) {
         console.warn('loaded not active, play');
-        console.log(tabState.active, '->', !tabState.active);
+        console.log(tabState, '->', !tabState.active);
         return doAction(tabId, tabState, 'play');
 
-      } else if (tabState.active) {
+      } else if (tabState === true) {
         console.warn('loaded active, pause');
-        console.log(tabState.active, '->', 'doesn\`t use bool reverse');
+        console.log(tabState, '->', 'doesn\`t use bool reverse');
         return doAction(tabId, tabState, 'pause');
       }
       return Promise.reject(new Error('listenerAction if else didn\'t work'));
