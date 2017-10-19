@@ -28,26 +28,17 @@ function getState(tabId) {
   });
 }
 
-// setState(tabId, 'load', true);
-// setState(tabId, 'active', state.collapse);
-function setState(tabId, state, value) {
-  console.warn('setState');
-  console.log(tabId, state, value);
+function setLoadState(tabId) {
+  console.warn('setLoadState');
+  console.log(tabId);
   return new Promise((resolve) => {
-    if (state === 'load') {
-      console.warn('set IF');
-      console.log({ [tabId]: {} });
-      chrome.storage.local.set({ [tabId]: {} }, () => resolve());
-    } else {
-      console.warn('set ELSE');
-      // const proxy = {};
-      // proxy[state] = value; // {loaded: true}
-      // init[tabId] = proxy; // {451: {loaded: true}}
-      // chrome.storage.local.set(init, () => resolve());
-      // console.log();
-      resolve();
-    }
+    chrome.storage.local.set({ [tabId]: {} }, () => resolve());
   });
+}
+
+function setActiveState(tabState, value) {
+  console.warn('setActiveState');
+  console.log(value);
 }
 
 function load(tabId) {
@@ -58,14 +49,14 @@ function load(tabId) {
       updateContextMenus('Collapse brackets');
       chrome.tabs.insertCSS(tabId, { file: 'css/action.css' });
       chrome.tabs.executeScript(tabId, { file: 'src/action.js' }, () => {
-        setState(tabId, 'load')
+        setLoadState(tabId)
           .then(() => resolve('load resolved')); // { 322: {} }
       });
     });
   });
 }
 
-function doAction(tabId, action) {
+function doAction(tabId, tabState, action) {
   const state = action === 'play' ?
     { message: 'Pause collapsing', collapse: true, icon: 'pause' } :
     { message: 'Collapse brackets', collapse: false, icon: 'play' };
@@ -73,9 +64,9 @@ function doAction(tabId, action) {
   chrome.browserAction.setTitle({ tabId, title: state.message });
   // chrome.tabs.sendMessage(tabId, { collapse: state.collapse });
 
-  setState(tabId, 'active', state.collapse);
+  setActiveState(tabState, state.collapse);
   updateContextMenus(state.message);
-  return 'action resolved';
+  return `action resolved: ${state.message}`;
 }
 
 function listenerAction(tabId) {
@@ -92,11 +83,12 @@ function listenerAction(tabId) {
       } else if (!tabState.active) {
         console.warn('loaded not active, play');
         console.log(tabState.active, '->', !tabState.active);
-        return Promise.resolve(doAction(tabId, 'play'));
+        return Promise.resolve(doAction(tabId, tabState, 'play'));
+
       } else if (tabState.active) {
         console.warn('loaded active, pause');
         console.log(tabState.active, '->', 'doesn\`t use bool reverse');
-        return Promise.resolve(doAction(tabId, 'pause'));
+        return Promise.resolve(doAction(tabId, tabState, 'pause'));
       }
       return Promise.reject(new Error('listenerAction if else didn\'t work'));
     })
