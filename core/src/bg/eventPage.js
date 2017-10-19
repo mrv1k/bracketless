@@ -75,6 +75,7 @@ function doAction(tabId, action) {
 
   setState(tabId, 'active', state.collapse);
   updateContextMenus(state.message);
+  return 'action resolved';
 }
 
 function listenerAction(tabId) {
@@ -86,18 +87,22 @@ function listenerAction(tabId) {
       if (!tabState) {
         console.warn('not loaded, load');
         console.log(tabState, '->', !tabState);
-        load(tabId);
+        return load(tabId);
 
       } else if (!tabState.active) {
-        doAction(tabId, 'play');
         console.warn('loaded not active, play');
         console.log(tabState.active, '->', !tabState.active);
-
+        return Promise.resolve(doAction(tabId, 'play'));
       } else if (tabState.active) {
         console.warn('loaded active, pause');
         console.log(tabState.active, '->', 'doesn\`t use bool reverse');
-        doAction(tabId, 'pause');
+        return Promise.resolve(doAction(tabId, 'pause'));
       }
+      return Promise.reject(new Error('listenerAction if else didn\'t work'));
+    })
+    .then((action) => {
+      console.log(action);
+      console.log('------------------------');
     });
 }
 
