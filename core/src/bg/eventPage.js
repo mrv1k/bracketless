@@ -21,7 +21,7 @@ function updateContextMenus(text) {
 function getState(tabId) {
   return new Promise((resolve) => {
     chrome.storage.local.get(tabId.toString(), (state) => {
-      console.log('getTabStates itself');
+      console.warn('getState');
       console.log(state[tabId]);
       resolve(state[tabId]);
     });
@@ -31,16 +31,20 @@ function getState(tabId) {
 // setState(tabId, 'loaded', true);
 // setState(tabId, 'active', state.collapse);
 function setState(tabId, state, value) {
-  console.log('F', tabId, state, value);
+  console.warn('setState');
+  console.log(tabId, state, value);
   return new Promise((resolve) => {
     if (state === 'loaded') {
+      console.warn('set IF');
       const init = {};
       const proxy = {};
       proxy[state] = value; // {loaded: true}
       init[tabId] = proxy; // {451: {loaded: true}}
+      console.log(init);
       chrome.storage.local.set(init, () => resolve());
     } else {
-      console.log('setState else');
+      console.warn('set ELSE');
+      console.log();
       resolve();
     }
   });
@@ -76,17 +80,23 @@ function doAction(tabId, action) {
 function listenerAction(tabId) {
   getState(tabId)
     .then((tabState) => {
-      console.log('LA', tabState);
+      console.warn('getState.then()');
+      console.log(tabState);
 
       if (!tabState) {
+        console.warn('not loaded, load');
+        console.log(tabState, '->', !tabState);
         load(tabId);
-        console.log('not loaded, load');
+
       } else if (!tabState.active) {
         doAction(tabId, 'play');
-        console.log('loaded not active, play');
+        console.warn('loaded not active, play');
+        console.log(tabState.active, '->', !tabState.active);
+
       } else if (tabState.active) {
+        console.warn('loaded active, pause');
+        console.log(tabState.active, '->', 'doesn\`t use bool reverse');
         doAction(tabId, 'pause');
-        console.log('loaded active, pause');
       }
     });
 }
