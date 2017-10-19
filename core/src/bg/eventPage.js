@@ -57,16 +57,20 @@ function load(tabId) {
 }
 
 function doAction(tabId, tabState, action) {
-  const state = action === 'play' ?
-    { message: 'Pause collapsing', collapse: true, icon: 'pause' } :
-    { message: 'Collapse brackets', collapse: false, icon: 'play' };
-  chrome.browserAction.setIcon({ tabId, path: `icons/${state.icon}.png` });
-  chrome.browserAction.setTitle({ tabId, title: state.message });
-  // chrome.tabs.sendMessage(tabId, { collapse: state.collapse });
-
-  setActiveState(tabState, state.collapse);
-  // updateContextMenus(state.message);
-  return `action resolved: ${state.message}`;
+  return new Promise((resolve) => {
+    const state = action === 'play' ?
+      { message: 'Pause collapsing', collapse: true, icon: 'pause' } :
+      { message: 'Collapse brackets', collapse: false, icon: 'play' };
+    chrome.browserAction.setIcon({ tabId, path: `icons/${state.icon}.png` });
+    chrome.browserAction.setTitle({ tabId, title: state.message });
+    // updateContextMenus(state.message);
+    chrome.tabs.sendMessage(tabId, { collapse: state.collapse }, (response) => {
+      console.warn('doAction sendMessage responseFn');
+      console.log(response);
+      setActiveState(tabState, state.collapse);
+      resolve(`action resolved: ${action}`);
+    });
+  });
 }
 
 function listenerAction(tabId) {
@@ -83,12 +87,12 @@ function listenerAction(tabId) {
       } else if (!tabState.active) {
         console.warn('loaded not active, play');
         console.log(tabState.active, '->', !tabState.active);
-        return Promise.resolve(doAction(tabId, tabState, 'play'));
+        return doAction(tabId, tabState, 'play');
 
       } else if (tabState.active) {
         console.warn('loaded active, pause');
         console.log(tabState.active, '->', 'doesn\`t use bool reverse');
-        return Promise.resolve(doAction(tabId, tabState, 'pause'));
+        return doAction(tabId, tabState, 'pause');
       }
       return Promise.reject(new Error('listenerAction if else didn\'t work'));
     })

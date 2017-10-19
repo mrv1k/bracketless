@@ -18,4 +18,7 @@ function toggleCollapse(state) {
   }
 }
 
-chrome.runtime.onMessage.addListener(state => toggleCollapse(state));
+chrome.runtime.onMessage.addListener((state, _, sendResponse) => {
+  toggleCollapse(state);
+  sendResponse('action complete');
+});
