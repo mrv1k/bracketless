@@ -1,17 +1,3 @@
-function syncDefaultOptions() {
-  chrome.storage.sync.getBytesInUse(null, (bytes) => {
-    if (bytes === 0) {
-      chrome.storage.sync.set({
-        lowLimit: 13,
-        upLimit: 255,
-        autoLoad: false,
-        autoPlay: false,
-      });
-    }
-  });
-}
-
-
 function createContextMenus() {
   chrome.contextMenus.create({ id: 'bracketless', title: 'local.clear()' });
 }
@@ -168,8 +154,22 @@ chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
   });
 });
 
+
+function syncDefault() {
+  chrome.storage.sync.set({
+    lowLimit: 13,
+    upLimit: 255,
+    autoLoad: false,
+    autoPlay: false,
+  });
+}
+
+function checkOptsUse(cb) {
+  chrome.storage.sync.getBytesInUse(null, (bytes) => { if (bytes === 0) cb(); });
+}
+
 chrome.runtime.onInstalled.addListener(() => {
-  syncDefaultOptions();
+  checkOptsUse(syncDefault); // if not in use, sync default
   createContextMenus();
   chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
   chrome.contextMenus.onClicked.addListener((_, tab) => clearAllStates());
