@@ -62,7 +62,7 @@ function activate(tabId, active) {
     chrome.browserAction.setIcon({ tabId, path: `icons/${action.reverseIcon}.png` });
     chrome.browserAction.setTitle({ tabId, title: action.message });
     // updateContextMenu(state.message);
-    chrome.tabs.sendMessage(tabId, { active }, () => {
+    chrome.tabs.sendMessage(tabId, active, () => {
       tabState.set(tabId, active) // { 322: bool}
         .then(() => { resolve(`action resolved. enabled: ${active}`); });
     });

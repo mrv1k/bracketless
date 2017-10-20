@@ -10,15 +10,15 @@ function doAction(e) {
 
 document.body.addEventListener('click', doAction);
 
-function activate(message) {
-  if (message.active) { // play -> text collapsed
+function activate(active) {
+  if (active) { // play -> text collapsed
     elements.forEach(el => el.classList.add('bracket-less'));
   } else { // pause -> text displayed
     elements.forEach(el => el.classList.remove('bracket-less'));
   }
 }
 
-chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
-  activate(message);
+chrome.runtime.onMessage.addListener((active, _, sendResponse) => {
+  activate(active);
   sendResponse('action complete');
 });
