@@ -100,49 +100,43 @@ function listenerAction(tabId) {
 //   }));
 // }
 
-// function autoAction() {
-//   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-//     // if (this is not the same page AND already loaded) OR (chrome browser utility page) - like "chrome://"
-//     if ((tabId !== tab.id && loadedTabs[tabId]) || /(chrome)(?:[/:-])/.test(tab.url)) return;
-//     if (changeInfo.status === 'complete' && tab.active) {
-//       chrome.storage.sync.get(null, (options) => {
-//         if (options.autoLoad && options.autoPlay === false) load(tabId);
-//         if (options.autoLoad && options.autoPlay) {
-//           load(tabId)
-//             .then(() => activate(tabId, true));
-//         }
-//       });
-//     }
-//   });
-// }
-
-
-// DEV
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete' && tab.active) {
-    tabState.getAll();
-  }
-});
-// integer tabId, object removeInfo
-chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
-  tabState.get(tabId).then((state) => {
-    // act only if state is defined (obtained currentTab permission)
-    if (state !== undefined) {
-      console.warn('onRemoved IF');
-      console.log(state, removeInfo);
-
-      // tab is focused and tab gets closed
-      tabState.remove(tabId);
-
-      // tab is focused and browser window gets closed
-      if (removeInfo.insWindowClosing) {
-        tabState.clearAll();
-      }
-    } else {
-      console.warn('onRemoved ELSE');
-    }
+function onUpdated() {
+  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    // if (this is not the same page AND already loaded) OR (chrome browser utility page) - like "chrome://"
+    // if ((tabId !== tab.id && loadedTabs[tabId]) || /(chrome)(?:[/:-])/.test(tab.url)) return;
+    // if (changeInfo.status === 'complete' && tab.active) {
+    //   chrome.storage.sync.get(null, (options) => {
+    //     if (options.autoLoad && options.autoPlay === false) load(tabId);
+    //     if (options.autoLoad && options.autoPlay) {
+    //       load(tabId)
+    //         .then(() => activate(tabId, true));
+    //     }
+    //   });
+    // }
   });
-});
+}
+
+function onRemoved() {
+  chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
+    tabState.get(tabId).then((state) => {
+      // act only if state is defined (obtained currentTab permission)
+      if (state !== undefined) {
+        console.warn('onRemoved IF');
+        console.log(state, removeInfo);
+
+        // tab is focused and tab gets closed
+        tabState.remove(tabId);
+
+        // tab is focused and browser window gets closed
+        if (removeInfo.insWindowClosing) {
+          tabState.clearAll();
+        }
+      } else {
+        console.warn('onRemoved ELSE');
+      }
+    });
+  });
+}
 
 
 function syncDefault() {
@@ -157,12 +151,19 @@ function checkOptsUse(cb) {
   chrome.storage.sync.getBytesInUse(null, (bytes) => { if (bytes === 0) cb(); });
 }
 
+function onInstalled() {
+  chrome.runtime.onInstalled.addListener(() => {
+    checkOptsUse(syncDefault); // if not in use, sync default
+    createContextMenu();
 
-chrome.runtime.onInstalled.addListener(() => {
-  checkOptsUse(syncDefault); // if not in use, sync default
-  createContextMenu();
-  chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
-  chrome.contextMenus.onClicked.addListener((_, tab) => tabState.clearAll());
-  // checkPermission()
-  //   .then(autoAction, e => console.warn(e)); // no permission, just ignore?
-});
+    // listeners
+    chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
+    chrome.contextMenus.onClicked.addListener((_, tab) => tabState.clearAll());
+    onUpdated();
+    onRemoved();
+    // checkPermission()
+    //   .then(autoAction, e => console.warn(e)); // no permission, just ignore?
+  });
+}
+
+onInstalled();
