@@ -100,7 +100,7 @@ function listenerAction(tabId) {
 //   }));
 // }
 
-function onUpdated() {
+function addOnUpdated() {
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     // if (this is not the same page AND already loaded) OR (chrome browser utility page) - like "chrome://"
     // if ((tabId !== tab.id && loadedTabs[tabId]) || /(chrome)(?:[/:-])/.test(tab.url)) return;
@@ -116,25 +116,30 @@ function onUpdated() {
   });
 }
 
-function onRemoved() {
-  chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
-    tabState.get(tabId).then((state) => {
-      // act only if state is defined (obtained currentTab permission)
-      if (state !== undefined) {
-        console.warn('onRemoved IF');
-        console.log(state, removeInfo);
+function removedListener(tabId, info) {
+  tabState.get(tabId).then((state) => {
+    // act only if state is defined (obtained currentTab permission)
+    if (state !== undefined) {
+      console.warn('onRemoved IF');
+      console.log(state, info);
 
-        // tab is focused and tab gets closed
-        tabState.remove(tabId);
+      // tab is focused and tab gets closed
+      tabState.remove(tabId);
 
-        // tab is focused and browser window gets closed
-        if (removeInfo.insWindowClosing) {
-          tabState.clearAll();
-        }
-      } else {
-        console.warn('onRemoved ELSE');
+      // tab is focused and browser window gets closed
+      if (info.insWindowClosing) {
+        tabState.clearAll();
       }
-    });
+    } else {
+      console.warn('onRemoved ELSE');
+    }
+  });
+}
+
+function addOnRemoved() {
+  chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
+    console.warn('onRemoved');
+    removedListener(tabId, removeInfo);
   });
 }
 
@@ -159,8 +164,8 @@ function onInstalled() {
     // listeners
     chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
     chrome.contextMenus.onClicked.addListener((_, tab) => tabState.clearAll());
-    onUpdated();
-    onRemoved();
+    addOnUpdated();
+    addOnRemoved();
     // checkPermission()
     //   .then(autoAction, e => console.warn(e)); // no permission, just ignore?
   });
