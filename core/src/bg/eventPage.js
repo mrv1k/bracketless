@@ -11,12 +11,15 @@ function syncDefaultOptions() {
   });
 }
 
-function setUpContextMenus() {
+
+function createContextMenus() {
   chrome.contextMenus.create({ id: 'bracketless', title: 'local.clear()' });
 }
+
 function updateContextMenus(text) {
   chrome.contextMenus.update('bracketless', { title: text });
 }
+
 
 function getState(tabId) {
   return new Promise((resolve) => {
@@ -43,6 +46,16 @@ function removeState(tabId) {
     chrome.storage.local.remove(tabId.toString(), () => resolve());
   });
 }
+
+function clearAllStates() {
+  chrome.storage.local.clear(() => {
+    chrome.storage.local.get(null, (cleared) => {
+      console.warn('local.clear()');
+      console.log(cleared);
+    });
+  });
+}
+
 
 function load(tabId) {
   return new Promise((resolve) => {
@@ -100,7 +113,8 @@ function listenerAction(tabId) {
     });
 }
 
-function optionalPermsCheck() {
+
+function checkPermission() {
   return new Promise((resolve, reject) => chrome.permissions.contains({
     permissions: ['tabs'],
     origins: ['http://*/', 'https://*/'],
@@ -127,27 +141,18 @@ function autoAction() {
 }
 
 
-function localClear() {
-  chrome.storage.local.clear(() => {
-    chrome.storage.local.get(null, (cleared) => {
-      console.warn('local.clear()');
-      console.log(cleared);
-    });
-  });
-}
-
-function localGetAll() {
+// Dev QoL
+function getAllStates() {
   chrome.storage.local.get(null, (all) => {
     console.warn('local.get(null)');
     console.log(all);
   });
 }
 
-// !PRODUCTION BREAKING! Dev QoL (Quality of Life)
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete' && tab.active) {
     // localClear();
-    localGetAll();
+    getAllStates();
   }
 });
 
@@ -165,9 +170,9 @@ chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
 
 chrome.runtime.onInstalled.addListener(() => {
   syncDefaultOptions();
-  setUpContextMenus();
+  createContextMenus();
   chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
-  chrome.contextMenus.onClicked.addListener((_, tab) => localClear());
-  // optionalPermsCheck()
+  chrome.contextMenus.onClicked.addListener((_, tab) => clearAllStates());
+  // checkPermission()
   //   .then(autoAction, e => console.warn(e)); // no permission, just ignore?
 });
