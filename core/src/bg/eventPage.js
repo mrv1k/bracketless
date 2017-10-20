@@ -59,19 +59,19 @@ function load(tabId) {
   });
 }
 
-function doAction(tabId, action) {
+function activate(tabId, active) {
   return new Promise((resolve) => {
-    const state = action === 'play' ?
-      { message: 'Pause collapsing', active: true, icon: 'pause' } :
-      { message: 'Collapse brackets', active: false, icon: 'play' };
-    chrome.browserAction.setIcon({ tabId, path: `icons/${state.icon}.png` });
-    chrome.browserAction.setTitle({ tabId, title: state.message });
+    const action = active === true ?
+      { message: 'Pause collapsing', reverseIcon: 'pause' } :
+      { message: 'Collapse brackets', reverseIcon: 'play' };
+    chrome.browserAction.setIcon({ tabId, path: `icons/${action.reverseIcon}.png` });
+    chrome.browserAction.setTitle({ tabId, title: action.message });
     // updateContextMenus(state.message);
-    chrome.tabs.sendMessage(tabId, { active: state.active }, (response) => {
+    chrome.tabs.sendMessage(tabId, { active }, (response) => {
       console.warn('doAction sendMessage responseFn');
       console.log(response);
-      tabState.set(tabId, state.active) // { 322: bool}
-        .then(() => { resolve(`action resolved: ${action}`); });
+      tabState.set(tabId, active) // { 322: bool}
+        .then(() => { resolve(`action resolved. enabled: ${active}`); });
     });
   });
 }
@@ -88,10 +88,10 @@ function listenerAction(tabId) {
         return load(tabId);
       } else if (state === false) {
         console.log('loaded not active, play');
-        return doAction(tabId, 'play');
+        return activate(tabId, true);
       } else if (state === true) {
         console.log('loaded active, pause');
-        return doAction(tabId, 'pause');
+        return activate(tabId, false);
       }
       return Promise.reject(new Error('listenerAction if else didn\'t work'));
     })
@@ -121,7 +121,7 @@ function autoAction() {
         if (options.autoLoad && options.autoPlay === false) load(tabId);
         if (options.autoLoad && options.autoPlay) {
           load(tabId)
-            .then(() => doAction(tabId, 'play'));
+            .then(() => activate(tabId, 'play'));
         }
       });
     }
