@@ -1,16 +1,16 @@
 function createContextMenu() {
   chrome.contextMenus.create({ id: 'bracketless', title: 'local.clear()' });
 }
-function updateContextMenu(text) {
-  chrome.contextMenus.update('bracketless', { title: text });
-}
+// function updateContextMenu(text) {
+//   chrome.contextMenus.update('bracketless', { title: text });
+// }
 
 
 const tabState = {
   get(tabId) {
     return new Promise((resolve) => {
-      chrome.storage.local.get(tabId.toString(), (singleState) => {
-        resolve(singleState[tabId]);
+      chrome.storage.local.get(tabId.toString(), (state) => {
+        resolve(state[tabId]);
       });
     });
   },
@@ -90,31 +90,31 @@ function listenerAction(tabId) {
 }
 
 
-function checkPermission() {
-  return new Promise((resolve, reject) => chrome.permissions.contains({
-    permissions: ['tabs'],
-    origins: ['http://*/', 'https://*/'],
-  }, (permission) => {
-    if (permission) resolve(permission);
-    else reject(new Error(`Bracketless. Tabs at any origins was denied. Permission: ${permission}`));
-  }));
-}
+// function checkPermission() {
+//   return new Promise((resolve, reject) => chrome.permissions.contains({
+//     permissions: ['tabs'],
+//     origins: ['http://*/', 'https://*/'],
+//   }, (permission) => {
+//     if (permission) resolve(permission);
+//     else reject(new Error(`Bracketless. Tabs at any origins was denied. Permission: ${permission}`));
+//   }));
+// }
 
-function autoAction() {
-  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    // if (this is not the same page AND already loaded) OR (chrome browser utility page) - like "chrome://"
-    if ((tabId !== tab.id && loadedTabs[tabId]) || /(chrome)(?:[/:-])/.test(tab.url)) return;
-    if (changeInfo.status === 'complete' && tab.active) {
-      chrome.storage.sync.get(null, (options) => {
-        if (options.autoLoad && options.autoPlay === false) load(tabId);
-        if (options.autoLoad && options.autoPlay) {
-          load(tabId)
-            .then(() => activate(tabId, 'play'));
-        }
-      });
-    }
-  });
-}
+// function autoAction() {
+//   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+//     // if (this is not the same page AND already loaded) OR (chrome browser utility page) - like "chrome://"
+//     if ((tabId !== tab.id && loadedTabs[tabId]) || /(chrome)(?:[/:-])/.test(tab.url)) return;
+//     if (changeInfo.status === 'complete' && tab.active) {
+//       chrome.storage.sync.get(null, (options) => {
+//         if (options.autoLoad && options.autoPlay === false) load(tabId);
+//         if (options.autoLoad && options.autoPlay) {
+//           load(tabId)
+//             .then(() => activate(tabId, true));
+//         }
+//       });
+//     }
+//   });
+// }
 
 
 // DEV
