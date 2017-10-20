@@ -32,7 +32,6 @@ const tabState = {
   },
   clearAll() {
     chrome.storage.local.clear(() => {
-      console.warn('local.clear(null)');
       this.getAll();
     });
   },
@@ -47,7 +46,7 @@ function load(tabId) {
       // updateContextMenu('Collapse brackets');
       chrome.tabs.insertCSS(tabId, { file: 'css/action.css' });
       chrome.tabs.executeScript(tabId, { file: 'src/action.js' }, () => {
-        tabState.set(tabId, false) // { 322: false }
+        tabState.set(tabId, false)
           .then(() => resolve('load resolved'));
       });
     });
@@ -63,7 +62,7 @@ function activate(tabId, active) {
     chrome.browserAction.setTitle({ tabId, title: action.message });
     // updateContextMenu(state.message);
     chrome.tabs.sendMessage(tabId, active, () => {
-      tabState.set(tabId, active) // { 322: bool}
+      tabState.set(tabId, active)
         .then(() => { resolve(`action resolved. enabled: ${active}`); });
     });
   });
@@ -121,7 +120,6 @@ function autoAction() {
 // DEV
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete' && tab.active) {
-    // localClear();
     tabState.getAll();
   }
 });
@@ -133,10 +131,10 @@ chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
       console.warn('onRemoved IF');
       console.log(state, removeInfo);
 
-      // page is focused and gets closed
+      // tab is focused and tab gets closed
       tabState.remove(tabId);
 
-      // page is focused and browser window gets closed
+      // tab is focused and browser window gets closed
       if (removeInfo.insWindowClosing) {
         tabState.clearAll();
       }
