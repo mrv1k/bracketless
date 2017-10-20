@@ -128,11 +128,18 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 // integer tabId, object removeInfo
 chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
   tabState.get(tabId).then((state) => {
-    // act only if state is defined (user granted currentTab permission)
+    // act only if state is defined (obtained currentTab permission)
     if (state !== undefined) {
       console.warn('onRemoved IF');
       console.log(state, removeInfo);
+
+      // page is focused and gets closed
       tabState.remove(tabId);
+
+      // page is focused and browser window gets closed
+      if (removeInfo.insWindowClosing) {
+        tabState.clearAll();
+      }
     } else {
       console.warn('onRemoved ELSE');
     }
