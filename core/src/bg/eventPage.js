@@ -1,31 +1,25 @@
-function createContextMenus() {
+function createContextMenu() {
   chrome.contextMenus.create({ id: 'bracketless', title: 'local.clear()' });
 }
-
-function updateContextMenus(text) {
+function updateContextMenu(text) {
   chrome.contextMenus.update('bracketless', { title: text });
 }
+
 
 const tabState = {
   get(tabId) {
     return new Promise((resolve) => {
       chrome.storage.local.get(tabId.toString(), (singleState) => {
-        console.warn('getState');
-        console.log(singleState[tabId]);
         resolve(singleState[tabId]);
       });
     });
   },
   set(tabId, value) {
-    console.warn('setState');
-    console.log(tabId, value);
     return new Promise((resolve) => {
       chrome.storage.local.set({ [tabId]: value }, () => resolve());
     });
   },
   remove(tabId) {
-    console.warn('removeState');
-    console.log(tabId);
     return new Promise((resolve) => {
       chrome.storage.local.remove(tabId.toString(), () => resolve());
     });
@@ -44,12 +38,13 @@ const tabState = {
   },
 };
 
+
 function load(tabId) {
   return new Promise((resolve) => {
     chrome.tabs.executeScript(tabId, { file: 'src/bracketless.js' }, () => {
       chrome.browserAction.setIcon({ tabId, path: 'icons/play.png' });
       chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
-      // updateContextMenus('Collapse brackets');
+      // updateContextMenu('Collapse brackets');
       chrome.tabs.insertCSS(tabId, { file: 'css/action.css' });
       chrome.tabs.executeScript(tabId, { file: 'src/action.js' }, () => {
         tabState.set(tabId, false) // { 322: false }
@@ -66,16 +61,13 @@ function activate(tabId, active) {
       { message: 'Collapse brackets', reverseIcon: 'play' };
     chrome.browserAction.setIcon({ tabId, path: `icons/${action.reverseIcon}.png` });
     chrome.browserAction.setTitle({ tabId, title: action.message });
-    // updateContextMenus(state.message);
-    chrome.tabs.sendMessage(tabId, { active }, (response) => {
-      console.warn('doAction sendMessage responseFn');
-      console.log(response);
+    // updateContextMenu(state.message);
+    chrome.tabs.sendMessage(tabId, { active }, () => {
       tabState.set(tabId, active) // { 322: bool}
         .then(() => { resolve(`action resolved. enabled: ${active}`); });
     });
   });
 }
-
 
 function listenerAction(tabId) {
   tabState.get(tabId)
@@ -84,13 +76,10 @@ function listenerAction(tabId) {
       console.log(state);
 
       if (state === undefined) {
-        console.log('not loaded, load');
         return load(tabId);
       } else if (state === false) {
-        console.log('loaded not active, play');
         return activate(tabId, true);
       } else if (state === true) {
-        console.log('loaded active, pause');
         return activate(tabId, false);
       }
       return Promise.reject(new Error('listenerAction if else didn\'t work'));
@@ -128,13 +117,14 @@ function autoAction() {
   });
 }
 
+
+// DEV
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete' && tab.active) {
     // localClear();
     tabState.getAll();
   }
 });
-
 // integer tabId, object removeInfo
 chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
   tabState.get(tabId).then((diz) => {
@@ -156,14 +146,14 @@ function syncDefault() {
     autoPlay: false,
   });
 }
-
 function checkOptsUse(cb) {
   chrome.storage.sync.getBytesInUse(null, (bytes) => { if (bytes === 0) cb(); });
 }
 
+
 chrome.runtime.onInstalled.addListener(() => {
   checkOptsUse(syncDefault); // if not in use, sync default
-  createContextMenus();
+  createContextMenu();
   chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
   chrome.contextMenus.onClicked.addListener((_, tab) => tabState.clearAll());
   // checkPermission()
