@@ -127,12 +127,14 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 });
 // integer tabId, object removeInfo
 chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
-  tabState.get(tabId).then((diz) => {
-    if (diz === undefined) {
-      console.log('I have no power over hea.');
-    } else {
-      console.log('FEEL THE POWER!');
+  tabState.get(tabId).then((state) => {
+    // act only if state is defined (user granted currentTab permission)
+    if (state !== undefined) {
+      console.warn('onRemoved IF');
+      console.log(state, removeInfo);
       tabState.remove(tabId);
+    } else {
+      console.warn('onRemoved ELSE');
     }
   });
 });
