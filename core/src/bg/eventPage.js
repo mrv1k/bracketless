@@ -1,5 +1,5 @@
 function createContextMenu() {
-  chrome.contextMenus.create({ id: 'bracketless', title: 'local.clear()' });
+  chrome.contextMenus.create({ id: 'bracketless', title: 'getAll().clearAll()' });
 }
 // function updateContextMenu(text) {
 //   chrome.contextMenus.update('bracketless', { title: text });
@@ -24,15 +24,14 @@ const tabState = {
       chrome.storage.local.remove(tabId.toString(), () => resolve());
     });
   },
+  clearAll() {
+    chrome.storage.local.clear();
+  },
   getAll() { // Dev QoL
     chrome.storage.local.get(null, (all) => {
       console.warn('local.get(null)');
       console.log(all);
-    });
-  },
-  clearAll() {
-    chrome.storage.local.clear(() => {
-      this.getAll();
+      this.clearAll();
     });
   },
 };
@@ -135,7 +134,6 @@ function removedListener(tabId, info) {
     }
   });
 }
-
 function addOnRemoved() {
   chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
     console.warn('onRemoved');
@@ -163,7 +161,7 @@ function onInstalled() {
 
     // listeners
     chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
-    chrome.contextMenus.onClicked.addListener((_, tab) => tabState.clearAll());
+    chrome.contextMenus.onClicked.addListener((_, tab) => tabState.getAll());
     addOnUpdated();
     addOnRemoved();
     // checkPermission()
