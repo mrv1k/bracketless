@@ -99,19 +99,35 @@ function listenerAction(tabId) {
 //   }));
 // }
 
+// function autoAction(tabId) {
+//   chrome.storage.sync.get(null, (options) => {
+//     if (options.autoLoad && options.autoPlay === false) load(tabId);
+//     if (options.autoLoad && options.autoPlay) {
+//       load(tabId)
+//         .then(() => activate(tabId, true));
+//     }
+//   });
+// }
 function addOnUpdated() {
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    // if (this is not the same page AND already loaded) OR (chrome browser utility page) - like "chrome://"
-    // if ((tabId !== tab.id && loadedTabs[tabId]) || /(chrome)(?:[/:-])/.test(tab.url)) return;
-    // if (changeInfo.status === 'complete' && tab.active) {
-    //   chrome.storage.sync.get(null, (options) => {
-    //     if (options.autoLoad && options.autoPlay === false) load(tabId);
-    //     if (options.autoLoad && options.autoPlay) {
-    //       load(tabId)
-    //         .then(() => activate(tabId, true));
-    //     }
-    //   });
-    // }
+    // Works only with auto options. Chrome browser utility page check (requires tab permission)
+    if (/(chrome)(?:[/:-])/.test(tab.url)) return;
+
+    if (changeInfo.status === 'complete' && tab.active) {
+      // no permission, either new tab or tab refresh
+      if (tab.url === undefined) {
+        tabState.get(tabId)
+          .then((state) => {
+            console.log('undefined check');
+            // state loaded, no permission = page refresh
+            if (typeof state === 'boolean') tabState.remove(tabId);
+          });
+      } else if (/#/.test(tab.url)) {
+        console.log('its just a bookmark update, dont do anything stupid');
+      }
+
+      // autoAction(tabId);
+    }
   });
 }
 
