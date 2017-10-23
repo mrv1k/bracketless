@@ -126,26 +126,16 @@ function addOnUpdated() {
 
 function removedListener(tabId, info) {
   tabState.get(tabId).then((state) => {
-    // act only if state is defined (obtained currentTab permission)
     if (state !== undefined) {
-      console.warn('onRemoved IF');
-      console.log(state, info);
-
       // tab is focused and tab gets closed
       tabState.remove(tabId);
-
       // tab is focused and browser window gets closed
-      if (info.insWindowClosing) {
-        tabState.clearAll();
-      }
-    } else {
-      console.warn('onRemoved ELSE');
+      if (info.insWindowClosing) tabState.clearAll();
     }
   });
 }
 function addOnRemoved() {
   chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
-    console.warn('onRemoved');
     removedListener(tabId, removeInfo);
   });
 }
