@@ -27,11 +27,13 @@ const tabState = {
   clearAll() {
     chrome.storage.local.clear();
   },
-  getAll() { // Dev QoL
-    chrome.storage.local.get(null, (all) => {
-      console.warn('local.get(null)');
-      console.log(all);
-      this.clearAll();
+  getAll() {
+    return new Promise((resolve) => {
+      chrome.storage.local.get(null, (all) => {
+        console.log(all);
+        const activeIdArr = Object.keys(all).map(key => Number(key));
+        resolve(activeIdArr);
+      });
     });
   },
 };
@@ -100,25 +102,60 @@ function autoAction(tabId) {
   });
 }
 
+function getOpenTabIdList() {
+  return new Promise((resolve) => {
+    chrome.tabs.query({ currentWindow: true }, (tabList) => {
+      resolve(tabList.map(tab => tab.id));
+    });
+  });
+}
+
+function garbageCollector() {
+  return Promise.all([tabState.getAll(), getOpenTabIdList()])
+    .then((tabIdArr) => {
+      const activeList = tabIdArr[0];
+      const openList = tabIdArr[1];
+      console.log(activeList);
+      console.log(openList);
+
+      if (activeList === undefined) {
+        console.log('Extension is not loaded anywhere');
+      } else {
+        activeList.forEach((activeId) => {
+          if (openList.includes(activeId)) {
+            console.log('tab is still alive, leave it');
+          } else {
+            console.log('tab is NOT alive, collect it');
+          }
+        });
+      }
+    });
+}
+
 function addOnUpdated() {
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    // Works only with auto options. Chrome browser utility page check (requires tab permission)
+    // Works only with auto options. Chrome browser utility tab check (requires tab permission)
     if (/(chrome)(?:[/:-])/.test(tab.url)) return;
 
     if (changeInfo.status === 'complete' && tab.active) {
       // no permission, either new tab or tab refresh
+      console.log(tab.url);
       if (tab.url === undefined) {
         tabState.get(tabId)
           .then((state) => {
-            console.log('undefined check');
-            // state loaded, no permission = page refresh
+            // state loaded, no permission = tab refresh
             if (typeof state === 'boolean') tabState.remove(tabId);
           });
+
+      // else will also catch when permission granted via activeTab, FIX IT
       } else {
         if (/#/.test(tab.url)) {
-          console.log('this test is inefficient as it will prevent autoload from working');
+          console.log('this test is inefficient as it will prevent autoLoad from working');
         }
-        autoAction(tabId); // no permission, just ignore?
+        autoAction(tabId);
+
+        // currently run onUpdated, which is weird and inefficient but makes testing easier
+        garbageCollector();
       }
     }
   });
