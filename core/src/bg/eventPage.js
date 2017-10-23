@@ -89,25 +89,17 @@ function listenerAction(tabId) {
 }
 
 
-// function checkPermission() {
-//   return new Promise((resolve, reject) => chrome.permissions.contains({
-//     permissions: ['tabs'],
-//     origins: ['http://*/', 'https://*/'],
-//   }, (permission) => {
-//     if (permission) resolve(permission);
-//     else reject(new Error(`Bracketless. Tabs at any origins was denied. Permission: ${permission}`));
-//   }));
-// }
+function autoAction(tabId) {
+  // call fns directly to bypass listenerAction condition checks
+  chrome.storage.sync.get(null, (options) => {
+    if (options.autoPlay) {
+      load(tabId).then(() => activate(tabId, true));
+    } else if (options.autoLoad) {
+      load(tabId);
+    }
+  });
+}
 
-// function autoAction(tabId) {
-//   chrome.storage.sync.get(null, (options) => {
-//     if (options.autoLoad && options.autoPlay === false) load(tabId);
-//     if (options.autoLoad && options.autoPlay) {
-//       load(tabId)
-//         .then(() => activate(tabId, true));
-//     }
-//   });
-// }
 function addOnUpdated() {
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     // Works only with auto options. Chrome browser utility page check (requires tab permission)
@@ -122,11 +114,12 @@ function addOnUpdated() {
             // state loaded, no permission = page refresh
             if (typeof state === 'boolean') tabState.remove(tabId);
           });
-      } else if (/#/.test(tab.url)) {
-        console.log('its just a bookmark update, dont do anything stupid');
+      } else {
+        if (/#/.test(tab.url)) {
+          console.log('this test is inefficient as it will prevent autoload from working');
+        }
+        autoAction(tabId); // no permission, just ignore?
       }
-
-      // autoAction(tabId);
     }
   });
 }
@@ -180,8 +173,6 @@ function onInstalled() {
     chrome.contextMenus.onClicked.addListener((_, tab) => tabState.getAll());
     addOnUpdated();
     addOnRemoved();
-    // checkPermission()
-    //   .then(autoAction, e => console.warn(e)); // no permission, just ignore?
   });
 }
 
