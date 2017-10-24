@@ -1,5 +1,5 @@
 function createContextMenu() {
-  chrome.contextMenus.create({ id: 'bracketless', title: 'getAll() garbageCollector()' });
+  chrome.contextMenus.create({ id: 'bracketless', title: 'garbageCollector()' });
 }
 // function updateContextMenu(text) {
 //   chrome.contextMenus.update('bracketless', { title: text });
@@ -111,6 +111,8 @@ function getOpenTabIdList() {
 }
 
 function garbageCollector() {
+  console.warn('REMINDER THAT YOU GET ACTIVE TAB PERMISSION BY USING GC THROUGH CONTEXT MENU');
+
   return Promise.all([tabState.getAll(), getOpenTabIdList()])
     .then((tabIdArr) => {
       const activeList = tabIdArr[0];
@@ -118,15 +120,15 @@ function garbageCollector() {
       console.log(activeList);
       console.log(openList);
 
-      if (activeList === undefined) {
-        console.log('Extension is not loaded anywhere');
-      } else if (activeList.length < 1) {
-        console.log('Less than 1 state is saved, dont clean just yet');
+      if (activeList.length === 0 || activeList.length < 1) {
+        console.log('Extension is not loaded, or Less than 1 state is saved');
       } else {
-        activeList.forEach((activeId) => {
-          if (openList.includes(activeId)) {
+        activeList.forEach((id) => {
+          console.log(id);
+          if (openList.includes(id)) {
             console.log('tab is still alive, leave it');
           } else {
+            tabState.remove(id);
             console.log('tab is NOT alive, collect it');
           }
         });
@@ -196,7 +198,7 @@ function onInstalled() {
 
     // listeners
     chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
-    chrome.contextMenus.onClicked.addListener((_, tab) => { tabState.getAll(); garbageCollector(); });
+    chrome.contextMenus.onClicked.addListener((_, tab) => { garbageCollector(); });
     addOnUpdated();
     addOnRemoved();
   });
