@@ -1,5 +1,5 @@
 function createContextMenu() {
-  chrome.contextMenus.create({ id: 'bracketless', title: 'getAll().clearAll()' });
+  chrome.contextMenus.create({ id: 'bracketless', title: 'getAll() garbageCollector()' });
 }
 // function updateContextMenu(text) {
 //   chrome.contextMenus.update('bracketless', { title: text });
@@ -120,6 +120,8 @@ function garbageCollector() {
 
       if (activeList === undefined) {
         console.log('Extension is not loaded anywhere');
+      } else if (activeList.length < 1) {
+        console.log('Less than 1 state is saved, dont clean just yet');
       } else {
         activeList.forEach((activeId) => {
           if (openList.includes(activeId)) {
@@ -139,7 +141,7 @@ function addOnUpdated() {
 
     if (changeInfo.status === 'complete' && tab.active) {
       // no permission, either new tab or tab refresh
-      console.log(tab.url);
+      console.log(`tab.url is ${tab.url}`);
       if (tab.url === undefined) {
         tabState.get(tabId)
           .then((state) => {
@@ -147,15 +149,12 @@ function addOnUpdated() {
             if (typeof state === 'boolean') tabState.remove(tabId);
           });
 
-      // else will also catch when permission granted via activeTab, FIX IT
+        // else will also catch when permission granted via activeTab, FIX IT
       } else {
         if (/#/.test(tab.url)) {
           console.log('this test is inefficient as it will prevent autoLoad from working');
         }
         autoAction(tabId);
-
-        // currently run onUpdated, which is weird and inefficient but makes testing easier
-        garbageCollector();
       }
     }
   });
@@ -197,7 +196,7 @@ function onInstalled() {
 
     // listeners
     chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
-    chrome.contextMenus.onClicked.addListener((_, tab) => tabState.getAll());
+    chrome.contextMenus.onClicked.addListener((_, tab) => { tabState.getAll(); garbageCollector(); });
     addOnUpdated();
     addOnRemoved();
   });
