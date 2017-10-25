@@ -120,8 +120,8 @@ function garbageCollector() {
       console.log(activeList);
       console.log(openList);
 
-      if (activeList.length === 0 || activeList.length < 1) {
-        console.log('Extension is not loaded, or Less than 1 state is saved');
+      if (activeList.length < 3) {
+        console.log('dont bother yet');
       } else {
         activeList.forEach((id) => {
           console.log(id);
@@ -162,19 +162,33 @@ function addOnUpdated() {
   });
 }
 
-function removedListener(tabId, info) {
-  tabState.get(tabId).then((state) => {
-    if (state !== undefined) {
-      // tab is focused and tab gets closed
-      tabState.remove(tabId);
-      // tab is focused and browser window gets closed
-      if (info.insWindowClosing) tabState.clearAll();
-    }
-  });
-}
 function addOnRemoved() {
   chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
-    removedListener(tabId, removeInfo);
+    // tab is focused (matters only for activeTab) and browser window gets closed
+    if (removeInfo.isWindowClosing) {
+      tabState.clearAll();
+      return;
+    }
+
+    // autoOptions enabled, tabs permission obtained
+    chrome.permissions.contains({
+      permissions: ['tabs'],
+      origins: ['http://*/', 'https://*/'],
+    }, (tabsGranted) => {
+      if (tabsGranted) {
+        tabState.get(tabId)
+          .then((state) => {
+            if (state !== undefined) {
+              tabState.remove(tabId);
+            }
+          });
+      } else {
+        // try clean up via activeTab
+        chrome.permissions.contains({ permissions: ['activeTab'] }, (granted) => {
+          if (granted) garbageCollector(removeInfo);
+        });
+      }
+    });
   });
 }
 
