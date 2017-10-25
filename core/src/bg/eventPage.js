@@ -107,6 +107,28 @@ function autoAction(tabId) {
   });
 }
 
+function addOnUpdated() {
+  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    // Works only with auto options. Chrome browser utility tab check (requires tab permission)
+    if (/(chrome)(?:[/:-])/.test(tab.url)) return;
+
+    if (changeInfo.status === 'complete' && tab.active) {
+      // no permission, either new tab or tab refresh
+      console.log(`tab.url is ${tab.url}`);
+      if (tab.url === undefined) {
+        tabState.removeWithCheck(tabId);
+        // else will also catch when permission granted via activeTab, FIX IT
+      } else {
+        if (/#/.test(tab.url)) {
+          console.log('this test is inefficient as it will prevent autoLoad from working');
+        }
+        autoAction(tabId);
+      }
+    }
+  });
+}
+
+
 function getOpenTabIdList() {
   return new Promise((resolve) => {
     chrome.tabs.query({ currentWindow: true }, (tabList) => {
@@ -114,7 +136,6 @@ function getOpenTabIdList() {
     });
   });
 }
-
 function garbageCollector() {
   console.warn('REMINDER THAT YOU GET ACTIVE TAB PERMISSION BY USING GC THROUGH CONTEXT MENU');
 
@@ -139,27 +160,6 @@ function garbageCollector() {
         });
       }
     });
-}
-
-function addOnUpdated() {
-  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    // Works only with auto options. Chrome browser utility tab check (requires tab permission)
-    if (/(chrome)(?:[/:-])/.test(tab.url)) return;
-
-    if (changeInfo.status === 'complete' && tab.active) {
-      // no permission, either new tab or tab refresh
-      console.log(`tab.url is ${tab.url}`);
-      if (tab.url === undefined) {
-        tabState.removeWithCheck(tabId);
-      // else will also catch when permission granted via activeTab, FIX IT
-      } else {
-        if (/#/.test(tab.url)) {
-          console.log('this test is inefficient as it will prevent autoLoad from working');
-        }
-        autoAction(tabId);
-      }
-    }
-  });
 }
 
 function addOnRemoved() {
@@ -199,6 +199,7 @@ function syncDefault() {
 function checkOptsUse(cb) {
   chrome.storage.sync.getBytesInUse(null, (bytes) => { if (bytes === 0) cb(); });
 }
+
 
 function onInstalled() {
   chrome.runtime.onInstalled.addListener(() => {
