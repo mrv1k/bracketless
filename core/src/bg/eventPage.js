@@ -87,11 +87,10 @@ function listenerAction(tabId) {
       } else if (state === true) {
         return activate(tabId, false);
       }
-      return Promise.reject(new Error('listenerAction if else didn\'t work'));
+      return Promise.reject(new Error('listenerAction if else'));
     })
-    .then((action) => {
-      console.log(action);
-      console.log('------------------------');
+    .catch((reason) => {
+      throw Error(`Bracketless. listenerAction. Reason: ${reason}`);
     });
 }
 
@@ -193,7 +192,7 @@ function addOnRemoved() {
           });
       })
       .catch((reason) => {
-        throw Error(`Bracketless. addOnRemoved failed. Reason: ${reason}`);
+        throw Error(`Bracketless. addOnRemoved. Reason: ${reason}`);
       });
   });
 }
