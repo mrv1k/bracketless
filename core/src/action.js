@@ -1,11 +1,10 @@
 const elements = document.querySelectorAll('bracket-less');
 
 function doAction(e) {
-  e.stopPropagation();
-
   if (e.target.tagName !== 'BRACKET-LESS') return;
 
   e.target.classList.toggle('bracket-less');
+  e.stopPropagation();
 }
 
 document.body.addEventListener('click', doAction);
