@@ -146,9 +146,7 @@ function garbageCollector() {
       console.log(activeList);
       console.log(openList);
 
-      if (activeList.length < 3) {
-        console.log('dont bother yet');
-      } else {
+      if (activeList.length > 4) {
         activeList.forEach((id) => {
           console.log(id);
           if (openList.includes(id)) {
