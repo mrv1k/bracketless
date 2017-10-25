@@ -77,9 +77,6 @@ function activate(tabId, active) {
 function listenerAction(tabId) {
   tabState.get(tabId)
     .then((state) => {
-      console.warn('getState.then()');
-      console.log(state);
-
       if (state === undefined) {
         return load(tabId);
       } else if (state === false) {
@@ -136,23 +133,17 @@ function getOpenTabIdList() {
   });
 }
 function garbageCollector() {
-  console.warn('REMINDER THAT YOU GET ACTIVE TAB PERMISSION BY USING GC THROUGH CONTEXT MENU');
-
   return Promise.all([tabState.getAll(), getOpenTabIdList()])
     .then((tabIdArr) => {
       const activeList = tabIdArr[0];
       const openList = tabIdArr[1];
-      console.log(activeList);
-      console.log(openList);
 
       if (activeList.length > 4) {
         activeList.forEach((id) => {
-          console.log(id);
           if (openList.includes(id)) {
             console.log('tab is still alive, leave it');
           } else {
             tabState.remove(id);
-            console.log('tab is NOT alive, collect it');
           }
         });
       }
