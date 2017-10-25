@@ -162,7 +162,22 @@ function garbageCollector() {
     });
 }
 
+function checkPermission(permissionObj) {
+  return new Promise((resolve, reject) => {
+    chrome.permissions.contains(permissionObj, (result) => {
+      if (result) resolve(result);
+      else reject(result);
+    });
+  });
+}
+
 function addOnRemoved() {
+  const tabsPerm = {
+    permissions: ['tabs'],
+    origins: ['http://*/', 'https://*/'],
+  };
+  const activePerm = { permissions: ['activeTab'] };
+
   chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
     // tab is focused (matters only for activeTab) and browser window gets closed
     if (removeInfo.isWindowClosing) {
@@ -170,20 +185,18 @@ function addOnRemoved() {
       return;
     }
 
-    // autoOptions enabled, tabs permission obtained
-    chrome.permissions.contains({
-      permissions: ['tabs'],
-      origins: ['http://*/', 'https://*/'],
-    }, (tabsGranted) => {
-      if (tabsGranted) {
+    checkPermission(tabsPerm)
+      .then(() => { // autoOptions enabled, tabs permission obtained
         tabState.removeWithCheck(tabId);
-      } else {
-        // try clean up via activeTab
-        chrome.permissions.contains({ permissions: ['activeTab'] }, (granted) => {
-          if (granted) garbageCollector(removeInfo);
-        });
-      }
-    });
+      }, () => { // autoOptions disabled, try clean up via activeTab
+        checkPermission(activePerm)
+          .then(() => {
+            garbageCollector(removeInfo);
+          });
+      })
+      .catch((reason) => {
+        throw Error(`Bracketless. addOnRemoved failed. Reason: ${reason}`);
+      });
   });
 }
 
@@ -208,7 +221,7 @@ function onInstalled() {
 
     // listeners
     chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
-    chrome.contextMenus.onClicked.addListener((_, tab) => { garbageCollector(); });
+    chrome.contextMenus.onClicked.addListener((_, tab) => { tabState.getAll(); });
     addOnUpdated();
     addOnRemoved();
   });
