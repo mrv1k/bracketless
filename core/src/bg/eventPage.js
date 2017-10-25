@@ -1,5 +1,5 @@
 function createContextMenu() {
-  chrome.contextMenus.create({ id: 'bracketless', title: 'garbageCollector()' });
+  chrome.contextMenus.create({ id: 'bracketless', title: 'getAll()' });
 }
 // function updateContextMenu(text) {
 //   chrome.contextMenus.update('bracketless', { title: text });
@@ -140,6 +140,7 @@ function garbageCollector() {
 
       if (activeList.length > 4) {
         activeList.forEach((id) => {
+          console.log(openList.includes(id));
           if (openList.includes(id) === false) {
             tabState.remove(id);
           }
@@ -203,7 +204,7 @@ function onInstalled() {
 
     // listeners
     chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
-    chrome.contextMenus.onClicked.addListener((_, tab) => { tabState.getAll(); });
+    chrome.contextMenus.onClicked.addListener((_, tab) => tabState.getAll());
     addOnUpdated();
     addOnRemoved();
   });
