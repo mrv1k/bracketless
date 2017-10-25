@@ -140,9 +140,7 @@ function garbageCollector() {
 
       if (activeList.length > 4) {
         activeList.forEach((id) => {
-          if (openList.includes(id)) {
-            console.log('tab is still alive, leave it');
-          } else {
+          if (openList.includes(id) === false) {
             tabState.remove(id);
           }
         });
