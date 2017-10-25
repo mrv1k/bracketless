@@ -164,7 +164,6 @@ function addOnRemoved() {
     permissions: ['tabs'],
     origins: ['http://*/', 'https://*/'],
   };
-  const activePerm = { permissions: ['activeTab'] };
 
   chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
     // tab is focused (matters only for activeTab) and browser window gets closed
@@ -176,11 +175,8 @@ function addOnRemoved() {
     checkPermission(tabsPerm)
       .then(() => { // autoOptions enabled, tabs permission obtained
         tabState.removeWithCheck(tabId);
-      }, () => { // autoOptions disabled, try clean up via activeTab
-        checkPermission(activePerm)
-          .then(() => {
-            garbageCollector(removeInfo);
-          });
+      }, () => { // autoOptions disabled, clean up via activeTab
+        garbageCollector(removeInfo);
       })
       .catch((reason) => {
         throw Error(`Bracketless. addOnRemoved. Reason: ${reason}`);
