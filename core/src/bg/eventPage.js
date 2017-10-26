@@ -144,9 +144,12 @@ function garbageCollector() {
     });
 }
 
-function checkPermission(permissionObj) {
+function checkTabsPermission() {
   return new Promise((resolve, reject) => {
-    chrome.permissions.contains(permissionObj, (result) => {
+    chrome.permissions.contains({
+      permissions: ['tabs'],
+      origins: ['http://*/', 'https://*/'],
+    }, (result) => {
       if (result) resolve(result);
       else reject(result);
     });
@@ -154,11 +157,6 @@ function checkPermission(permissionObj) {
 }
 
 function addOnRemoved() {
-  const tabsPerm = {
-    permissions: ['tabs'],
-    origins: ['http://*/', 'https://*/'],
-  };
-
   chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
     // tab is focused (matters only for activeTab) and browser window gets closed
     if (removeInfo.isWindowClosing) {
@@ -166,7 +164,7 @@ function addOnRemoved() {
       return;
     }
 
-    checkPermission(tabsPerm)
+    checkTabsPermission()
       .then(() => { // autoOptions enabled, tabs permission obtained
         tabState.remove(tabId);
       }, () => { // autoOptions disabled, clean up via activeTab
