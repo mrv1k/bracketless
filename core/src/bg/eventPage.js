@@ -123,7 +123,7 @@ function addOnUpdated() {
         checkTabsPermission()
           .then(() => {
             console.log('autoAction granted');
-            autoAction();
+            autoAction(tabId);
             if (/#/.test(tab.url)) {
               console.log('hashrefresh~!');
             }
