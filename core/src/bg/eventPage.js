@@ -119,12 +119,17 @@ function addOnUpdated() {
       console.log(`tab.url is ${tab.url}`);
       if (tab.url === undefined) {
         tabState.remove(tabId);
-        // else will also catch when permission granted via activeTab, FIX IT
       } else {
-        if (/#/.test(tab.url)) {
-          console.log('this test is inefficient as it will prevent autoLoad from working');
-        }
-        autoAction(tabId);
+        checkTabsPermission()
+          .then(() => {
+            console.log('autoAction granted');
+            autoAction();
+            if (/#/.test(tab.url)) {
+              console.log('hashrefresh~!');
+            }
+          }, () => {
+            console.log('denied');
+          });
       }
     }
   });
