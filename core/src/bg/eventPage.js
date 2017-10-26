@@ -24,11 +24,6 @@ const tabState = {
       chrome.storage.local.remove(tabId.toString(), () => resolve());
     });
   },
-  removeWithCheck(tabId) {
-    this.get(tabId).then((state) => {
-      if (state !== undefined) this.remove(tabId);
-    });
-  },
   clearAll() {
     chrome.storage.local.clear();
   },
@@ -112,7 +107,7 @@ function addOnUpdated() {
       // no permission, either new tab or tab refresh
       console.log(`tab.url is ${tab.url}`);
       if (tab.url === undefined) {
-        tabState.removeWithCheck(tabId);
+        tabState.remove(tabId);
         // else will also catch when permission granted via activeTab, FIX IT
       } else {
         if (/#/.test(tab.url)) {
@@ -173,7 +168,7 @@ function addOnRemoved() {
 
     checkPermission(tabsPerm)
       .then(() => { // autoOptions enabled, tabs permission obtained
-        tabState.removeWithCheck(tabId);
+        tabState.remove(tabId);
       }, () => { // autoOptions disabled, clean up via activeTab
         garbageCollector(removeInfo);
       })
