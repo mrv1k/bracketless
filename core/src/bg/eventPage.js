@@ -87,6 +87,18 @@ function listenerAction(tabId) {
 }
 
 
+function checkTabsPermission() {
+  return new Promise((resolve, reject) => {
+    chrome.permissions.contains({
+      permissions: ['tabs'],
+      origins: ['http://*/', 'https://*/'],
+    }, (result) => {
+      if (result) resolve(result);
+      else reject(result);
+    });
+  });
+}
+
 function autoAction(tabId) {
   // call fns directly to bypass listenerAction condition checks
   chrome.storage.sync.get(null, (options) => {
@@ -97,7 +109,6 @@ function autoAction(tabId) {
     }
   });
 }
-
 function addOnUpdated() {
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     // Works only with auto options. Chrome browser utility tab check (requires tab permission)
@@ -143,19 +154,6 @@ function garbageCollector() {
       }
     });
 }
-
-function checkTabsPermission() {
-  return new Promise((resolve, reject) => {
-    chrome.permissions.contains({
-      permissions: ['tabs'],
-      origins: ['http://*/', 'https://*/'],
-    }, (result) => {
-      if (result) resolve(result);
-      else reject(result);
-    });
-  });
-}
-
 function addOnRemoved() {
   chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
     // tab is focused (matters only for activeTab) and browser window gets closed
