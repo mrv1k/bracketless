@@ -5,6 +5,25 @@ function updateContextMenu(text) {
   chrome.contextMenus.update('bracketless', { title: text });
 }
 
+function syncDefault() {
+  chrome.storage.sync.set({
+    lowLimit: 13,
+    upLimit: 255,
+    autoLoad: false,
+    autoPlay: false,
+  });
+}
+function checkOptsUse(cb) {
+  chrome.storage.sync.getBytesInUse(null, (bytes) => { if (bytes === 0) cb(); });
+}
+
+function onInstalled() {
+  chrome.runtime.onInstalled.addListener(() => {
+    checkOptsUse(syncDefault);
+    createContextMenu();
+  });
+}
+
 
 const tabState = {
   get(tabId) {
@@ -98,6 +117,7 @@ function checkTabsPermission() {
   });
 }
 
+
 function autoAction(tabId) {
   // call fns directly to bypass listenerAction condition checks
   chrome.storage.sync.get(null, (options) => {
@@ -171,26 +191,6 @@ function addOnRemoved() {
   });
 }
 
-
-function syncDefault() {
-  chrome.storage.sync.set({
-    lowLimit: 13,
-    upLimit: 255,
-    autoLoad: false,
-    autoPlay: false,
-  });
-}
-function checkOptsUse(cb) {
-  chrome.storage.sync.getBytesInUse(null, (bytes) => { if (bytes === 0) cb(); });
-}
-
-
-function onInstalled() {
-  chrome.runtime.onInstalled.addListener(() => {
-    checkOptsUse(syncDefault); // if not in use, sync default
-    createContextMenu();
-  });
-}
 
 function eventPageListeners() {
   chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
