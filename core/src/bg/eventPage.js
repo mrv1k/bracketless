@@ -111,26 +111,19 @@ function autoAction(tabId) {
 }
 function addOnUpdated() {
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    // Works only with auto options. Chrome browser utility tab check (requires tab permission)
-    if (/(chrome)(?:[/:-])/.test(tab.url)) return;
+    //  Following work only with auto options (require tab permission)
+    if (/(chrome)(?:[/:-])/.test(tab.url)) return; // Chrome browser utility tab check
+    if (changeInfo.title) tabState.remove(tabId); // autoOptions clean up - new tab / reload
+
+    console.log(changeInfo);
 
     if (changeInfo.status === 'complete' && tab.active) {
-      // no permission, either new tab or tab refresh
-      console.log(`tab.url is ${tab.url}`);
-      if (tab.url === undefined) {
-        tabState.remove(tabId);
-      } else {
-        checkTabsPermission()
-          .then(() => {
-            console.log('autoAction granted');
-            autoAction(tabId);
-            if (/#/.test(tab.url)) {
-              console.log('hashrefresh~!');
-            }
-          }, () => {
-            console.log('denied');
-          });
-      }
+      checkTabsPermission()
+        .then(() => {
+          autoAction(tabId);
+        }, () => {
+          if (tab.url === undefined) tabState.remove(tabId); // reload clean up
+        });
     }
   });
 }
