@@ -189,13 +189,15 @@ function onInstalled() {
   chrome.runtime.onInstalled.addListener(() => {
     checkOptsUse(syncDefault); // if not in use, sync default
     createContextMenu();
-
-    // listeners
-    chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
-    chrome.contextMenus.onClicked.addListener((_, tab) => listenerAction(tab.id));
-    addOnUpdated();
-    addOnRemoved();
   });
 }
 
+function eventPageListeners() {
+  chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
+  chrome.contextMenus.onClicked.addListener((_, tab) => listenerAction(tab.id));
+  addOnUpdated();
+  addOnRemoved();
+}
+
 onInstalled();
+eventPageListeners();
