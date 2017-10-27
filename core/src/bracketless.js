@@ -90,6 +90,8 @@ function nativeTreeWalker(bracketsRegex) {
       nodes.push(cur);
     }
   }
+  // If no brackets found on the page. Current node will be root (body). Verify its type to be text
+  if (walker.currentNode.nodeType !== 3) return [];
   return nodes;
 }
 
