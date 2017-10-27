@@ -120,7 +120,10 @@ function addOnUpdated() {
     if (changeInfo.status === 'complete' && tab.active) {
       checkTabsPermission()
         .then(() => {
-          autoAction(tabId);
+          tabState.get(tabId)
+            .then((state) => {
+              if (state === undefined) autoAction(tabId);
+            });
         }, () => {
           if (tab.url === undefined) tabState.remove(tabId); // reload clean up
         });
