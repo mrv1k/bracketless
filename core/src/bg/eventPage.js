@@ -1,9 +1,9 @@
 function createContextMenu() {
-  chrome.contextMenus.create({ id: 'bracketless', title: 'getAll()' });
+  chrome.contextMenus.create({ id: 'bracketless', title: 'Load bracketless' });
 }
-// function updateContextMenu(text) {
-//   chrome.contextMenus.update('bracketless', { title: text });
-// }
+function updateContextMenu(text) {
+  chrome.contextMenus.update('bracketless', { title: text });
+}
 
 
 const tabState = {
@@ -30,7 +30,6 @@ const tabState = {
   getAll() {
     return new Promise((resolve) => {
       chrome.storage.local.get(null, (all) => {
-        console.log(all);
         const activeIdArr = Object.keys(all).map(key => Number(key));
         resolve(activeIdArr);
       });
@@ -44,7 +43,7 @@ function load(tabId) {
     chrome.tabs.executeScript(tabId, { file: 'src/bracketless.js' }, () => {
       chrome.browserAction.setIcon({ tabId, path: 'icons/play.png' });
       chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
-      // updateContextMenu('Collapse brackets');
+      updateContextMenu('Collapse brackets');
       chrome.tabs.insertCSS(tabId, { file: 'css/action.css' });
       chrome.tabs.executeScript(tabId, { file: 'src/action.js' }, () => {
         tabState.set(tabId, false)
@@ -61,7 +60,7 @@ function activate(tabId, active) {
       { message: 'Collapse brackets', reverseIcon: 'play' };
     chrome.browserAction.setIcon({ tabId, path: `icons/${action.reverseIcon}.png` });
     chrome.browserAction.setTitle({ tabId, title: action.message });
-    // updateContextMenu(state.message);
+    updateContextMenu(action.message);
     chrome.tabs.sendMessage(tabId, active, () => {
       tabState.set(tabId, active)
         .then(() => { resolve(`action resolved. enabled: ${active}`); });
@@ -115,8 +114,6 @@ function addOnUpdated() {
     if (/(chrome)(?:[/:-])/.test(tab.url)) return; // Chrome browser utility tab check
     if (changeInfo.title) tabState.remove(tabId); // autoOptions clean up - new tab / reload
 
-    console.log(changeInfo);
-
     if (changeInfo.status === 'complete') {
       checkTabsPermission()
         .then(() => {
@@ -147,7 +144,6 @@ function garbageCollector() {
 
       if (activeList.length > 4) {
         activeList.forEach((id) => {
-          console.log(openList.includes(id));
           if (openList.includes(id) === false) {
             tabState.remove(id);
           }
@@ -196,7 +192,7 @@ function onInstalled() {
 
     // listeners
     chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
-    chrome.contextMenus.onClicked.addListener((_, tab) => tabState.getAll());
+    chrome.contextMenus.onClicked.addListener((_, tab) => listenerAction(tab.id));
     addOnUpdated();
     addOnRemoved();
   });
