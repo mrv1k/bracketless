@@ -117,7 +117,7 @@ function addOnUpdated() {
 
     console.log(changeInfo);
 
-    if (changeInfo.status === 'complete' && tab.active) {
+    if (changeInfo.status === 'complete') {
       checkTabsPermission()
         .then(() => {
           tabState.get(tabId)
