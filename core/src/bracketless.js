@@ -77,8 +77,6 @@ function nativeTreeWalker(bracketsRegex) {
   const nodes = [walker.currentNode]; // store one value immediately so length is not 0
   const sameParent = [];
 
-  // TODO: handle no brackets found on the page
-
   while (walker.nextNode()) {
     const prev = nodes[nodes.length - 1];
     const cur = walker.currentNode;
@@ -92,6 +90,8 @@ function nativeTreeWalker(bracketsRegex) {
       nodes.push(cur);
     }
   }
+  // If no brackets found on the page. Current node will be root (body). Verify its type to be text
+  if (walker.currentNode.nodeType !== 3) return [];
   return nodes;
 }
 
