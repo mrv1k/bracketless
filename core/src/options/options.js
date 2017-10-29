@@ -55,6 +55,7 @@ function requestPermissions(permission) {
       autoLoadBool.nextElementSibling.textContent = '(permission granted)';
       autoPlayBool.removeAttribute('disabled');
       setStatusText('Don\'t forget to save!', 7000);
+      saveOptions();
       chrome.storage.local.clear(); // clear all previously saved states
     } else {
       autoLoadBool.nextElementSibling.textContent = '(permission denied)';
