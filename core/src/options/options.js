@@ -1,11 +1,13 @@
 const lowerLimitNum = document.querySelector('#lowerLimit');
 const upperLimitNum = document.querySelector('#upperLimit');
 const autoLoadBool = document.querySelector('#autoLoad');
-const autoLoadNote = document.querySelector('.autoLoad.note');
 const autoPlayBool = document.querySelector('#autoPlay');
+
 const autoPlayNote = document.querySelector('.autoPlay.note');
-const status = document.querySelector('#status');
-const saveBtn = document.querySelector('#save');
+const permissionStatus = document.querySelector('.permission .status');
+const saveStatus = document.querySelector('.toolbar .status');
+
+const saveBtn = document.querySelector('#save-btn');
 
 function validateNumInput() {
   if (!this.checkValidity() || (Number(lowerLimitNum.value) > Number(upperLimitNum.value))) {
@@ -13,10 +15,10 @@ function validateNumInput() {
   } else { saveBtn.removeAttribute('disabled'); }
 }
 
-function setStatusText(text, timeout = 2000, cb) {
-  status.textContent = text;
+function setSaveStatus(text, timeout = 2000, cb) {
+  saveStatus.textContent = text;
   setTimeout(() => {
-    status.textContent = '';
+    saveStatus.textContent = '';
     if (cb) cb();
   }, timeout);
 }
@@ -34,10 +36,12 @@ function restoreOptions() {
     autoPlayBool.checked = items.autoPlay;
 
     if (!autoLoadBool.checked) {
-      autoLoadNote.textContent = '(extra permission required)';
-      autoPlayNote.textContent = '(autoload required)';
+      permissionStatus.textContent = 'denied';
+      autoPlayNote.textContent = '(load required)';
       autoPlayBool.setAttribute('disabled', true);
     } else {
+      permissionStatus.textContent = 'granted';
+      autoPlayBool.parentNode.classList.remove('secondary');
       autoPlayBool.removeAttribute('disabled');
     }
   });
@@ -49,22 +53,20 @@ function saveOptions() {
     upLimit: upperLimitNum.value,
     autoLoad: autoLoadBool.checked,
     autoPlay: autoPlayBool.checked,
-  }, setStatusText.bind(null, 'Options saved.'));
-}
-
-function resetOptions() {
-  chrome.storage.sync.clear(setStatusText.bind(null, 'Options reset.', 1500, restoreOptions));
+  }, setSaveStatus.bind(null, 'Options saved'));
 }
 
 function requestPermissions(permission) {
   chrome.permissions.request(permission, (granted) => {
     if (granted) {
-      autoLoadNote.textContent = '(permission granted)';
+      permissionStatus.textContent = 'granted';
+      autoPlayNote.textContent = '';
+      autoPlayBool.parentNode.classList.remove('secondary');
       autoPlayBool.removeAttribute('disabled');
-      setStatusText('Don\'t forget to save!', 7000);
+      setSaveStatus('Don\'t forget to save!', 7000);
       chrome.storage.local.clear(); // clear all previously saved states
     } else {
-      autoLoadNote.textContent = '(permission denied)';
+      permissionStatus.textContent = 'denied by the user';
       autoLoadBool.checked = false;
       autoPlayBool.setAttribute('disabled', true);
     }
@@ -74,8 +76,8 @@ function requestPermissions(permission) {
 function removePermission(permission) {
   chrome.permissions.remove(permission, (removed) => {
     if (removed) {
-      autoLoadNote.textContent = '(permission removed)';
-      setStatusText('Don\'t forget to save!', 7000);
+      permissionStatus.textContent = 'removed';
+      setSaveStatus('Don\'t forget to save!', 7000);
       autoPlayBool.checked = false;
       autoPlayBool.setAttribute('disabled', true);
     }
@@ -91,10 +93,16 @@ function permissionHandler() {
   else removePermission(tabPerm);
 }
 
+
+function resetOptions() {
+  permissionHandler(); // remove permission if any
+  chrome.storage.sync.clear(setSaveStatus.bind(null, 'Options reset', 2000, restoreOptions));
+}
+
 lowerLimitNum.addEventListener('input', validateNumInput);
 upperLimitNum.addEventListener('input', validateNumInput);
 document.addEventListener('DOMContentLoaded', restoreOptions);
 
 saveBtn.addEventListener('click', saveOptions);
-document.querySelector('#reset').addEventListener('click', resetOptions);
+document.querySelector('#reset-btn').addEventListener('click', resetOptions);
 autoLoadBool.addEventListener('change', permissionHandler);
