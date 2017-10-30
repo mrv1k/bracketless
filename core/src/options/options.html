@@ -7,13 +7,10 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Bracketless Options</title>
   <style>
-    input:invalid {
-      border: 1px solid red;
-    }
+    input:focus:required:invalid {background-color: #f44336}
+    input:required:invalid {background-color: #ff867c;}
 
-    input:valid {
-      border: 1px solid green;
-    }
+    input:focus:required:valid {background-color: #66bb6a;}
   </style>
 </head>
 
@@ -27,11 +24,11 @@
   <p class="disclaimer">To do an automatic action chrome requires an extra permission (i.e. do an action without user interaction)</p>
   <hr>
   <label><input type="checkbox" id="autoLoad"> Autoload
-    <span class="note">(requires an extra permission)</span>
+    <span class="autoLoad note"></span>
   </label>
   <br>
   <label for="autoPlay"><input type="checkbox" id="autoPlay"> Autoplay
-    <span class="note">(autoload required)</span>
+    <span class="autoPlay note"></span>
   </label>
 
   <h1 id="status"></h1>

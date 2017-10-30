@@ -1,7 +1,9 @@
 const lowerLimitNum = document.querySelector('#lowerLimit');
 const upperLimitNum = document.querySelector('#upperLimit');
 const autoLoadBool = document.querySelector('#autoLoad');
+const autoLoadNote = document.querySelector('.autoLoad.note');
 const autoPlayBool = document.querySelector('#autoPlay');
+const autoPlayNote = document.querySelector('.autoPlay.note');
 const status = document.querySelector('#status');
 const saveBtn = document.querySelector('#save');
 
@@ -31,8 +33,13 @@ function restoreOptions() {
     autoLoadBool.checked = items.autoLoad;
     autoPlayBool.checked = items.autoPlay;
 
-    if (!autoLoadBool.checked) autoPlayBool.setAttribute('disabled', true);
-    else autoPlayBool.removeAttribute('disabled');
+    if (!autoLoadBool.checked) {
+      autoLoadNote.textContent = '(extra permission required)';
+      autoPlayNote.textContent = '(autoload required)';
+      autoPlayBool.setAttribute('disabled', true);
+    } else {
+      autoPlayBool.removeAttribute('disabled');
+    }
   });
 }
 
@@ -52,13 +59,12 @@ function resetOptions() {
 function requestPermissions(permission) {
   chrome.permissions.request(permission, (granted) => {
     if (granted) {
-      autoLoadBool.nextElementSibling.textContent = '(permission granted)';
+      autoLoadNote.textContent = '(permission granted)';
       autoPlayBool.removeAttribute('disabled');
       setStatusText('Don\'t forget to save!', 7000);
-      saveOptions();
       chrome.storage.local.clear(); // clear all previously saved states
     } else {
-      autoLoadBool.nextElementSibling.textContent = '(permission denied)';
+      autoLoadNote.textContent = '(permission denied)';
       autoLoadBool.checked = false;
       autoPlayBool.setAttribute('disabled', true);
     }
@@ -68,7 +74,7 @@ function requestPermissions(permission) {
 function removePermission(permission) {
   chrome.permissions.remove(permission, (removed) => {
     if (removed) {
-      autoLoadBool.nextElementSibling.textContent = '(permission removed)';
+      autoLoadNote.textContent = '(permission removed)';
       setStatusText('Don\'t forget to save!', 7000);
       autoPlayBool.checked = false;
       autoPlayBool.setAttribute('disabled', true);
