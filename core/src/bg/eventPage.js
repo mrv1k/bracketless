@@ -1,7 +1,3 @@
-function createContextMenu() {
-  chrome.contextMenus.create({ id: 'bracketless', title: 'Load bracketless' });
-}
-
 function syncDefault() {
   chrome.storage.sync.set({
     lowLimit: 13,
@@ -17,7 +13,7 @@ function checkOptsUse(cb) {
 function onInstalled() {
   chrome.runtime.onInstalled.addListener(() => {
     checkOptsUse(syncDefault);
-    createContextMenu();
+    chrome.contextMenus.create({ id: 'bracketless', title: 'Load bracketless' });
   });
 }
 
