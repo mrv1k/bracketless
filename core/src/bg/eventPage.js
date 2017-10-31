@@ -1,9 +1,6 @@
 function createContextMenu() {
   chrome.contextMenus.create({ id: 'bracketless', title: 'Load bracketless' });
 }
-function updateContextMenu(text) {
-  chrome.contextMenus.update('bracketless', { title: text });
-}
 
 function syncDefault() {
   chrome.storage.sync.set({
@@ -62,7 +59,6 @@ function load(tabId) {
     chrome.tabs.executeScript(tabId, { file: 'src/bracketless.js' }, () => {
       chrome.browserAction.setIcon({ tabId, path: { 16: 'icons/play16.png', 32: 'icons/play32.png' } });
       chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
-      updateContextMenu('Collapse brackets');
       chrome.tabs.insertCSS(tabId, { file: 'css/action.css' });
       chrome.tabs.executeScript(tabId, { file: 'src/action.js' }, () => {
         tabState.set(tabId, false)
@@ -79,7 +75,6 @@ function activate(tabId, active) {
       { message: 'Collapse brackets', reverseIcon: 'play' };
     chrome.browserAction.setIcon({ tabId, path: { 16: `icons/${action.reverseIcon}16.png`, 32: `icons/${action.reverseIcon}32.png` } });
     chrome.browserAction.setTitle({ tabId, title: action.message });
-    updateContextMenu(action.message);
     chrome.tabs.sendMessage(tabId, active, () => {
       tabState.set(tabId, active)
         .then(() => { resolve(`action resolved. enabled: ${active}`); });
