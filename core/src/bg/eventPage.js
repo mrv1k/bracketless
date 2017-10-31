@@ -60,7 +60,7 @@ const tabState = {
 function load(tabId) {
   return new Promise((resolve) => {
     chrome.tabs.executeScript(tabId, { file: 'src/bracketless.js' }, () => {
-      chrome.browserAction.setIcon({ tabId, path: 'icons/play.png' });
+      chrome.browserAction.setIcon({ tabId, path: { 16: 'icons/play16.png', 32: 'icons/play32.png' } });
       chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
       updateContextMenu('Collapse brackets');
       chrome.tabs.insertCSS(tabId, { file: 'css/action.css' });
@@ -77,7 +77,7 @@ function activate(tabId, active) {
     const action = active === true ?
       { message: 'Pause collapsing', reverseIcon: 'pause' } :
       { message: 'Collapse brackets', reverseIcon: 'play' };
-    chrome.browserAction.setIcon({ tabId, path: `icons/${action.reverseIcon}.png` });
+    chrome.browserAction.setIcon({ tabId, path: { 16: `icons/${action.reverseIcon}16.png`, 32: `icons/${action.reverseIcon}32.png` } });
     chrome.browserAction.setTitle({ tabId, title: action.message });
     updateContextMenu(action.message);
     chrome.tabs.sendMessage(tabId, active, () => {
