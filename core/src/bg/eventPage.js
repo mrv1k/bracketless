@@ -13,7 +13,7 @@ function checkOptsUse(cb) {
 function onInstalled() {
   chrome.runtime.onInstalled.addListener(() => {
     checkOptsUse(syncDefault);
-    chrome.contextMenus.create({ id: 'bracketless', title: 'Load bracketless' });
+    chrome.contextMenus.create({ id: 'bracketless', title: 'Bracketless: next action' });
   });
 }
 

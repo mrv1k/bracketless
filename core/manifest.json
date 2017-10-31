@@ -1,7 +1,7 @@
 {
   "name": "Bracketless",
   "version": "0.6.0",
-  "description": "Collapse text between the brackets",
+  "description": "Hide or display text between brackets",
   "homepage_url": "https://github.com/mrv1k/bracketless#readme",
   "author": "Viktor Khotimchenko",
   "icons": {
@@ -30,7 +30,7 @@
       "16": "icons/bracketless16.png",
       "32": "icons/bracketless32.png"
     },
-    "default_title": "Load bracketless for current page"
+    "default_title": "Bracketless: load for current page"
   },
   "options_ui": {
     "page": "src/options/options.html",
