@@ -29,52 +29,58 @@ function saveOptions() {
 }
 
 
-function requestPermissions(permission) {
-  chrome.permissions.request(permission, (granted) => {
-    if (granted) {
-      permissionStatus.textContent = 'granted';
-      autoPlayNote.textContent = '';
-      autoPlayBool.parentNode.classList.remove('secondary');
-      autoPlayBool.removeAttribute('disabled');
-      setSaveStatus('Don\'t forget to save!', 7000);
-      chrome.storage.local.clear(); // clear all previously saved states
-    } else {
-      permissionStatus.textContent = 'denied by the user';
-      autoLoadBool.checked = false;
-      autoPlayBool.setAttribute('disabled', true);
-    }
-  });
-}
-function removePermission(permission) {
-  chrome.permissions.remove(permission, (removed) => {
-    if (removed) {
-      permissionStatus.textContent = 'removed';
-      setSaveStatus('Don\'t forget to save!', 7000);
-      autoPlayBool.checked = false;
-      autoPlayBool.setAttribute('disabled', true);
-    }
-  });
-}
-function permissionHandler() {
-  const tabPerm = {
+const permission = {
+  request(p) {
+    chrome.permissions.request(p, (granted) => {
+      if (granted) {
+        permissionStatus.textContent = 'granted';
+        autoPlayNote.textContent = '';
+        autoPlayBool.parentNode.classList.remove('secondary');
+        autoPlayBool.removeAttribute('disabled');
+        setSaveStatus('Don\'t forget to save!', 7000);
+        chrome.storage.local.clear(); // clear all previously saved states
+      } else {
+        permissionStatus.textContent = 'denied by the user';
+        autoLoadBool.checked = false;
+        autoPlayBool.setAttribute('disabled', true);
+      }
+    });
+  },
+  remove(p) {
+    chrome.permissions.remove(p, (removed) => {
+      if (removed) {
+        permissionStatus.textContent = 'removed';
+        setSaveStatus('Don\'t forget to save!', 7000);
+        autoPlayBool.checked = false;
+        autoPlayBool.setAttribute('disabled', true);
+      }
+    });
+  },
+  check(p) {
+    return new Promise((resolve, reject) => {
+      chrome.permissions.contains(p, (result) => {
+        if (result) resolve(result);
+        else reject(result);
+      });
+    });
+  },
+};
+
+const tabsPermission = {
+  tabs: {
     permissions: ['tabs'],
     origins: ['http://*/', 'https://*/'],
-  };
-  if (this.checked) requestPermissions(tabPerm);
-  else removePermission(tabPerm);
-}
+  },
+  check() {
+    return permission.check(this.tabs);
+  },
+  manage() {
+    if (autoLoadBool.checked) permission.request(this.tabs);
+    else permission.remove(this.tabs);
+  },
+};
 
-function checkTabsPermission() {
-  return new Promise((resolve, reject) => {
-    chrome.permissions.contains({
-      permissions: ['tabs'],
-      origins: ['http://*/', 'https://*/'],
-    }, (result) => {
-      if (result) resolve(result);
-      else reject(result);
-    });
-  });
-}
+
 function restoreOptions() {
   chrome.storage.sync.get({
     lowLimit: 13,
@@ -87,7 +93,7 @@ function restoreOptions() {
     autoLoadBool.checked = items.autoLoad;
     autoPlayBool.checked = items.autoPlay;
 
-    checkTabsPermission()
+    tabsPermission.check()
       .then(() => {
         permissionStatus.textContent = 'granted';
       }, () => {
@@ -105,7 +111,8 @@ function restoreOptions() {
 }
 
 function resetOptions() {
-  permissionHandler(); // remove permission if any
+  tabsPermission.check()
+    .then(() => { permission.removeTabs(); });
   chrome.storage.sync.clear(setSaveStatus.bind(null, 'Options reset', 2000, restoreOptions));
 }
 
@@ -120,7 +127,7 @@ function validateNumInput() {
 // user interactions
 saveBtn.addEventListener('click', saveOptions);
 resetBtn.addEventListener('click', resetOptions);
-autoLoadBool.addEventListener('change', permissionHandler);
+autoLoadBool.addEventListener('change', tabsPermission.manage.bind(tabsPermission));
 
 // invoked automatically
 lowerLimitNum.addEventListener('input', validateNumInput);
