@@ -139,7 +139,6 @@ function addOnUpdated() {
   });
 }
 
-
 function getOpenTabIdList() {
   return new Promise((resolve) => {
     chrome.tabs.query({ currentWindow: true }, (tabList) => {
