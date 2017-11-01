@@ -98,15 +98,18 @@ function restoreOptions() {
         permissionStatus.textContent = 'granted';
       }, () => {
         permissionStatus.textContent = 'denied/removed';
+        // Checkbox checked and no tabs permission. User removed permission but forgot to save
+        if (autoLoadBool.checked) autoLoadBool.checked = false;
+      })
+      .then(() => {
+        if (!autoLoadBool.checked) {
+          autoPlayNote.textContent = '(load required)';
+          autoPlayBool.setAttribute('disabled', true);
+        } else {
+          autoPlayBool.parentNode.classList.remove('secondary');
+          autoPlayBool.removeAttribute('disabled');
+        }
       });
-
-    if (!autoLoadBool.checked) {
-      autoPlayNote.textContent = '(load required)';
-      autoPlayBool.setAttribute('disabled', true);
-    } else {
-      autoPlayBool.parentNode.classList.remove('secondary');
-      autoPlayBool.removeAttribute('disabled');
-    }
   });
 }
 
