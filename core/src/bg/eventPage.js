@@ -39,14 +39,6 @@ const tabState = {
   clearAll() {
     chrome.storage.local.clear();
   },
-  getAll() {
-    return new Promise((resolve) => {
-      chrome.storage.local.get(null, (all) => {
-        const activeIdArr = Object.keys(all).map(key => Number(key));
-        resolve(activeIdArr);
-      });
-    });
-  },
 };
 
 
@@ -144,45 +136,10 @@ function tabsUpdated() {
   });
 }
 
-function getOpenTabIdList() {
-  return new Promise((resolve) => {
-    chrome.tabs.query({ currentWindow: true }, (tabList) => {
-      resolve(tabList.map(tab => tab.id));
-    });
-  });
-}
-function garbageCollector() {
-  return Promise.all([tabState.getAll(), getOpenTabIdList()])
-    .then((tabIdArr) => {
-      const activeList = tabIdArr[0];
-      const openList = tabIdArr[1];
-
-      if (activeList.length > 4) {
-        activeList.forEach((id) => {
-          if (openList.includes(id) === false) {
-            tabState.remove(id);
-          }
-        });
-      }
-    });
-}
 function tabsRemoved() {
   chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
-    // tab is focused (matters only for activeTab) and browser window gets closed
-    if (removeInfo.isWindowClosing) {
-      tabState.clearAll();
-      return;
-    }
-
-    checkTabsWebNavPerm()
-      .then(() => { // autoOptions enabled, tabs permission obtained
-        tabState.remove(tabId);
-      }, () => { // autoOptions disabled, clean up via activeTab
-        garbageCollector(removeInfo);
-      })
-      .catch((reason) => {
-        throw Error(`Bracketless. addOnRemoved. Reason: ${reason}`);
-      });
+    if (removeInfo.isWindowClosing) tabState.clearAll();
+    else tabState.remove(tabId);
   });
 }
 
