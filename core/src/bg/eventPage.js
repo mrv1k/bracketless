@@ -108,7 +108,7 @@ function checkTabsWebNavPerm() {
   });
 }
 
-
+// NOT INVOKED
 function autoAction(tabId) {
   // call fns directly to bypass listenerAction condition checks
   chrome.storage.sync.get(null, (options) => {
@@ -121,20 +121,9 @@ function autoAction(tabId) {
 }
 function addOnUpdated() {
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    //  Following work only with auto options (require tab permission)
-    if (/(chrome)(?:[/:-])/.test(tab.url)) return; // Chrome browser utility tab check
-    if (changeInfo.title) tabState.remove(tabId); // autoOptions clean up - new tab / reload
-
-    if (changeInfo.status === 'complete') {
-      checkTabsWebNavPerm()
-        .then(() => {
-          tabState.get(tabId)
-            .then((state) => {
-              if (state === undefined) autoAction(tabId);
-            });
-        }, () => {
-          if (tab.url === undefined) tabState.remove(tabId); // reload clean up
-        });
+    // as there is no reliable way to detect page reload via onUpdated, do it the weird way
+    if (changeInfo.status === 'complete' && !Object.prototype.hasOwnProperty.call(tab, 'url')) {
+      tabState.remove(tabId); // activeTab page reload clean up
     }
   });
 }
