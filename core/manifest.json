@@ -16,6 +16,7 @@
   ],
   "optional_permissions": [
     "tabs",
+    "webNavigation",
     "http://*/",
     "https://*/"
   ],

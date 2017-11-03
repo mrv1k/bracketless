@@ -66,17 +66,19 @@ const permission = {
   },
 };
 
-const tabsPermission = {
-  tabs: {
-    permissions: ['tabs'],
+const tabsWebNavPerm = {
+  // Both permissions have same warning and required for auto-actions. Keep together
+  perms: {
+    permissions: ['tabs', 'webNavigation'],
     origins: ['http://*/', 'https://*/'],
   },
   check() {
-    return permission.check(this.tabs);
+    return permission.check(this.perms);
   },
   manage() {
-    if (autoLoadBool.checked) permission.request(this.tabs);
-    else permission.remove(this.tabs);
+    // Request Warning: Read and modify all your data on all websites you visit
+    if (autoLoadBool.checked) permission.request(this.perms);
+    else permission.remove(this.perms);
   },
 };
 
@@ -93,7 +95,7 @@ function restoreOptions() {
     autoLoadBool.checked = items.autoLoad;
     autoPlayBool.checked = items.autoPlay;
 
-    tabsPermission.check()
+    tabsWebNavPerm.check()
       .then(() => {
         permissionStatus.textContent = 'granted';
       }, () => {
@@ -114,7 +116,7 @@ function restoreOptions() {
 }
 
 function resetOptions() {
-  tabsPermission.check()
+  tabsWebNavPerm.check()
     .then(() => { permission.removeTabs(); });
   chrome.storage.sync.clear(setSaveStatus.bind(null, 'Options reset', 2000, restoreOptions));
 }
@@ -130,7 +132,7 @@ function validateNumInput() {
 // user interactions
 saveBtn.addEventListener('click', saveOptions);
 resetBtn.addEventListener('click', resetOptions);
-autoLoadBool.addEventListener('change', tabsPermission.manage.bind(tabsPermission));
+autoLoadBool.addEventListener('change', tabsWebNavPerm.manage.bind(tabsWebNavPerm));
 
 // invoked automatically
 lowerLimitNum.addEventListener('input', validateNumInput);

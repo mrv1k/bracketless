@@ -96,10 +96,10 @@ function listenerAction(tabId) {
 }
 
 
-function checkTabsPermission() {
+function checkTabsWebNavPerm() {
   return new Promise((resolve, reject) => {
     chrome.permissions.contains({
-      permissions: ['tabs'],
+      permissions: ['tabs', 'webNavigation'],
       origins: ['http://*/', 'https://*/'],
     }, (result) => {
       if (result) resolve(result);
@@ -126,7 +126,7 @@ function addOnUpdated() {
     if (changeInfo.title) tabState.remove(tabId); // autoOptions clean up - new tab / reload
 
     if (changeInfo.status === 'complete') {
-      checkTabsPermission()
+      checkTabsWebNavPerm()
         .then(() => {
           tabState.get(tabId)
             .then((state) => {
@@ -169,7 +169,7 @@ function addOnRemoved() {
       return;
     }
 
-    checkTabsPermission()
+    checkTabsWebNavPerm()
       .then(() => { // autoOptions enabled, tabs permission obtained
         tabState.remove(tabId);
       }, () => { // autoOptions disabled, clean up via activeTab
