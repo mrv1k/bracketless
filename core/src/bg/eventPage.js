@@ -201,9 +201,9 @@ function eventPageListeners() {
       onWebNavLoaded();
     }, () => {
       console.log('NO permissions.');
+      addOnUpdated();
+      addOnRemoved();
     });
-  addOnUpdated();
-  addOnRemoved();
 }
 
 onInstalled();
