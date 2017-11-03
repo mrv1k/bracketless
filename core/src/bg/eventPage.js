@@ -123,19 +123,19 @@ function autoAction(tabId) {
 // filter out chrome util pages. url examples: https://git.io/vFZhQ
 const webNavFilter = { url: [{ hostContains: '.' }] };
 
-function onWebNavCommitted() {
+function webNavCommitted() {
   chrome.webNavigation.onCommitted.addListener((details) => {
     if (details.transitionType === 'reload') tabState.remove(details.tabId); // autoAction clean up
   }, webNavFilter);
 }
 
-function onWebNavLoaded() {
+function webNavLoaded() {
   chrome.webNavigation.onDOMContentLoaded.addListener((details) => {
     if (details.frameId === 0) autoAction(details.tabId);
   }, webNavFilter);
 }
 
-function addOnUpdated() {
+function tabsUpdated() {
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     // as there is no reliable way to detect page reload via onUpdated, do it the weird way
     if (changeInfo.status === 'complete' && !Object.prototype.hasOwnProperty.call(tab, 'url')) {
@@ -166,7 +166,7 @@ function garbageCollector() {
       }
     });
 }
-function addOnRemoved() {
+function tabsRemoved() {
   chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
     // tab is focused (matters only for activeTab) and browser window gets closed
     if (removeInfo.isWindowClosing) {
@@ -197,12 +197,12 @@ function eventPageListeners() {
   checkTabsWebNavPerm()
     .then(() => {
       console.log('permissions!');
-      onWebNavCommitted();
-      onWebNavLoaded();
+      webNavCommitted();
+      webNavLoaded();
     }, () => {
       console.log('NO permissions.');
-      addOnUpdated();
-      addOnRemoved();
+      tabsUpdated();
+      tabsRemoved();
     });
 }
 
