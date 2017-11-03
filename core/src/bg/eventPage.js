@@ -108,7 +108,7 @@ function checkTabsWebNavPerm() {
   });
 }
 
-// NOT INVOKED
+
 function autoAction(tabId) {
   // call fns directly to bypass listenerAction condition checks
   chrome.storage.sync.get(null, (options) => {
@@ -119,6 +119,22 @@ function autoAction(tabId) {
     }
   });
 }
+
+// filter out chrome util pages. url examples: https://git.io/vFZhQ
+const webNavFilter = { url: [{ hostContains: '.' }] };
+
+function onWebNavCommitted() {
+  chrome.webNavigation.onCommitted.addListener((details) => {
+    if (details.transitionType === 'reload') tabState.remove(details.tabId); // autoAction clean up
+  }, webNavFilter);
+}
+
+function onWebNavLoaded() {
+  chrome.webNavigation.onDOMContentLoaded.addListener((details) => {
+    if (details.frameId === 0) autoAction(details.tabId);
+  }, webNavFilter);
+}
+
 function addOnUpdated() {
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     // as there is no reliable way to detect page reload via onUpdated, do it the weird way
@@ -174,6 +190,18 @@ function addOnRemoved() {
 function eventPageListeners() {
   chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
   chrome.contextMenus.onClicked.addListener((_, tab) => listenerAction(tab.id));
+
+  // TODO: FIX
+  // checks once for event page invocation
+  // meaning that user will not see the changes before event page reboots
+  checkTabsWebNavPerm()
+    .then(() => {
+      console.log('permissions!');
+      onWebNavCommitted();
+      onWebNavLoaded();
+    }, () => {
+      console.log('NO permissions.');
+    });
   addOnUpdated();
   addOnRemoved();
 }
