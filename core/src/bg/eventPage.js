@@ -50,7 +50,7 @@ function load(tabId) {
       chrome.tabs.insertCSS(tabId, { file: 'css/action.css' });
       chrome.tabs.executeScript(tabId, { file: 'src/action.js' }, () => {
         tabState.set(tabId, false)
-          .then(() => resolve('load resolved'));
+          .then(() => resolve('load'));
       });
     });
   });
@@ -65,7 +65,7 @@ function activate(tabId, active) {
     chrome.browserAction.setTitle({ tabId, title: action.message });
     chrome.tabs.sendMessage(tabId, active, () => {
       tabState.set(tabId, active)
-        .then(() => { resolve(`action resolved. enabled: ${active}`); });
+        .then(() => { resolve('action'); });
     });
   });
 }
@@ -88,21 +88,8 @@ function listenerAction(tabId) {
 }
 
 
-function checkTabsWebNavPerm() {
-  return new Promise((resolve, reject) => {
-    chrome.permissions.contains({
-      permissions: ['tabs', 'webNavigation'],
-      origins: ['http://*/', 'https://*/'],
-    }, (result) => {
-      if (result) resolve(result);
-      else reject(result);
-    });
-  });
-}
-
-
 function autoAction(tabId) {
-  // call fns directly to bypass listenerAction condition checks
+  // call directly to bypass listenerAction conditional check
   chrome.storage.sync.get(null, (options) => {
     if (options.autoPlay) {
       load(tabId).then(() => activate(tabId, true));
@@ -112,12 +99,13 @@ function autoAction(tabId) {
   });
 }
 
-// filter out chrome util pages. url examples: https://git.io/vFZhQ
+// filter out chrome util pages. examples: https://git.io/vFZhQ
 const webNavFilter = { url: [{ hostContains: '.' }] };
 
 function webNavCommitted() {
   chrome.webNavigation.onCommitted.addListener((details) => {
-    if (details.transitionType === 'reload') tabState.remove(details.tabId); // autoAction clean up
+    // autoAction clean up (tabs & webNav permissions obtained)
+    if (details.transitionType === 'reload') tabState.remove(details.tabId);
   }, webNavFilter);
 }
 
@@ -127,11 +115,13 @@ function webNavLoaded() {
   }, webNavFilter);
 }
 
+
 function tabsUpdated() {
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    // as there is no reliable way to detect page reload via onUpdated, do it the weird way
+    // reload clean up, (just activeTab permission)
+    // clean up every there's no url, in order to obtain url activeTab permission must be present
     if (changeInfo.status === 'complete' && !Object.prototype.hasOwnProperty.call(tab, 'url')) {
-      tabState.remove(tabId); // activeTab page reload clean up
+      tabState.remove(tabId);
     }
   });
 }
@@ -144,7 +134,19 @@ function tabsRemoved() {
 }
 
 
-function eventPageListeners() {
+function checkTabsWebNavPerm() {
+  return new Promise((resolve, reject) => {
+    chrome.permissions.contains({
+      permissions: ['tabs', 'webNavigation'],
+      origins: ['http://*/', 'https://*/'],
+    }, (result) => {
+      if (result) resolve(result);
+      else reject(result);
+    });
+  });
+}
+
+function onEventPage() {
   chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
   chrome.contextMenus.onClicked.addListener((_, tab) => listenerAction(tab.id));
 
@@ -153,15 +155,14 @@ function eventPageListeners() {
   // meaning that user will not see the changes before event page reboots
   checkTabsWebNavPerm()
     .then(() => {
-      console.log('permissions!');
       webNavCommitted();
       webNavLoaded();
     }, () => {
-      console.log('NO permissions.');
       tabsUpdated();
       tabsRemoved();
     });
 }
 
+
 onInstalled();
-eventPageListeners();
+onEventPage();
