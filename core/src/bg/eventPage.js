@@ -150,9 +150,6 @@ function onEventPage() {
   chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
   chrome.contextMenus.onClicked.addListener((_, tab) => listenerAction(tab.id));
 
-  // TODO: FIX
-  // checks once for event page invocation
-  // meaning that user will not see the changes before event page reboots
   checkTabsWebNavPerm()
     .then(() => {
       webNavCommitted();
@@ -163,6 +160,11 @@ function onEventPage() {
     });
 }
 
+function eventPageReload() {
+  chrome.runtime.onMessage.addListener(() => { onEventPage(); });
+}
+
 
 onInstalled();
 onEventPage();
+eventPageReload();
