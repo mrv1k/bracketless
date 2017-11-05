@@ -12,7 +12,7 @@ function checkOptsUse(cb) {
 
 function onInstalled() {
   chrome.runtime.onInstalled.addListener(() => {
-    checkOptsUse(syncDefault);
+    checkOptsUse(syncDefault); // for easy retrieval in bracketless.js
     chrome.contextMenus.create({ id: 'bracketless', title: 'Bracketless: next action' });
   });
 }
@@ -85,11 +85,43 @@ function listenerAction(tabId) {
     .catch((reason) => { throw reason; });
 }
 
+// Clean up with any permission(s)
+function tabsRemoved() {
+  chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
+    if (removeInfo.isWindowClosing) tabState.clearAll();
+    else tabState.remove(tabId);
+  });
+}
+
+
+// Only 'activeTab' permission
+function tabsUpdated() {
+  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    // tab reload clean up. No .url access == no permission for this tab
+    if (changeInfo.status === 'complete' && !Object.prototype.hasOwnProperty.call(tab, 'url')) {
+      tabState.remove(tabId);
+    }
+  });
+}
+
+
+// Automation. 'tabs' and 'webNavigation' required
+function checkTabsWebNavPerm() {
+  return new Promise((resolve, reject) => {
+    chrome.permissions.contains({
+      permissions: ['tabs', 'webNavigation'],
+      origins: ['*://*/'],
+    }, (result) => {
+      if (result) resolve(result);
+      else reject(result);
+    });
+  });
+}
 
 function autoAction(tabId) {
-  // Call directly to bypass listenerAction conditional check.
   chrome.storage.sync.get(null, (options) => {
     if (options.autoPlay) {
+      // Call directly to bypass listenerAction conditional check.
       load(tabId).then(() => activate(tabId, true));
     } else if (options.autoLoad) {
       load(tabId);
@@ -109,44 +141,17 @@ function webNavCommitted() {
 
 function webNavLoaded() {
   chrome.webNavigation.onDOMContentLoaded.addListener((details) => {
-    if (details.frameId === 0) autoAction(details.tabId);
+    if (details.frameId === 0) autoAction(details.tabId); // run only for main frame
   }, webNavFilter);
 }
 
 
-function tabsUpdated() {
-  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    // browserAction reload clean up. No .url access == no permission for this tab
-    if (changeInfo.status === 'complete' && !Object.prototype.hasOwnProperty.call(tab, 'url')) {
-      tabState.remove(tabId);
-    }
-  });
-}
-
-function tabsRemoved() {
-  chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
-    if (removeInfo.isWindowClosing) tabState.clearAll();
-    else tabState.remove(tabId);
-  });
-}
-
-
-function checkTabsWebNavPerm() {
-  return new Promise((resolve, reject) => {
-    chrome.permissions.contains({
-      permissions: ['tabs', 'webNavigation'],
-      origins: ['*://*/'],
-    }, (result) => {
-      if (result) resolve(result);
-      else reject(result);
-    });
-  });
-}
-
 function onEventPage() {
   chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
   chrome.contextMenus.onClicked.addListener((_, tab) => listenerAction(tab.id));
+  tabsRemoved();
 
+  // determine which API use to listen for events
   checkTabsWebNavPerm()
     .then(() => {
       webNavCommitted();
@@ -154,7 +159,6 @@ function onEventPage() {
     }, () => {
       tabsUpdated();
     });
-  tabsRemoved();
 }
 
 function eventPageReload() {
