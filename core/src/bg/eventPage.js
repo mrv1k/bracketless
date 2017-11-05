@@ -65,7 +65,7 @@ function activate(tabId, active) {
     chrome.browserAction.setTitle({ tabId, title: action.message });
     chrome.tabs.sendMessage(tabId, active, () => {
       tabState.set(tabId, active)
-        .then(() => { resolve('action'); });
+        .then(() => resolve('action'));
     });
   });
 }
@@ -80,16 +80,14 @@ function listenerAction(tabId) {
       } else if (state === true) {
         return activate(tabId, false);
       }
-      return Promise.reject(new Error('listenerAction if else'));
+      return Promise.reject(new Error('Bracketless. listenerAction. if else'));
     })
-    .catch((reason) => {
-      throw Error(`Bracketless. listenerAction. Reason: ${reason}`);
-    });
+    .catch((reason) => { throw reason; });
 }
 
 
 function autoAction(tabId) {
-  // call directly to bypass listenerAction conditional check
+  // Call directly to bypass listenerAction conditional check.
   chrome.storage.sync.get(null, (options) => {
     if (options.autoPlay) {
       load(tabId).then(() => activate(tabId, true));
@@ -99,12 +97,12 @@ function autoAction(tabId) {
   });
 }
 
-// filter out chrome util pages. examples: https://git.io/vFZhQ
+// Filter out chrome util pages. Examples: https://git.io/vFZhQ
 const webNavFilter = { url: [{ hostContains: '.' }] };
 
 function webNavCommitted() {
   chrome.webNavigation.onCommitted.addListener((details) => {
-    // autoAction clean up (tabs & webNav permissions obtained)
+    // autoAction reload clean up. tabs & webNav permissions obtained
     if (details.transitionType === 'reload') tabState.remove(details.tabId);
   }, webNavFilter);
 }
@@ -118,8 +116,7 @@ function webNavLoaded() {
 
 function tabsUpdated() {
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    // reload clean up, (just activeTab permission)
-    // clean up every there's no url, in order to obtain url activeTab permission must be present
+    // browserAction reload clean up. No .url access == no permission for this tab
     if (changeInfo.status === 'complete' && !Object.prototype.hasOwnProperty.call(tab, 'url')) {
       tabState.remove(tabId);
     }

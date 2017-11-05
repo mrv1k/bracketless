@@ -4,7 +4,7 @@ const autoLoadBool = document.querySelector('#autoLoad');
 const autoPlayBool = document.querySelector('#autoPlay');
 
 const autoPlayNote = document.querySelector('.autoPlay.note');
-const permissionStatus = document.querySelector('.permission .status');
+const tabsWebNavStatus = document.querySelector('.permission .status');
 const saveStatus = document.querySelector('.toolbar .status');
 
 const saveBtn = document.querySelector('#save-btn');
@@ -63,11 +63,10 @@ const tabsWebNavPerm = {
 };
 
 function manageTabsWebNavPerm() {
-  // Request Warning: Read and modify all your data on all websites you visit
   if (autoLoadBool.checked) {
     permissionsAPI.request(tabsWebNavPerm)
       .then(() => {
-        permissionStatus.textContent = 'granted';
+        tabsWebNavStatus.textContent = 'granted';
         autoPlayNote.textContent = '';
         autoPlayBool.parentNode.classList.remove('secondary');
         autoPlayBool.removeAttribute('disabled');
@@ -76,14 +75,14 @@ function manageTabsWebNavPerm() {
         chrome.storage.local.clear(); // clear all previously saved states
         chrome.runtime.sendMessage({});
       }, () => {
-        permissionStatus.textContent = 'denied by the user';
+        tabsWebNavStatus.textContent = 'denied by the user';
         autoLoadBool.checked = false;
         autoPlayBool.setAttribute('disabled', true);
       });
   } else {
     permissionsAPI.remove(tabsWebNavPerm)
       .then(() => {
-        permissionStatus.textContent = 'removed';
+        tabsWebNavStatus.textContent = 'removed';
         setSaveStatus('Don\'t forget to save!', 7000);
         autoPlayBool.checked = false;
         autoPlayBool.setAttribute('disabled', true);
@@ -107,9 +106,9 @@ function restoreOptions() {
 
     permissionsAPI.check(tabsWebNavPerm)
       .then(() => {
-        permissionStatus.textContent = 'granted';
+        tabsWebNavStatus.textContent = 'granted';
       }, () => {
-        permissionStatus.textContent = 'denied/removed';
+        tabsWebNavStatus.textContent = 'denied/removed';
         // Checkbox checked and no tabs permission. User removed permission but forgot to save
         if (autoLoadBool.checked) autoLoadBool.checked = false;
       })
