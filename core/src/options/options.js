@@ -129,7 +129,7 @@ function restoreOptions() {
 
 function resetOptions() {
   tabsWebNavPerm.check()
-    .then(() => { permission.removeTabs(); });
+    .then(() => { permission.remove(tabsWebNavPerm.perms); });
   chrome.storage.sync.clear(setSaveStatus.bind(null, 'Options reset', 2000, restoreOptions));
 }
 
