@@ -42,7 +42,7 @@ const permissionsAPI = {
     return new Promise((resolve, reject) => {
       chrome.permissions.remove(p, (removed) => {
         if (removed) resolve();
-        else reject();
+        else reject(new Error('The permissions have not been removed.'));
       });
     });
   },
@@ -87,11 +87,8 @@ const tabsWebNavPerm = {
         setSaveStatus('Don\'t forget to save!', 7000);
         autoPlayBool.checked = false;
         autoPlayBool.setAttribute('disabled', true);
-      }, () => {
-        permissionStatus.textContent = 'removed';
-        autoPlayBool.checked = false;
-        autoPlayBool.setAttribute('disabled', true);
-      });
+      })
+      .catch((reason) => { throw reason; });
   },
   manage() {
     // Request Warning: Read and modify all your data on all websites you visit
