@@ -153,8 +153,8 @@ function onEventPage() {
       webNavLoaded();
     }, () => {
       tabsUpdated();
-      tabsRemoved();
     });
+  tabsRemoved();
 }
 
 function eventPageReload() {
