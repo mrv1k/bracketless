@@ -29,7 +29,7 @@ function saveOptions() {
 }
 
 
-const permission = {
+const permissionsAPI = {
   request(p) {
     return new Promise((resolve, reject) => {
       chrome.permissions.request(p, (granted) => {
@@ -62,9 +62,9 @@ const tabsWebNavPerm = {
     permissions: ['tabs', 'webNavigation'],
     origins: ['http://*/', 'https://*/'],
   },
-  check() { return permission.check(this.perms); },
+  check() { return permissionsAPI.check(this.perms); },
   request() {
-    permission.request(this.perms)
+    permissionsAPI.request(this.perms)
       .then(() => {
         permissionStatus.textContent = 'granted';
         autoPlayNote.textContent = '';
@@ -81,7 +81,7 @@ const tabsWebNavPerm = {
       });
   },
   remove() {
-    permission.remove(this.perms)
+    permissionsAPI.remove(this.perms)
       .then(() => {
         permissionStatus.textContent = 'removed';
         setSaveStatus('Don\'t forget to save!', 7000);
