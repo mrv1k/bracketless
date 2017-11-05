@@ -135,7 +135,7 @@ function checkTabsWebNavPerm() {
   return new Promise((resolve, reject) => {
     chrome.permissions.contains({
       permissions: ['tabs', 'webNavigation'],
-      origins: ['http://*/', 'https://*/'],
+      origins: ['*://*/'],
     }, (result) => {
       if (result) resolve(result);
       else reject(result);

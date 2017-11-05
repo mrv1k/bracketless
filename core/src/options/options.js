@@ -59,7 +59,7 @@ const permissionsAPI = {
 // Both permissions have same warning and required for auto-actions. Keep together
 const tabsWebNavPerm = {
   permissions: ['tabs', 'webNavigation'],
-  origins: ['http://*/', 'https://*/'],
+  origins: ['*://*/'],
 };
 
 function manageTabsWebNavPerm() {

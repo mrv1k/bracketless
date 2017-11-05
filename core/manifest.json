@@ -17,8 +17,7 @@
   "optional_permissions": [
     "tabs",
     "webNavigation",
-    "http://*/",
-    "https://*/"
+    "*://*/"
   ],
   "background": {
     "scripts": [
