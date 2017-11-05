@@ -33,31 +33,17 @@ const permission = {
   request(p) {
     return new Promise((resolve, reject) => {
       chrome.permissions.request(p, (granted) => {
-        if (granted) {
-          permissionStatus.textContent = 'granted';
-          autoPlayNote.textContent = '';
-          autoPlayBool.parentNode.classList.remove('secondary');
-          autoPlayBool.removeAttribute('disabled');
-          setSaveStatus('Don\'t forget to save!', 7000);
-          chrome.storage.local.clear(); // clear all previously saved states
-          resolve();
-        } else {
-          permissionStatus.textContent = 'denied by the user';
-          autoLoadBool.checked = false;
-          autoPlayBool.setAttribute('disabled', true);
-          reject();
-        }
+        if (granted) resolve();
+        else reject();
       });
     });
   },
   remove(p) {
-    chrome.permissions.remove(p, (removed) => {
-      if (removed) {
-        permissionStatus.textContent = 'removed';
-        setSaveStatus('Don\'t forget to save!', 7000);
-        autoPlayBool.checked = false;
-        autoPlayBool.setAttribute('disabled', true);
-      }
+    return new Promise((resolve, reject) => {
+      chrome.permissions.remove(p, (removed) => {
+        if (removed) resolve();
+        else reject();
+      });
     });
   },
   check(p) {
@@ -76,21 +62,41 @@ const tabsWebNavPerm = {
     permissions: ['tabs', 'webNavigation'],
     origins: ['http://*/', 'https://*/'],
   },
-  check() {
-    return permission.check(this.perms);
+  check() { return permission.check(this.perms); },
+  request() {
+    permission.request(this.perms)
+      .then(() => {
+        permissionStatus.textContent = 'granted';
+        autoPlayNote.textContent = '';
+        autoPlayBool.parentNode.classList.remove('secondary');
+        autoPlayBool.removeAttribute('disabled');
+        setSaveStatus('Don\'t forget to save!', 7000);
+
+        chrome.storage.local.clear(); // clear all previously saved states
+        chrome.runtime.sendMessage({});
+      }, () => {
+        permissionStatus.textContent = 'denied by the user';
+        autoLoadBool.checked = false;
+        autoPlayBool.setAttribute('disabled', true);
+      });
+  },
+  remove() {
+    permission.remove(this.perms)
+      .then(() => {
+        permissionStatus.textContent = 'removed';
+        setSaveStatus('Don\'t forget to save!', 7000);
+        autoPlayBool.checked = false;
+        autoPlayBool.setAttribute('disabled', true);
+      }, () => {
+        permissionStatus.textContent = 'removed';
+        autoPlayBool.checked = false;
+        autoPlayBool.setAttribute('disabled', true);
+      });
   },
   manage() {
     // Request Warning: Read and modify all your data on all websites you visit
-    if (autoLoadBool.checked) {
-      permission.request(this.perms)
-        .then(() => {
-          chrome.runtime.sendMessage({});
-        }, () => {
-          console.warn('denied');
-        });
-    } else {
-      permission.remove(this.perms);
-    }
+    if (autoLoadBool.checked) this.request();
+    else this.remove();
   },
 };
 
@@ -129,7 +135,7 @@ function restoreOptions() {
 
 function resetOptions() {
   tabsWebNavPerm.check()
-    .then(() => { permission.remove(tabsWebNavPerm.perms); });
+    .then(() => tabsWebNavPerm.remove());
   chrome.storage.sync.clear(setSaveStatus.bind(null, 'Options reset', 2000, restoreOptions));
 }
 
