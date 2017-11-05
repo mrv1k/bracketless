@@ -56,15 +56,16 @@ const permissionsAPI = {
   },
 };
 
+// Both permissions have same warning and required for auto-actions. Keep together
 const tabsWebNavPerm = {
-  // Both permissions have same warning and required for auto-actions. Keep together
-  perms: {
-    permissions: ['tabs', 'webNavigation'],
-    origins: ['http://*/', 'https://*/'],
-  },
-  check() { return permissionsAPI.check(this.perms); },
-  request() {
-    permissionsAPI.request(this.perms)
+  permissions: ['tabs', 'webNavigation'],
+  origins: ['http://*/', 'https://*/'],
+};
+
+function manageTabsWebNavPerm() {
+  // Request Warning: Read and modify all your data on all websites you visit
+  if (autoLoadBool.checked) {
+    permissionsAPI.request(tabsWebNavPerm)
       .then(() => {
         permissionStatus.textContent = 'granted';
         autoPlayNote.textContent = '';
@@ -79,9 +80,8 @@ const tabsWebNavPerm = {
         autoLoadBool.checked = false;
         autoPlayBool.setAttribute('disabled', true);
       });
-  },
-  remove() {
-    permissionsAPI.remove(this.perms)
+  } else {
+    permissionsAPI.remove(tabsWebNavPerm)
       .then(() => {
         permissionStatus.textContent = 'removed';
         setSaveStatus('Don\'t forget to save!', 7000);
@@ -89,13 +89,8 @@ const tabsWebNavPerm = {
         autoPlayBool.setAttribute('disabled', true);
       })
       .catch((reason) => { throw reason; });
-  },
-  manage() {
-    // Request Warning: Read and modify all your data on all websites you visit
-    if (autoLoadBool.checked) this.request();
-    else this.remove();
-  },
-};
+  }
+}
 
 
 function restoreOptions() {
@@ -110,7 +105,7 @@ function restoreOptions() {
     autoLoadBool.checked = items.autoLoad;
     autoPlayBool.checked = items.autoPlay;
 
-    tabsWebNavPerm.check()
+    permissionsAPI.check(tabsWebNavPerm)
       .then(() => {
         permissionStatus.textContent = 'granted';
       }, () => {
@@ -131,8 +126,8 @@ function restoreOptions() {
 }
 
 function resetOptions() {
-  tabsWebNavPerm.check()
-    .then(() => tabsWebNavPerm.remove());
+  permissionsAPI.check(tabsWebNavPerm)
+    .then(() => permissionsAPI.remove(tabsWebNavPerm));
   chrome.storage.sync.clear(setSaveStatus.bind(null, 'Options reset', 2000, restoreOptions));
 }
 
@@ -147,7 +142,7 @@ function validateNumInput() {
 // user interactions
 saveBtn.addEventListener('click', saveOptions);
 resetBtn.addEventListener('click', resetOptions);
-autoLoadBool.addEventListener('change', tabsWebNavPerm.manage.bind(tabsWebNavPerm));
+autoLoadBool.addEventListener('change', manageTabsWebNavPerm);
 
 // invoked automatically
 lowerLimitNum.addEventListener('input', validateNumInput);
