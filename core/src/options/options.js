@@ -62,33 +62,40 @@ const tabsWebNavPerm = {
   origins: ['*://*/'],
 };
 
-function manageTabsWebNavPerm() {
-  if (autoLoadBool.checked) {
-    permissionsAPI.request(tabsWebNavPerm)
-      .then(() => {
-        tabsWebNavStatus.textContent = 'granted';
-        autoPlayNote.textContent = '';
-        autoPlayBool.parentNode.classList.remove('secondary');
-        autoPlayBool.removeAttribute('disabled');
-        setSaveStatus('Don\'t forget to save!', 7000);
+function permFulfilled() {
+  tabsWebNavStatus.textContent = 'granted';
+  autoPlayNote.textContent = '';
+  autoPlayBool.parentNode.classList.remove('secondary');
+  autoPlayBool.removeAttribute('disabled');
+}
 
-        chrome.storage.local.clear(); // clear all previously saved states
-        chrome.runtime.sendMessage({});
-      }, () => {
-        tabsWebNavStatus.textContent = 'denied by the user';
-        autoLoadBool.checked = false;
-        autoPlayBool.setAttribute('disabled', true);
-      });
+function permRejected(statusText) {
+  tabsWebNavStatus.textContent = statusText;
+  autoLoadBool.checked = false;
+  autoPlayBool.checked = false;
+  autoPlayBool.setAttribute('disabled', true);
+}
+
+function requestEventPageReload() {
+  chrome.runtime.sendMessage({}); // to apply permission changes
+}
+
+function manageTabsWebNavPerm() {
+  let chain;
+  if (autoLoadBool.checked) {
+    chain = permissionsAPI.request(tabsWebNavPerm)
+      .then(permFulfilled);
   } else {
-    permissionsAPI.remove(tabsWebNavPerm)
-      .then(() => {
-        tabsWebNavStatus.textContent = 'removed';
-        setSaveStatus('Don\'t forget to save!', 7000);
-        autoPlayBool.checked = false;
-        autoPlayBool.setAttribute('disabled', true);
-      })
+    chain = permissionsAPI.remove(tabsWebNavPerm)
+      .then(() => permRejected('removed'))
       .catch((reason) => { throw reason; });
   }
+  chain.then(() => {
+    setSaveStatus('Don\'t forget to save!', 7000);
+    requestEventPageReload();
+  }, () => { // catch .request rejection
+    permRejected('denied by the user');
+  });
 }
 
 
