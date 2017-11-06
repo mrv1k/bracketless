@@ -42,10 +42,15 @@ const tabState = {
 };
 
 
-function checkTitle(tabId) { // Check if not disabled
+function disableBrowserAction(tabId, message) {
+  chrome.browserAction.setTitle({ tabId, title: `Disabled: ${message}` });
+  chrome.browserAction.disable(tabId);
+}
+
+function checkBrowserAction(tabId) { // Check if not disabled
   return new Promise((resolve) => {
     chrome.browserAction.getTitle({ tabId }, (title) => {
-      if (title !== 'Disabled. No brackets found') resolve();
+      if (!title.includes('Disabled')) resolve();
     });
   });
 }
@@ -83,7 +88,7 @@ function listenerAction(tabId) {
       if (state === undefined) {
         return load(tabId)
           .then(() => {
-            checkTitle(tabId)
+            checkBrowserAction(tabId)
               .then(() => {
                 chrome.browserAction.setIcon({ tabId, path: { 16: 'icons/play16.png', 32: 'icons/play32.png' } });
                 chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
@@ -138,7 +143,7 @@ function autoAction(tabId) {
       // Call directly to bypass listenerAction conditional check.
       load(tabId)
         .then(() => {
-          checkTitle(tabId)
+          checkBrowserAction(tabId)
             .then(() => {
               activate(tabId, true);
             });
@@ -183,10 +188,7 @@ function onEventPage() {
 function addMessageListener() {
   chrome.runtime.onMessage.addListener((request, sender) => {
     if (request.disable) {
-      const tabId = sender.tab.id;
-      chrome.browserAction.setIcon({ tabId, path: { 16: 'icons/bracketless16.png', 32: 'icons/bracketless32.png' } });
-      chrome.browserAction.setTitle({ tabId, title: 'Disabled. No brackets found' });
-      chrome.browserAction.disable(tabId);
+      disableBrowserAction(sender.tab.id, 'No brackets found');
       // No method to disable contextMenus for a single tab, leave as is
     } else if (request.permissionsUpdated) {
       onEventPage(); // Re-execute to apply permission changes
