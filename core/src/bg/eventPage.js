@@ -54,16 +54,11 @@ function checkTitle(tabId) { // Check if not disabled
 function load(tabId) {
   return new Promise((resolve) => {
     chrome.tabs.executeScript(tabId, { file: 'src/bracketless.js' }, () => {
-      checkTitle(tabId)
-        .then(() => {
-          chrome.browserAction.setIcon({ tabId, path: { 16: 'icons/play16.png', 32: 'icons/play32.png' } });
-          chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
-          chrome.tabs.insertCSS(tabId, { file: 'css/action.css' });
-          chrome.tabs.executeScript(tabId, { file: 'src/action.js' }, () => {
-            tabState.set(tabId, false)
-              .then(() => resolve('load'));
-          });
-        });
+      chrome.tabs.insertCSS(tabId, { file: 'css/action.css' });
+      chrome.tabs.executeScript(tabId, { file: 'src/action.js' }, () => {
+        tabState.set(tabId, false)
+          .then(() => resolve('load'));
+      });
     });
   });
 }
@@ -86,7 +81,14 @@ function listenerAction(tabId) {
   tabState.get(tabId)
     .then((state) => {
       if (state === undefined) {
-        return load(tabId);
+        return load(tabId)
+          .then(() => {
+            checkTitle(tabId)
+              .then(() => {
+                chrome.browserAction.setIcon({ tabId, path: { 16: 'icons/play16.png', 32: 'icons/play32.png' } });
+                chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
+              });
+          });
       } else if (state === false) {
         return activate(tabId, true);
       } else if (state === true) {
