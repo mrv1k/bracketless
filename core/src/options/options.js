@@ -67,6 +67,7 @@ function permFulfilled() {
   autoPlayNote.textContent = '';
   autoPlayBool.parentNode.classList.remove('secondary');
   autoPlayBool.removeAttribute('disabled');
+  chrome.storage.local.clear();
 }
 
 function permRejected(statusText) {
