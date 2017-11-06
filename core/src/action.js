@@ -17,7 +17,6 @@ function activate(active) {
   }
 }
 
-chrome.runtime.onMessage.addListener((active, _, sendResponse) => {
+chrome.runtime.onMessage.addListener((active) => {
   activate(active);
-  sendResponse('action complete');
 });
