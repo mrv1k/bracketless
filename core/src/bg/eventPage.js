@@ -149,23 +149,23 @@ function webNavLoaded() {
 function onEventPage() {
   chrome.browserAction.onClicked.addListener(tab => listenerAction(tab.id));
   chrome.contextMenus.onClicked.addListener((_, tab) => listenerAction(tab.id));
-  tabsRemoved();
 
+  tabsRemoved();
   // determine which API use to listen for events
   checkTabsWebNavPerm()
     .then(() => {
       webNavCommitted();
       webNavLoaded();
-    }, () => {
-      tabsUpdated();
-    });
+    }, tabsUpdated);
 }
 
-function eventPageReload() {
-  chrome.runtime.onMessage.addListener(() => { onEventPage(); });
+function addMessageListener() {
+  chrome.runtime.onMessage.addListener(() => {
+    onEventPage();
+  });
 }
 
 
 onInstalled();
 onEventPage();
-eventPageReload();
+addMessageListener();
