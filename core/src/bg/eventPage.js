@@ -42,16 +42,28 @@ const tabState = {
 };
 
 
+function checkTitle(tabId) { // Check if not disabled
+  return new Promise((resolve) => {
+    chrome.browserAction.getTitle({ tabId }, (title) => {
+      if (title !== 'Disabled. No brackets found') resolve();
+    });
+  });
+}
+
+
 function load(tabId) {
   return new Promise((resolve) => {
     chrome.tabs.executeScript(tabId, { file: 'src/bracketless.js' }, () => {
-      chrome.browserAction.setIcon({ tabId, path: { 16: 'icons/play16.png', 32: 'icons/play32.png' } });
-      chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
-      chrome.tabs.insertCSS(tabId, { file: 'css/action.css' });
-      chrome.tabs.executeScript(tabId, { file: 'src/action.js' }, () => {
-        tabState.set(tabId, false)
-          .then(() => resolve('load'));
-      });
+      checkTitle(tabId)
+        .then(() => {
+          chrome.browserAction.setIcon({ tabId, path: { 16: 'icons/play16.png', 32: 'icons/play32.png' } });
+          chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
+          chrome.tabs.insertCSS(tabId, { file: 'css/action.css' });
+          chrome.tabs.executeScript(tabId, { file: 'src/action.js' }, () => {
+            tabState.set(tabId, false)
+              .then(() => resolve('load'));
+          });
+        });
     });
   });
 }
@@ -122,7 +134,12 @@ function autoAction(tabId) {
   chrome.storage.sync.get(null, (options) => {
     if (options.autoPlay) {
       // Call directly to bypass listenerAction conditional check.
-      load(tabId).then(() => activate(tabId, true));
+      load(tabId).then(() => {
+        checkTitle(tabId) // If non disabled, proceed
+          .then(() => {
+            activate(tabId, true);
+          });
+      });
     } else if (options.autoLoad) {
       load(tabId);
     }
@@ -161,8 +178,14 @@ function onEventPage() {
 
 
 function addMessageListener() {
-  chrome.runtime.onMessage.addListener((request) => {
-    if (request.permissionsUpdated) {
+  chrome.runtime.onMessage.addListener((request, sender) => {
+    if (request.disable) {
+      const tabId = sender.tab.id;
+      chrome.browserAction.setIcon({ tabId, path: { 16: 'icons/bracketless16.png', 32: 'icons/bracketless32.png' } });
+      chrome.browserAction.setTitle({ tabId, title: 'Disabled. No brackets found' });
+      chrome.browserAction.disable(tabId);
+      // No method to disable contextMenus for a single tab, leave as is
+    } else if (request.permissionsUpdated) {
       onEventPage(); // re-execute to apply permission changes
     } else {
       throw Error('Bracketless. eventPageReload. if else');
