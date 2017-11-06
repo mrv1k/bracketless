@@ -166,7 +166,14 @@ function webNavCommitted() {
 
 function webNavLoaded() {
   chrome.webNavigation.onDOMContentLoaded.addListener((details) => {
-    if (details.frameId === 0) autoAction(details.tabId); // run only for main frame
+    if (details.frameId === 0) {
+      // Chrome extensions cannot execute/insert the Chrome Web Store: more here https://goo.gl/3dRRe3
+      if (details.url.includes('https://chrome.google.com/webstore')) {
+        disableBrowserAction(details.tabId, 'Not allowed at webstore');
+      } else {
+        autoAction(details.tabId);
+      }
+    } // run only for main frame
   }, webNavFilter);
 }
 
