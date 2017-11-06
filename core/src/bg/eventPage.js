@@ -159,9 +159,14 @@ function onEventPage() {
     }, tabsUpdated);
 }
 
+
 function addMessageListener() {
-  chrome.runtime.onMessage.addListener(() => {
-    onEventPage();
+  chrome.runtime.onMessage.addListener((request) => {
+    if (request.permissionsUpdated) {
+      onEventPage(); // re-execute to apply permission changes
+    } else {
+      throw Error('Bracketless. eventPageReload. if else');
+    }
   });
 }
 

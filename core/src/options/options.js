@@ -77,7 +77,7 @@ function permRejected(statusText) {
 }
 
 function requestEventPageReload() {
-  chrome.runtime.sendMessage({}); // to apply permission changes
+  chrome.runtime.sendMessage({ permissionsUpdated: true }); // to apply permission changes
 }
 
 function manageTabsWebNavPerm() {
