@@ -12,7 +12,7 @@ function checkOptsUse(cb) {
 
 function onInstalled() {
   chrome.runtime.onInstalled.addListener(() => {
-    checkOptsUse(syncDefault); // for easy retrieval in bracketless.js
+    checkOptsUse(syncDefault); // For easy retrieval in bracketless.js
     chrome.contextMenus.create({ id: 'bracketless', title: 'Bracketless: next action' });
   });
 }
@@ -111,7 +111,7 @@ function tabsRemoved() {
 // Only 'activeTab' permission
 function tabsUpdated() {
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    // tab reload clean up. No .url access == no permission for this tab
+    // Tab reload clean up. No .url access == no permission for this tab
     if (changeInfo.status === 'complete' && !Object.prototype.hasOwnProperty.call(tab, 'url')) {
       tabState.remove(tabId);
     }
@@ -136,12 +136,13 @@ function autoAction(tabId) {
   chrome.storage.sync.get(null, (options) => {
     if (options.autoPlay) {
       // Call directly to bypass listenerAction conditional check.
-      load(tabId).then(() => {
-        checkTitle(tabId) // If non disabled, proceed
-          .then(() => {
-            activate(tabId, true);
-          });
-      });
+      load(tabId)
+        .then(() => {
+          checkTitle(tabId)
+            .then(() => {
+              activate(tabId, true);
+            });
+        });
     } else if (options.autoLoad) {
       load(tabId);
     }
@@ -170,7 +171,7 @@ function onEventPage() {
   chrome.contextMenus.onClicked.addListener((_, tab) => listenerAction(tab.id));
 
   tabsRemoved();
-  // determine which API use to listen for events
+  // Determine which API use to listen for events
   checkTabsWebNavPerm()
     .then(() => {
       webNavCommitted();
@@ -188,9 +189,9 @@ function addMessageListener() {
       chrome.browserAction.disable(tabId);
       // No method to disable contextMenus for a single tab, leave as is
     } else if (request.permissionsUpdated) {
-      onEventPage(); // re-execute to apply permission changes
+      onEventPage(); // Re-execute to apply permission changes
     } else {
-      throw Error('Bracketless. eventPageReload. if else');
+      throw Error('Bracketless. addMessageListener. if else');
     }
   });
 }

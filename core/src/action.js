@@ -10,9 +10,9 @@ function doAction(e) {
 document.body.addEventListener('click', doAction);
 
 function activate(active) {
-  if (active) { // play -> text collapsed
+  if (active) { // Play
     elements.forEach(el => el.classList.add('bracket-less'));
-  } else { // pause -> text displayed
+  } else { // Pause
     elements.forEach(el => el.classList.remove('bracket-less'));
   }
 }

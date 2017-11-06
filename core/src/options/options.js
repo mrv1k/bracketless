@@ -91,12 +91,13 @@ function manageTabsWebNavPerm() {
       .then(() => permRejected('removed'))
       .catch((reason) => { throw reason; });
   }
-  chain.then(() => {
-    setSaveStatus('Don\'t forget to save!', 7000);
-    requestEventPageReload();
-  }, () => { // catch .request rejection
-    permRejected('denied by the user');
-  });
+  chain
+    .then(() => {
+      setSaveStatus('Don\'t forget to save!', 7000);
+      requestEventPageReload();
+    }, () => { // Catch .request rejection
+      permRejected('denied by the user');
+    });
 }
 
 
@@ -146,12 +147,12 @@ function validateNumInput() {
 }
 
 
-// user interactions
+// User interactions
 saveBtn.addEventListener('click', saveOptions);
 resetBtn.addEventListener('click', resetOptions);
 autoLoadBool.addEventListener('change', manageTabsWebNavPerm);
 
-// invoked automatically
+// Invoked automatically
 lowerLimitNum.addEventListener('input', validateNumInput);
 upperLimitNum.addEventListener('input', validateNumInput);
 document.addEventListener('DOMContentLoaded', restoreOptions);
