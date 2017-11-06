@@ -1,6 +1,6 @@
 {
   "name": "bracketless",
-  "version": "0.7",
+  "version": "0.7.1",
   "description": "A Chrome extension that allows to hide or display text between brackets",
   "main": "core/manifest.json",
   "keywords": ["chrome-extension", "browser-extension", "javascript", "regex"],

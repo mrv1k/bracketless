@@ -61,8 +61,13 @@ function load(tabId) {
     chrome.tabs.executeScript(tabId, { file: 'src/bracketless.js' }, () => {
       chrome.tabs.insertCSS(tabId, { file: 'css/action.css' });
       chrome.tabs.executeScript(tabId, { file: 'src/action.js' }, () => {
-        tabState.set(tabId, false)
-          .then(() => resolve('load'));
+        checkBrowserAction(tabId)
+          .then(() => {
+            chrome.browserAction.setIcon({ tabId, path: { 16: 'icons/play16.png', 32: 'icons/play32.png' } });
+            chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
+            tabState.set(tabId, false)
+              .then(() => resolve('load'));
+          });
       });
     });
   });
@@ -86,14 +91,7 @@ function listenerAction(tabId) {
   tabState.get(tabId)
     .then((state) => {
       if (state === undefined) {
-        return load(tabId)
-          .then(() => {
-            checkBrowserAction(tabId)
-              .then(() => {
-                chrome.browserAction.setIcon({ tabId, path: { 16: 'icons/play16.png', 32: 'icons/play32.png' } });
-                chrome.browserAction.setTitle({ tabId, title: 'Collapse brackets' });
-              });
-          });
+        return load(tabId);
       } else if (state === false) {
         return activate(tabId, true);
       } else if (state === true) {
@@ -141,13 +139,7 @@ function autoAction(tabId) {
   chrome.storage.sync.get(null, (options) => {
     if (options.autoPlay) {
       // Call directly to bypass listenerAction conditional check.
-      load(tabId)
-        .then(() => {
-          checkBrowserAction(tabId)
-            .then(() => {
-              activate(tabId, true);
-            });
-        });
+      load(tabId).then(() => activate(tabId, true));
     } else if (options.autoLoad) {
       load(tabId);
     }
