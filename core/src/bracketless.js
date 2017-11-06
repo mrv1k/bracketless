@@ -59,6 +59,7 @@ function iterateNodes(nodesArr) {
       singleHandler(textNode);
     }
   });
+  return nodesArr.length;
 }
 
 function nativeTreeWalker(bracketsRegex) {
@@ -100,4 +101,7 @@ const regexPr = getOptions()
 
 regexPr
   .then(nativeTreeWalker)
-  .then(iterateNodes);
+  .then(iterateNodes)
+  .then((count) => {
+    if (count === 0) chrome.runtime.sendMessage({ disable: true });
+  });
