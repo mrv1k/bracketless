@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="../icons/bracketless16.png">
+
+  <title>How-to Bracketless</title>
+
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body { padding-top: 1.5rem; }
+
+    .header,
+    .footer {
+      padding-right: 1rem;
+      padding-left: 1rem;
+    }
+    .header {
+      padding-bottom: 1rem;
+      border-bottom: .05rem solid #e5e5e5;
+    }
+    .header h3 {
+      margin-top: 0;
+      margin-bottom: 0;
+      line-height: 3rem;
+    }
+    .jumbotron { padding: 1rem 3rem; }
+
+    @media screen and (min-width: 48em) {
+      .header,
+      .footer {
+        padding-right: 0;
+        padding-left: 0;
+      }
+      .header { margin-bottom: 2rem; }
+    }
+  </style>
+  <link href="../css/action.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <div class="container">
+    <header class="header clearfix">
+      <h3 class="text-muted">Bracketless - how to</h3>
+    </header>
+
+    <main role="main">
+
+      <h1 class="display-4">Thank you for installing Bracketless!</h1>
+      <br>
+
+      <div class="jumbotron">
+        <div class="lead text-center">Basic
+          <span>(<bracket-less class="uncollapsed" data-bracketless="avaliable upon extension load">avaliable upon extension load</bracket-less>)</span>
+        </div>
+        <hr>
+        <div>
+          <strong>Left click</strong> to collapse text between brackets
+          <span>(<bracket-less class="uncollapsed" data-bracketless="The gills kneading quietly, and the pectorals.">The gills kneading quietly, and the pectorals</bracket-less>).</span>
+        </div>
+        <div>
+          <strong>Left click again</strong> to expand text between brackets
+          <span>(<bracket-less class="collapsed" data-bracketless="The farmers in the valley grew potatoes, peanuts, and bored.">The farmers in the valley grew potatoes, peanuts, and bored.</bracket-less>)</span>
+        </div>
+      </div>
+
+
+      <div class="jumbotron">
+        <div class="text-center lead">Options</div>
+        <hr>
+        <div><strong>Matching limits:</strong> customize minimum and maximum
+          (<bracket-less class="uncollapsed" data-bracketless="defaults are 13 and 255 characters respectively">defaults are 13 and 255 characters respectively</bracket-less>)
+        </div>
+        <div><strong>Automation:</strong> enable autoloading or autoloading and autoplaying</div>
+        <div class="text-center"><a id="go-to-options" class="btn btn-dark" href="" role="button">Options</a></div>
+      </div>
+
+
+      <div class="jumbotron text-center pb-0">
+        <div class="lead">Extension simulator9000
+          <span>(<bracket-less class="collapsed" data-bracketless="Does it fit your expectations?">Does it fit your expectations?</bracket-less>)</span>
+        </div>
+        <hr>
+
+        <div class="row">
+          <div class="col-lg-4">
+            <a id="playBtn" href="#play"><img src="../icons/play32.png" alt="play button" title="Play action"/></a>
+            <div>Play</div>
+          </div>
+
+          <div class="col-lg-4">
+            <a id="extensionSimulator9000" href="#simulate"><img id="simulationImg" src="../icons/bracketless32.png" alt="Simulation button" title="Simulate extension"/></a>
+            <br>
+            <div><span id="simulatorStatusText">Default: not loaded</span></div>
+            <span id="simulatorStatus" class="d-none">notloaded</span>
+          </div>
+
+          <div class="col-lg-4">
+            <a id="pauseBtn" href="#pause"> <img src="../icons/pause32.png" alt="pause button" title="Pause action"/></a>
+            <div>Pause</div>
+          </div>
+        </div>
+      <br>
+      </div>
+    </main>
+
+    <hr>
+    <footer class="footer text-right">
+      <span>&copy; Viktor Khotimchenko 2017
+        <a class="text-secondary " href="https://github.com/mrv1k/bracketless">View on GitHub
+          <svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-mark-github" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
+        </a>
+      </span>
+
+
+    </footer>
+
+  </div>
+  <!-- /container -->
+  <script src="to.js"></script>
+</body>
+
+</html>

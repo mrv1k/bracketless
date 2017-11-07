@@ -11,9 +11,12 @@ function checkOptsUse(cb) {
 }
 
 function onInstalled() {
-  chrome.runtime.onInstalled.addListener(() => {
-    checkOptsUse(syncDefault); // For easy retrieval in bracketless.js
-    chrome.contextMenus.create({ id: 'bracketless', title: 'Bracketless: next action' });
+  chrome.runtime.onInstalled.addListener((details) => {
+    if (details.reason === 'install') {
+      checkOptsUse(syncDefault); // For easy retrieval in bracketless.js
+      chrome.contextMenus.create({ id: 'bracketless', title: 'Bracketless: next action' });
+      chrome.tabs.create({ url: '../../how/to.html' });
+    }
   });
 }
 
