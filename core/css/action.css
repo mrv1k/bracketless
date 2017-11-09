@@ -1,17 +1,17 @@
-.bracket-less {
+.bracket-css {
   font-size: 0;
 }
 
-.bracket-less::after {
+.bracket-css::after {
   content: '...';
   font-size: 1rem;
 }
 
-.bracket-less:hover {
-  content: attr('data-bracketless');
+.bracket-css:hover {
+  content: attr(data-bracketless);
   font-size: inherit;
 }
 
-.bracket-less:hover::after {
+.bracket-css:hover::after {
   content: '';
 }

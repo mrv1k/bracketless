@@ -3,9 +3,6 @@ const elements = document.querySelectorAll('bracket-less');
 const optionsBtn = document.querySelector('#go-to-options');
 const collapsedNodes = document.querySelectorAll('.collapsed');
 
-const playBtn = document.querySelector('#playBtn');
-const pauseBtn = document.querySelector('#pauseBtn');
-
 const extensionSimulator9000 = document.querySelector('#extensionSimulator9000');
 const simStatusText = document.querySelector('#simulatorStatusText');
 const simStatus = document.querySelector('#simulatorStatus');
@@ -15,10 +12,11 @@ const simIcons = {
   pause: '../icons/pause32.png',
 };
 
+// ACTION.JS COPYPASTE //
 function doAction(e) {
   if (e.target.tagName !== 'BRACKET-LESS') return;
 
-  e.target.classList.toggle('bracket-less');
+  e.target.classList.toggle('bracket-css');
   e.stopPropagation();
 }
 
@@ -27,11 +25,12 @@ collapsedNodes.forEach(el => el.click());
 
 function activate(active) {
   if (active) { // Play
-    elements.forEach(el => el.classList.add('bracket-less'));
+    elements.forEach(el => el.classList.add('bracket-css'));
   } else { // Pause
-    elements.forEach(el => el.classList.remove('bracket-less'));
+    elements.forEach(el => el.classList.remove('bracket-css'));
   }
 }
+
 
 function updateSimulation(text, img, status) {
   simStatusText.textContent = text;
