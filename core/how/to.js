@@ -42,19 +42,17 @@ function updateSimulation(text, img, status) {
 function simulateExtension() {
   const state = simStatus.textContent;
   if (state === 'notloaded') {
-    updateSimulation('Launched: loaded', simIcons.play, 'loaded');
+    updateSimulation('loaded', simIcons.play, 'loaded');
     activate(false);
   } else if (state === 'paused' || state === 'loaded') {
-    updateSimulation('Play: collapsed', simIcons.pause, 'playing');
+    updateSimulation('collapsed', simIcons.pause, 'playing');
     activate(true);
   } else if (state === 'playing') {
-    updateSimulation('Pause: expanded', simIcons.play, 'paused');
+    updateSimulation('expanded', simIcons.play, 'paused');
     activate(false);
   }
 }
 
-playBtn.addEventListener('click', activate.bind(null, true));
-pauseBtn.addEventListener('click', activate.bind(null, false));
 extensionSimulator9000.addEventListener('click', simulateExtension);
 
 

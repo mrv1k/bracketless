@@ -57,7 +57,7 @@
 
       <div class="jumbotron">
         <div class="lead text-center">Basic
-          <span>(<bracket-less class="uncollapsed" data-bracketless="avaliable upon extension load">avaliable upon extension load</bracket-less>)</span>
+          <span>(<bracket-less class="uncollapsed" data-bracketless="available upon extension load">available upon extension load</bracket-less>)</span>
         </div>
         <hr>
         <div>
@@ -74,43 +74,34 @@
       <div class="jumbotron">
         <div class="text-center lead">Options</div>
         <hr>
-        <div><strong>Matching limits:</strong> customize minimum and maximum
-          (<bracket-less class="uncollapsed" data-bracketless="defaults are 13 and 255 characters respectively">defaults are 13 and 255 characters respectively</bracket-less>)
+        <div><strong>Brackets matching:</strong> customize minimum and maximum limits. Defaults are 13 and 255 characters respectively
+          (<bracket-less class="uncollapsed" data-bracketless="below 13 and above 255 characters will get ignored">below 13 and above 255 characters will get ignored</bracket-less>)
         </div>
-        <div><strong>Automation:</strong> enable autoloading or autoloading and autoplaying</div>
+        <div><strong>Automation:</strong> enable autoloading and autoplaying</div>
         <div class="text-center"><a id="go-to-options" class="btn btn-dark" href="" role="button">Options</a></div>
       </div>
 
 
-      <div class="jumbotron text-center pb-0">
-        <div class="lead">Extension simulator9000
-          <span>(<bracket-less class="collapsed" data-bracketless="Does it fit your expectations?">Does it fit your expectations?</bracket-less>)</span>
-        </div>
+      <div class="jumbotron text-center">
+        <span class="lead">(<bracket-less class="collapsed" data-bracketless="Does it fit your expectations?">Does it fit your expectations?</bracket-less>)</span>
         <hr>
-
         <div class="row">
           <div class="col-lg-4">
-            <a id="playBtn" href="#play"><img src="../icons/play32.png" alt="play button" title="Play action"/></a>
-            <div>Play</div>
+            <div class="">Extension simulator9000</div>
           </div>
-
           <div class="col-lg-4">
             <a id="extensionSimulator9000" href="#simulate"><img id="simulationImg" src="../icons/bracketless32.png" alt="Simulation button" title="Simulate extension"/></a>
             <br>
-            <div><span id="simulatorStatusText">Default: not loaded</span></div>
             <span id="simulatorStatus" class="d-none">notloaded</span>
           </div>
 
           <div class="col-lg-4">
-            <a id="pauseBtn" href="#pause"> <img src="../icons/pause32.png" alt="pause button" title="Pause action"/></a>
-            <div>Pause</div>
+            <div>Bracketless state: <span id="simulatorStatusText">not loaded</span></div>
           </div>
         </div>
-      <br>
       </div>
     </main>
 
-    <hr>
     <footer class="footer text-right">
       <span>&copy; Viktor Khotimchenko 2017
         <a class="text-secondary " href="https://github.com/mrv1k/bracketless">View on GitHub
