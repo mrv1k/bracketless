@@ -4,14 +4,14 @@
 
 This extension makes text between brackets collapsible.
 
-![](./media/promo.png)
+![Media promo image](./media/promo.png)
 
 ## Features
 
-+ 0 permission required
++ 0 permissions required
 + Options page
-  + Brackets matching limits customization
-  + Automation options
+  + Minimal and maximal brackets matching limits
+  + Automation
 
 ## Installation
 
