@@ -18,8 +18,8 @@ _Decision to write my first project was the best decision I've ever made._
   + API
   + Toggl
 + First project specific
+  + The first version
   + Experimenting
-  + Hacks
 + Other
   + Working alone
   + All-in mindset
@@ -73,11 +73,11 @@ The extension was released on November 9, 2017. 58 days after I created the repo
 
 ### Books
 
-Knowledge gained by reading the book series "You Don't Know JavaScript" by getify helped me the most with this project. (I've read first 4)
++ Knowledge gained by reading the book series "You Don't Know JavaScript" by getify helped me the most with this project. (I've read first 4)
 
-### Planning
+## Planning
 
-## Without a plan
+### Without a plan
 
 1. I started this project only having an idea, no planning involved. It's a really bad idea unless it your first project (which was the case) in which case you can go ahead because you don't know what you're doing anyway :D
 
@@ -87,7 +87,7 @@ Knowledge gained by reading the book series "You Don't Know JavaScript" by getif
 
 1. Planning is hard. It impossible without experience, you simply cannot plan what you don't know.
 
-## With a plan
+### With a plan
 
 1. It's a must for any project that takes longer than a day.
 
@@ -122,14 +122,17 @@ Knowledge gained by reading the book series "You Don't Know JavaScript" by getif
 
 ## First project specific
 
+### The first version
+
+1. The first is the scariest. I questioned my abilities a lot. _Would I be able to make it through? What if I fail?_ The questions were full of self doubt.
+
+1. It’s important to get main functionality ready as soon as possible so you can test the idea. Bracketless idea has met the expectations. It was doing what I expected even though it was very buggy.
+
+1. While developing the first version of the first project I made a lot of logic mistakes and that cost me later in development as I had to refactor everything.
+
+1. It is scary to start the first project, but just close your eyes and do it. Nothing bad can happen. What is the worst case scenario that could happen? Project failure? The amount of new knowledge that you gain will easily patch that wound. Always consider what will happen if you don't start it - nothing. _If you change nothing, nothing will change._
+
 ### Experimenting
-
-1. Preface
-1. The good
-1. The bad
-1. Conclusion
-
-### Hacks
 
 1. Preface
 1. The good
@@ -140,10 +143,20 @@ Knowledge gained by reading the book series "You Don't Know JavaScript" by getif
 
 ### Working alone
 
-1. It's hard to work alone
-1. The good
-1. The bad
-1. Conclusion
+1. I am a pretty people independent person and I expected it to reflect in development. Not exactly the case.
+
+1. **Single responsibility**, I avoided organizational overhead and had easy time making changing on the fly.
+
+1. A few actually:
+
+    + **Full responsibility**. My project, I own it. I don’t like CSS, well nobody would do that for me, so I just suffered through. Quality is the currency.
+    + **Avoidance**. Happened to me a couple times. I knew what to do, I knew it would be difficult and still I delayed the completion until I had to do it. The end result was the same, I found myself doing that task later anyway.
+    + **Hard tasks**. There was a particularly hard problem that took me 4 back to back iterations and 10 hours to solve, just to arrive at the beginning but with a new perspective. Solution worked as expected, but I had to talk someone. I had to bitch about the difficulty.
+
+1. Working alone has its benefits but limitations are plenty. There’s a constant pressure that you’re the only one who can do it. It is hard but manageable. Be ready to do everything.
+
+> Alone we can do so little; together we can do so much.
+> -- _Helen Keller_
 
 ### All or nothing mindset
 
