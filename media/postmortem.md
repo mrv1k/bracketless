@@ -20,9 +20,10 @@ _Decision to write my first project was the best decision I've ever made._
 + First project specific
   + The first version
   + Experimenting
+  + Overengineering
 + Other
   + Working alone
-  + All-in mindset
+  + All or nothing mindset
 
 ---
 
@@ -47,7 +48,7 @@ _Decision to write my first project was the best decision I've ever made._
 
 1. I got better at estimating how long a feature may take as the project progressed, but because it's a self owned project I had the luxury of abandoning deadlines. At that point I was enjoying the coding process itself and didn't need deadlines to keep myself motivated.
 
-The extension was released on November 9, 2017. 58 days after I created the repo.
+p.s.: The extension was released on November 9, 2017. 58 days after I created the repo.
 
 ### Habits
 
@@ -101,10 +102,17 @@ The extension was released on November 9, 2017. 58 days after I created the repo
 
 ### Searching
 
-1. The art of googling
-1. The good
-1. The bad
-1. Conclusion
+1. The thing that you'll be doing the most.
+
+1. cuuuuuuuuure
+    + **Chrome API**. At the beginning, I was looking for template solutions on stackoverflow (_totally not to copypaste_). They worked alright for a little bit.
+    + **Rest**. Searching served me well for other requests so it's all good, we're still friends.
+
+1. As my challenges became more specific, stackoverflow's usability diminished. I'm not saying it was useless, but rather it simply became pointless to search for such narrow needs.
+
+1. Closer to the end, it was easier to figure a solution using Chrome Extension API rather searching. Late in development, try to search for solution, it may save you time, but expect to find only remotely similar solution, no more.
+
+p.s.: I have to give credits to stackoverflow user Xan. His answers are always on point and he clarified a lot of my API misunderstanding.
 
 ### API
 
@@ -126,7 +134,7 @@ The extension was released on November 9, 2017. 58 days after I created the repo
 
 1. The first is the scariest. I questioned my abilities a lot. _Would I be able to make it through? What if I fail?_ The questions were full of self doubt.
 
-1. It’s important to get main functionality ready as soon as possible so you can test the idea. Bracketless idea has met the expectations. It was doing what I expected even though it was very buggy.
+1. It's important to get main functionality ready as soon as possible so you can test the idea. Bracketless idea has met the expectations. It was doing what I expected even though it was very buggy.
 
 1. While developing the first version of the first project I made a lot of logic mistakes and that cost me later in development as I had to refactor everything.
 
@@ -134,10 +142,23 @@ The extension was released on November 9, 2017. 58 days after I created the repo
 
 ### Experimenting
 
-1. Preface
-1. The good
-1. The bad
-1. Conclusion
+1. Experiment. Personal project is the place to do it.
+
+1. It's easier to make right decision. e.g.: I learned why _querySelectorAll_ is better than _getElementsByTagName_ (TreeWalker to rule them all).
+
+1. It requires extra time, and likely to cause mess.
+
+1. So many options. How do you choose between similar libraries A and B? A over B? B over A? Try both and see for yourself, which one makes more sense? Use it.
+
+### Overengineering
+
+1. Overengineering is bad, m'kay? It's unnecessary complexity that adds mental tax. It should be avoided.
+
+1. I overengineered the extension. Primarily, to make it exactly like I envisioned it, a part just to practice and learn even more. I definitely didn't need state management complexity. I don't regret it, it forced me to think about things I've never considered before.
+
+1. Time is the price. I've spent 2 extra weeks doing what would be a simple "background" extension, an "event page" extension.
+
+1. It's okay to overengineer your **own** projects for the sake of learning. It's important to keep it for learning only, otherwise it's just unnecessary complexity.
 
 ## Other
 
@@ -149,11 +170,11 @@ The extension was released on November 9, 2017. 58 days after I created the repo
 
 1. A few actually:
 
-    + **Full responsibility**. My project, I own it. I don’t like CSS, well nobody would do that for me, so I just suffered through. Quality is the currency.
+    + **Full responsibility**. My project, I own it. I don't like CSS, well nobody would do that for me, so I just suffered through. Quality is the currency.
     + **Avoidance**. Happened to me a couple times. I knew what to do, I knew it would be difficult and still I delayed the completion until I had to do it. The end result was the same, I found myself doing that task later anyway.
     + **Hard tasks**. There was a particularly hard problem that took me 4 back to back iterations and 10 hours to solve, just to arrive at the beginning but with a new perspective. Solution worked as expected, but I had to talk someone. I had to bitch about the difficulty.
 
-1. Working alone has its benefits but limitations are plenty. There’s a constant pressure that you’re the only one who can do it. It is hard but manageable. Be ready to do everything.
+1. Working alone has its benefits but limitations are plenty. There's a constant pressure that you're the only one who can do it. It is hard but manageable. Be ready to do everything.
 
 > Alone we can do so little; together we can do so much.
 > -- _Helen Keller_
