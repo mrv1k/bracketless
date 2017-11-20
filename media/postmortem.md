@@ -40,63 +40,63 @@ _Decision to write my first project was the best decision I've ever made._
 
 ### Deadlines
 
-1. Initial deadline was to finish the extension in 3 days. It (obviously) didn't work, even the first implementation took 6 days to complete. 3 more self-set deadlines followed and failed. The idea behind deadlines was to get shit done.
+1. Initial deadline was to finish the extension in 3 days. It (obviously) didn't work, even the first implementation took 6 days to complete. 3 more self-set deadlines followed and failed. The logic behind deadlines was to get shit done.
 
-1. Deadlines are good, they helped me to stay motivated.
+1. **Deadlines are good**, they helped me to stay motivated.
 
-1. As tasks grew more complex I came to a realization that constant setting and failing deadlines started doing more harm than good. I decided to take my time to finish the extension and release it when its ready. No deadline.
+1. Tasks grew more complex. I realized that (setting and failing) deadlines were doing more harm than good, so I stopped. No deadlines. I was taking my time to finish the extension. Publish it when its ready. **Self-set deadlines alone can't keep motivating**
 
-1. I got better at estimating how long a feature may take as the project progressed, but because it's a self owned project I had the luxury of abandoning deadlines. At that point I was enjoying the coding process itself and didn't need deadlines to keep myself motivated.
+1. As the project progressed, I got better at estimating how long a feature will take, however, because it's a self owned project I had the luxury to keep it deadlines free. At that point, I was enjoying the coding process and didn't need deadlines anymore.
 
 p.s.: The extension was released on November 9, 2017. 58 days after I created the repo.
 
 ### Habits
 
-1. When I just started writing the extension, I knew I needed to build a habit of coding every day. At first, I failed to stay consistent but the failure helped me to realize the importance of making it a habit.
+1. When I started writing the extension, I knew I needed to build a habit of coding daily. I failed my first attempt but the failure reinforced the importance of making it a habit.
 
-1. Making it a habit is what allowed me to drop project deadlines altogether.
+1. Making it a habit allowed me to drop deadlines as it **kept me going** (especially when I didn't want to do anything).
 
-1. Nothing bad unless you abuse it somehow.
+1. **Nothing** bad unless abuse it. (Don't start smoking, alright?)
 
-1. Even after the project is over this habit helps me to move forward.
+1. The habit helps me move forward, even after the project is over.
 
 ## Self education
 
 ### Tutorials
 
-1. Watching/following tutorials helped to be a bit more ready for the first project. At least they made me confident, however, it was a short ride and soon I was searching everything but the basics.
+1. Tutorials helped to be a bit more ready for the first project, at least they made me confident. Nonetheless, it was a short ride. Soon, I was searching everything but the basics.
 
-1. I knew what and where to search.
+1. **I knew what and where to search**.
 
-1. Tutorials only helped me **familiarize** myself with the subject, they did NOT help me learn it.
+1. Tutorials **only familiarize with the subject**. Tutorials did NOT help me learn it.
 
-1. In the past 4 years of self education not a single tutorial was able to teach me what I learned by doing a project.
+1. In 4 years of self education, not a single tutorial was able to teach me what I learned by doing a project.
 
 ### Books
 
-+ Knowledge gained by reading the book series "You Don't Know JavaScript" by getify helped me the most with this project. (I've read first 4)
++ Reading the book series "[You Don't Know JavaScript](https://github.com/getify/You-Dont-Know-JS)" by [getify](https://github.com/getify) helped me the most with this project. (To be fair, the series taught me JavaScript altogether)
 
 ## Planning
 
 ### Without a plan
 
-1. I started this project only having an idea, no planning involved. It's a really bad idea unless it your first project (which was the case) in which case you can go ahead because you don't know what you're doing anyway :D
+1. I started this project only having a concept, no planning involved. It's a bad idea, unless, it your first project, which was the case. In that case you can go ahead because you don't know what you're doing anyway :laughing:
 
-1. Okay, I'm lying, the idea itself was a very generalized plan. It was enough to get me to the first version.
+1. Okay, I'm lying, **the concept itself is a generalized plan**. **It was enough for the first working version**.
 
-1. Having general idea I didn't see the whole picture which cost me dearly down the line. Particularly, last couple weeks when I was finishing the extension.
+1. Only **the idea was not enough to see the whole picture** which cost me later in development. Particularly, from versions 0.5 to 0.6. (I had to rewrite the internal state managing which lead to a huge domino effect.)
 
-1. Planning is hard. It impossible without experience, you simply cannot plan what you don't know.
+1. Planning is hard. It impossible without experience. You cannot reasonably plan what you don't know.
 
 ### With a plan
 
-1. It's a must for any project that takes longer than a day.
+1. Plan is a must for any project.
 
-1. My plans helped me to stay on track and eliminate the question of what to do next.
+1. Besides the usual, **plans helped me drop the question of what to do next**.
 
-1. Overplanning is a thing, I've experienced it firsthand. My first plan was a disaster. I created a huge plan where every point was expected to work but some of them didn't, that led to a domino effect and the whole plan just fell apart. It's important to have a plan for major & minor features without going too deep.
+1. **Over-planning is a thing**, I've experienced it firsthand. One of my plans was a disaster. It was a big plan with lots of points, I assumed everything to work as expected but it didn't. That led to a the domino effect and the plan fell apart. It's important to **have a plan for major & minor features without going in too deep**.
 
-1. What worked for me was the balance between main plan for major & minor features and small daily plans. It's important to keep daily plans small so that they are achievable within a day.
+1. What worked for me was the balance between the main plan for major & minor features and small daily plans. It's essential to keep daily plans small so that they are achievable within a day.
 
 ## Tools
 
@@ -104,13 +104,13 @@ p.s.: The extension was released on November 9, 2017. 58 days after I created th
 
 1. It's not coding that you'll be doing the most.
 
-1. Early in development. I was looking for solutions on **stackoverflow** (_totally not to copypaste_) and they worked.
+1. **Early development**. I was **looking for ready solutions** on stackoverflow (_totally not to copypaste_). It was **easy to find and they worked**.
 
-1. Middle. As my challenges became more specific, stackoverflow's usefulness decreased. Chances of finding something helpful plummeted.
+1. **Middle development**. I was **not looking for ready solutions** anymore, the challenges were too specific. **Stackoverflow's usefulness foreseeable decreased**. The unexpected was that chances of finding something useful plummeted. (Welcome to  2017, I'm complaining about SO like it's a wiki and not Q&A forum)
 
-1. Middle/Late. As stackoverflow's usefulness decreased, Chrome Extensions API documentation's increased. As you get to know the tools, it's you don't need that middle between you and the solution. You know where to go, just do it.
+1. Middle/Late development. As stackoverflow's usefulness decreased, Chrome Extensions API documentation's helpfulness increased. As you get to know the tools, middle step between you and a solution becomes unnecessary. You know where to go, just do it.
 
-p.s.: I have to give credits to stackoverflow user Xan. His answers are always on point. He clarified a lot of API misunderstanding.
+p.s.: I want to express gratitude to a stackoverflow user - [Xan](https://stackoverflow.com/users/934239/xan). He clarified a lot of my API misunderstanding.
 
 Fun fact: MDN extensions docs are better than google's.
 
