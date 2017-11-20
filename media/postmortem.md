@@ -15,7 +15,6 @@ _Decision to write my first project was the best decision I've ever made._
   + With a plan
 + Tools
   + Searching
-  + API
   + Toggl
 + First project specific
   + The first version
@@ -102,31 +101,24 @@ p.s.: The extension was released on November 9, 2017. 58 days after I created th
 
 ### Searching
 
-1. The thing that you'll be doing the most.
+1. It's not coding that you'll be doing the most.
 
-1. cuuuuuuuuure
-    + **Chrome API**. At the beginning, I was looking for template solutions on stackoverflow (_totally not to copypaste_). They worked alright for a little bit.
-    + **Rest**. Searching served me well for other requests so it's all good, we're still friends.
+1. Early in development. I was looking for solutions on **stackoverflow** (_totally not to copypaste_) and they worked.
 
-1. As my challenges became more specific, stackoverflow's usability diminished. I'm not saying it was useless, but rather it simply became pointless to search for such narrow needs.
+1. Middle. As my challenges became more specific, stackoverflow's usefulness decreased. Chances of finding something helpful plummeted.
 
-1. Closer to the end, it was easier to figure a solution using Chrome Extension API rather searching. Late in development, try to search for solution, it may save you time, but expect to find only remotely similar solution, no more.
+1. Middle/Late. As stackoverflow's usefulness decreased, Chrome Extensions API documentation's increased. As you get to know the tools, it's you don't need that middle between you and the solution. You know where to go, just do it.
 
-p.s.: I have to give credits to stackoverflow user Xan. His answers are always on point and he clarified a lot of my API misunderstanding.
+p.s.: I have to give credits to stackoverflow user Xan. His answers are always on point. He clarified a lot of API misunderstanding.
 
-### API
-
-1. Chrome Extension API
-1. The good
-1. The bad
-1. Conclusion
+Fun fact: MDN extensions docs are better than google's.
 
 ### Toggl
 
-1. Preface
-1. The good
-1. The bad
-1. Conclusion
+1. Git tracks code progress. Toggl tracks time.
+1. I started development, it went easy and I was coding. It got hard and boom, I was bombarded by self-doubting questions. %open\_toggl% %check\_time\_progress% If there's time, there's progress. Huh, okay. %coding%
+1. Don't cheat.
+1. Starting is easy, finishing is hard. Toggl helps to finish. Use it.
 
 ## First project specific
 
