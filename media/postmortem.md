@@ -2,37 +2,42 @@
 
 _Decision to write my first project was the best decision I've ever made._
 
-## Table of Contents
-
-+ Motivation
-  + Deadlines
-  + Habits
-+ Self education
-  + Tutorials
-  + Books
-+ Planning
-  + Without a plan
-  + With a plan
-+ Tools
-  + Searching
-  + Toggl
-+ First project specific
-  + The first version
-  + Experimenting
-  + Overengineering
-+ Other
-  + Working alone
-  + All or nothing mindset
-  + Toggl stats
-
 ---
 
 ## Content layout
+
+It's a weird style for a postmortem as there's good and bad for every section.
 
 1. Preface
 1. The good
 1. The bad
 1. Conclusion
+
+---
+
+## Table of Contents
+
++ [Motivation](#motivation)
+  + [Deadlines](#deadlines)
+  + [Habits](#habits)
++ [Self education](#self-education)
+  + [Tutorials](#tutorials)
+  + [Books](#books)
++ [Planning](#planning)
+  + [Without a plan](#without-a-plan)
+  + [With a plan](#with-a-plan)
++ [Tools](#tools)
+  + [Searching](#searching)
+  + [Toggl](#toggl)
++ [First project specific](#first-project-specific)
+  + [The first version](#the-first-version)
+  + [Experimenting](#experimenting)
+  + [Overengineering](#overengineering)
++ [Other](#other)
+  + [Working alone](#working-alone)
+  + [All or nothing mindset](#all-or-nothing-mindset)
+
+[Toggl stats](#toggl-stats)
 
 ---
 
@@ -182,7 +187,7 @@ Fun fact: MDN extensions docs are better than google's.
 
 1. I think this mindset tolerable as long as you strictly **strictly** limit this time. I didn't limit the time which lead me to start procrastinating. Being an experienced procrastinator I realized it relatively quickly and immediately ended this mindset and published the extension. (That's why I have published version 0.7.2 instead of planned 1.0)
 
-### Toggl Stats
+## Toggl Stats
 
 The tool helped that allowed me become a developer.
 
