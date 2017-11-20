@@ -23,10 +23,11 @@ _Decision to write my first project was the best decision I've ever made._
 + Other
   + Working alone
   + All or nothing mindset
+  + Toggl stats
 
 ---
 
-## Postmortem layout
+## Content layout
 
 1. Preface
 1. The good
@@ -180,3 +181,22 @@ Fun fact: MDN extensions docs are better than google's.
 1. It's a dangerous mindset as it eliminates time from the development equation. The most precious thing that I have.
 
 1. I think this mindset tolerable as long as you strictly **strictly** limit this time. I didn't limit the time which lead me to start procrastinating. Being an experienced procrastinator I realized it relatively quickly and immediately ended this mindset and published the extension. (That's why I have published version 0.7.2 instead of planned 1.0)
+
+### Toggl Stats
+
+The tool helped that allowed me become a developer.
+
+| Action/tag   | Hours |
+| -----------  | :---: |
+| js           | 177   |
+| html/css     | 2     |
+| js, html/css | 11    |
+| design       | 14    |
+| publishing   | 4     |
+| postmortem   | 8     |
+| total        | 217   |
+
+Detailed report:
+![Media promo image](toggl_report.png)
+
+It was a hell of a ride.
