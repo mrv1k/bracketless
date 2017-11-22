@@ -193,21 +193,21 @@ Fun fact: MDN extensions docs are better than google's.
 
 1. The mindset is bearable as long as you **strictly** limit its duration. I didn't. It lead me to procrastination. Toggl hours went down, that raised the procrastination alarm. I promptly wrapped the development and published the extension. (That's why I've published version 0.7.2 instead of planned 1.0)
 
+Thanks for reading.
+
 ## Toggl Stats
 
-The tool helped that allowed me become a developer.
+The tool that helped me become a developer.
 
 | Action/tag   | Hours |
 | -----------  | :---: |
 | js           | 177   |
-| html/css     | 2     |
+| html/css     | 5     |
 | js, html/css | 11    |
 | design       | 14    |
 | publishing   | 4     |
-| postmortem   | 8     |
-| total        | 217   |
+| postmortem   | 12    |
+| total        | 223   |
 
 Detailed report:
 ![Media promo image](toggl_report.png)
-
-It was a hell of a ride.
