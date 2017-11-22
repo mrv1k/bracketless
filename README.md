@@ -8,7 +8,7 @@ This extension makes text between brackets collapsible.
 
 ## Features
 
-+ 0 permissions required
++ No permissions required
 + Options page
   + Minimal and maximal brackets matching limits
   + Automation
@@ -22,6 +22,10 @@ This extension makes text between brackets collapsible.
 1. Download or `git clone https://github.com/mrv1k/bracketless.git`
 1. Open Chrome extensions and click on the `Developer mode` button
 1. Drag and drop "core" folder from bracketless folder
+
+### Postmortem
+
+Is available [here on GitHub](./media/postmortem.md)
 
 ### Credits
 
