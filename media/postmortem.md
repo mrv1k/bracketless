@@ -1,6 +1,6 @@
 # Postmortem
 
-_Decision to write my first project was the best decision I've ever made._
+_The decision to write my first project was the best decision I've ever made._
 
 ---
 
@@ -20,7 +20,7 @@ It's a weird style for a postmortem as there's good and bad for every section.
 + [Motivation](#motivation)
   + [Deadlines](#deadlines)
   + [Habits](#habits)
-+ [Self education](#self-education)
++ [Self-education](#self-education)
   + [Tutorials](#tutorials)
   + [Books](#books)
 + [Planning](#planning)
@@ -45,13 +45,13 @@ It's a weird style for a postmortem as there's good and bad for every section.
 
 ### Deadlines
 
-1. Initial deadline was to finish the extension in 3 days. It (obviously) didn't work, even the first implementation took 6 days to complete. 3 more self-set deadlines followed and failed. The logic behind deadlines was to get shit done.
+1. The initial deadline was to finish the extension in 3 days. It (obviously) didn't work, even the first implementation took 6 days to complete. 3 more self-set deadlines followed and failed. The logic behind deadlines was to get shit done.
 
 1. **Deadlines are good**, they helped me to stay motivated.
 
 1. Tasks grew more complex. I realized that (setting and failing) deadlines were doing more harm than good, so I stopped. No deadlines. I was taking my time to finish the extension. Publish it when its ready. **Self-set deadlines alone can't keep motivating**
 
-1. As the project progressed, I got better at estimating how long a feature will take, however, because it's a self owned project I had the luxury to keep it deadlines free. At that point, I was enjoying the coding process and didn't need deadlines anymore.
+1. As the project progressed, I got better at estimating how long a feature will take, however, because it's a self-owned project I had the luxury to keep it deadlines free. At that point, I was enjoying the coding process and didn't need deadlines anymore.
 
 p.s.: The extension was released on November 9, 2017. 58 days after I created the repo.
 
@@ -65,7 +65,7 @@ p.s.: The extension was released on November 9, 2017. 58 days after I created th
 
 1. The habit helps me move forward, even after the project is over.
 
-## Self education
+## Self-education
 
 ### Tutorials
 
@@ -75,7 +75,7 @@ p.s.: The extension was released on November 9, 2017. 58 days after I created th
 
 1. Tutorials **only familiarize with the subject**. Tutorials did NOT help me learn it.
 
-1. In 4 years of self education, not a single tutorial was able to teach me what I learned by doing a project.
+1. In 4 years of self-education, not a single tutorial was able to teach me what I learned by doing a project.
 
 ### Books
 
@@ -85,21 +85,21 @@ p.s.: The extension was released on November 9, 2017. 58 days after I created th
 
 ### Without a plan
 
-1. I started this project only having the idea, no planning involved. It's a bad decision, unless, it your first project, which was the case. In that case you can go ahead because you don't know what you're doing anyway :laughing:
+1. I started this project only having the idea, no planning involved. It's a bad decision, unless, it is your first project, which was the case. In that case, you can go ahead because you don't know what you're doing anyway :laughing:
 
 1. Okay, I'm lying, **the idea itself is a generalized plan**. **It was enough for the first working version**.
 
-1. Only **the idea was not enough to see the whole picture** which cost me later in development. Particularly, from versions 0.5 to 0.6. (I had to rewrite the internal state managing which lead to a huge domino effect.)
+1. Only **the idea was not enough to see the whole picture** which cost me later in development. Particularly, from versions 0.5 to 0.6. (I had to rewrite the internal state managing which led to a huge domino effect.)
 
 1. Planning is hard. It impossible without experience. You cannot reasonably plan what you don't know.
 
 ### With a plan
 
-1. Plan is a must for any project.
+1. A plan is a must for any project.
 
 1. Besides the usual, **plans helped me drop the question of what to do next**.
 
-1. **Over-planning is a thing**, I've experienced it firsthand. One of my plans was a disaster. It was a big plan with lots of points, I assumed everything to work as expected but it didn't. That led to a the domino effect and the plan fell apart. It's important to **have a plan for major & minor features without going in too deep**.
+1. **Over-planning is a thing**, I've experienced it firsthand. One of my plans was a disaster. It was a big plan with lots of points, I assumed everything to work as expected but it didn't. That led to a domino effect and the plan fell apart. It's important to **have a plan for major & minor features without going in too deep**.
 
 1. What worked for me was the balance between the main plan for major & minor features and small daily plans. It's essential to keep daily plans small so that they are achievable within a day.
 
@@ -113,7 +113,7 @@ p.s.: The extension was released on November 9, 2017. 58 days after I created th
 
 1. **Middle development**. I was **not looking for ready solutions** anymore, the challenges were too specific. **Stackoverflow's usefulness foreseeable decreased**. The unexpected was that chances of finding something useful plummeted. (Welcome to  2017, I'm complaining about SO like it's a wiki and not Q&A forum)
 
-1. Middle/Late development. As stackoverflow's usefulness decreased, Chrome Extensions API documentation's helpfulness increased. As you get to know the tools, middle step between you and a solution becomes unnecessary. You know where to go, just do it.
+1. Middle/Late development. As stackoverflow's usefulness decreased, Chrome Extensions API documentation's helpfulness increased. As you get to know the tools, a middle step between you and a solution becomes unnecessary. You know where to go, just do it.
 
 p.s.: I want to express gratitude to a stackoverflow user - [Xan](https://stackoverflow.com/users/934239/xan). He clarified a lot of my API misunderstanding.
 
@@ -135,9 +135,9 @@ Fun fact: MDN extensions docs are better than google's.
 
 1. The first _anything_ is the scariest. I questioned my coding skills a lot.
 
-1. It's impractical to test an idea, that's why it's crucial to get the fist version ready ASAP. Bracketless idea met the expectations. It was doing what I expected (even though it was buggy). **Don't trust an idea, test the idea**.
+1. It's impractical to test an idea, that's why it's crucial to get the first version ready ASAP. Bracketless idea has met the expectations. It was doing what I expected (even though it was buggy). **Don't trust an idea, test the idea**.
 
-1. First version of the first project doesn't sound right without **mistakes**. **I made a lot of them, and that's okay**. It would be crazy expect not to make any.
+1. The first version of the first project doesn't sound right without **mistakes**. **I made a lot of them, and that's okay**. It would be crazy expect not to make any.
 
 1. Starting is scary. Still, you have to do it. What is the worst case scenario that could possibly happen? A failure? Ha! The knowledge you obtain will easily patch that wound. What will happen if you don't start it? Nothing.
 
@@ -146,11 +146,11 @@ Fun fact: MDN extensions docs are better than google's.
 
 ### Experimenting
 
-1. Experiment. Personal project is the place to do it.
+1. Experiment. The personal project is the place to do it.
 
 1. I learned why _querySelectorAll_ is better than _getElementsByTagName_. **Experimenting helped to make a logical decision**.
 
-1. **It requires extra time, and likely to cause mess**.
+1. **It requires extra time, and likely to cause a mess**.
 
 1. So many options. How to choose between similar libraries A and B? A over B? B over A? Try both and see for yourself.
 
@@ -191,7 +191,7 @@ Fun fact: MDN extensions docs are better than google's.
 
 1. **A treacherous mindset that eliminates time from the development equation**.
 
-1. The mindset is bearable as long as you **strictly** limit its duration. I didn't. It lead me to procrastination. Toggl hours went down, that raised the procrastination alarm. I promptly wrapped the development and published the extension. (That's why I've published version 0.7.2 instead of planned 1.0)
+1. The mindset is bearable as long as you **strictly** limit its duration. I didn't. I started procrastinating. Toggl hours went down, that raised the procrastination alarm. I promptly wrapped the development and published the extension. (That's why I've published version 0.7.2 instead of planned 1.0)
 
 Thanks for reading.
 
