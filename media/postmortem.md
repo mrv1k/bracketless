@@ -32,10 +32,10 @@ It's a weird style for a postmortem as there's good and bad for every section.
 + [First project specific](#first-project-specific)
   + [The first version](#the-first-version)
   + [Experimenting](#experimenting)
-  + [Overengineering](#overengineering)
+  + [Over-engineering](#over-engineering)
 + [Other](#other)
   + [Working alone](#working-alone)
-  + [All or nothing mindset](#all-or-nothing-mindset)
+  + [All-in](#all-in)
 
 [Toggl stats](#toggl-stats)
 
@@ -85,9 +85,9 @@ p.s.: The extension was released on November 9, 2017. 58 days after I created th
 
 ### Without a plan
 
-1. I started this project only having a concept, no planning involved. It's a bad idea, unless, it your first project, which was the case. In that case you can go ahead because you don't know what you're doing anyway :laughing:
+1. I started this project only having the idea, no planning involved. It's a bad decision, unless, it your first project, which was the case. In that case you can go ahead because you don't know what you're doing anyway :laughing:
 
-1. Okay, I'm lying, **the concept itself is a generalized plan**. **It was enough for the first working version**.
+1. Okay, I'm lying, **the idea itself is a generalized plan**. **It was enough for the first working version**.
 
 1. Only **the idea was not enough to see the whole picture** which cost me later in development. Particularly, from versions 0.5 to 0.6. (I had to rewrite the internal state managing which lead to a huge domino effect.)
 
@@ -121,71 +121,77 @@ Fun fact: MDN extensions docs are better than google's.
 
 ### Toggl
 
-1. Git tracks code progress. Toggl tracks time.
-1. I started development, it went easy and I was coding. It got hard and boom, I was bombarded by self-doubting questions. %open\_toggl% %check\_time\_progress% If there's time, there's progress. Huh, okay. %coding%
-1. Don't cheat.
-1. Starting is easy, finishing is hard. Toggl helps to finish. Use it.
+1. Github tracks code. Toggl tracks time.
+
+1. When I started the project, the development process was going smooth. As time went on, the process got more complex and boom! (After a few consequent mistakes) I found myself bombarded by self-doubt questions. Took a deep breath. Opened toggl. Erased the self-doubt. **If there's time, there's progress**.
+
+1. **Don't cheat**.
+
+1. It's hard to finish. Toggl helps to finish. Use it.
 
 ## First project specific
 
 ### The first version
 
-1. The first is the scariest. I questioned my abilities a lot. _Would I be able to make it through? What if I fail?_ The questions were full of self doubt.
+1. The first _anything_ is the scariest. I questioned my coding skills a lot.
 
-1. It's important to get main functionality ready as soon as possible so you can test the idea. Bracketless idea has met the expectations. It was doing what I expected even though it was very buggy.
+1. It's impractical to test an idea, that's why it's crucial to get the fist version ready ASAP. Bracketless idea met the expectations. It was doing what I expected (even though it was buggy). **Don't trust an idea, test the idea**.
 
-1. While developing the first version of the first project I made a lot of logic mistakes and that cost me later in development as I had to refactor everything.
+1. First version of the first project doesn't sound right without **mistakes**. **I made a lot of them, and that's okay**. It would be crazy expect not to make any.
 
-1. It is scary to start the first project, but just close your eyes and do it. Nothing bad can happen. What is the worst case scenario that could happen? Project failure? The amount of new knowledge that you gain will easily patch that wound. Always consider what will happen if you don't start it - nothing. _If you change nothing, nothing will change._
+1. Starting is scary. Still, you have to do it. What is the worst case scenario that could possibly happen? A failure? Ha! The knowledge you obtain will easily patch that wound. What will happen if you don't start it? Nothing.
+
+> If you change nothing, nothing will change.
+> -- _Unknown_
 
 ### Experimenting
 
 1. Experiment. Personal project is the place to do it.
 
-1. It's easier to make right decision. e.g.: I learned why _querySelectorAll_ is better than _getElementsByTagName_ (TreeWalker to rule them all).
+1. I learned why _querySelectorAll_ is better than _getElementsByTagName_. **Experimenting helped to make a logical decision**.
 
-1. It requires extra time, and likely to cause mess.
+1. **It requires extra time, and likely to cause mess**.
 
-1. So many options. How do you choose between similar libraries A and B? A over B? B over A? Try both and see for yourself, which one makes more sense? Use it.
+1. So many options. How to choose between similar libraries A and B? A over B? B over A? Try both and see for yourself.
 
-### Overengineering
+### Over-engineering
 
-1. Overengineering is bad, m'kay? It's unnecessary complexity that adds mental tax. It should be avoided.
+1. Over-engineering is bad, m'kay? It's unnecessary complexity that adds mental tax. **Over-engineering should be avoided**.
 
-1. I overengineered the extension. Primarily, to make it exactly like I envisioned it, a part just to practice and learn even more. I definitely didn't need state management complexity. I don't regret it, it forced me to think about things I've never considered before.
+1. I admit, I over-engineered the extension. I had to, to make it exactly like I envisioned. I definitely didn't need all that state management complexity. I don't regret it. Managing state **forced me to think about things I've never even considered before**.
 
-1. Time is the price. I've spent 2 extra weeks doing what would be a simple "background" extension, an "event page" extension.
+1. **Time is the price**. I've spent 2 weeks doing what would be a simple "background" extension, an "event page" extension.
 
-1. It's okay to overengineer your **own** projects for the sake of learning. It's important to keep it for learning only, otherwise it's just unnecessary complexity.
+1. It's tolerable to over-engineer your own projects for the sake of learning. It's important to keep it for learning only.
 
 ## Other
 
 ### Working alone
 
-1. I am a pretty people independent person and I expected it to reflect in development. Not exactly the case.
+1. I don't rely on anyone and I expected it to reflect in development. Not exactly the case.
 
-1. **Single responsibility**, I avoided organizational overhead and had easy time making changing on the fly.
+1. **Single responsibility**, no organizational overhead and easy time making changes on the fly.
 
 1. A few actually:
 
-    + **Full responsibility**. My project, I own it. I don't like CSS, well nobody would do that for me, so I just suffered through. Quality is the currency.
-    + **Avoidance**. Happened to me a couple times. I knew what to do, I knew it would be difficult and still I delayed the completion until I had to do it. The end result was the same, I found myself doing that task later anyway.
-    + **Hard tasks**. There was a particularly hard problem that took me 4 back to back iterations and 10 hours to solve, just to arrive at the beginning but with a new perspective. Solution worked as expected, but I had to talk someone. I had to bitch about the difficulty.
+    + **Full responsibility**. I don't like CSS, well nobody would do that for me, so I just did it. Quality suffered, but it was done.
+    + **Avoidance**. Happened to me a couple times. I knew what to do, knew it would be difficult. Still, I delayed the completion. The end result was the same, I found myself doing that task anyway.
+    + **Challenging tasks**. There was a particularly challenging problem that took me 4 back to back iterations and 10 hours to solve. Final solution led me to the initial code but with a new perspective. The solution worked as planned, but I had to talk someone, had to share the experience. Sharing eased the pain.
 
-1. Working alone has its benefits but limitations are plenty. There's a constant pressure that you're the only one who can do it. It is hard but manageable. Be ready to do everything.
+1. Working alone has its benefits but limitations are plenty. There's a constant pressure that you're the only one who can do it. It is hard but manageable.
 
 > Alone we can do so little; together we can do so much.
 > -- _Helen Keller_
 
-### All or nothing mindset
+### All-in
 
-1. Close to the end of development, I got this mindset that based on how much time I've spent developing this extension I might as well take extra time and not rush it.
+1. Late in development, I got this all-in mindset. "I spent that much might as well take my time and not rush it." A decent idea, my bad execution.
 
-1. It's a good thing to take extra time and polish the project.
+1. It's good to take **extra time to polish the project**.
 
-1. It's a dangerous mindset as it eliminates time from the development equation. The most precious thing that I have.
+1. **A treacherous mindset that eliminates time from the development equation**.
 
-1. I think this mindset tolerable as long as you strictly **strictly** limit this time. I didn't limit the time which lead me to start procrastinating. Being an experienced procrastinator I realized it relatively quickly and immediately ended this mindset and published the extension. (That's why I have published version 0.7.2 instead of planned 1.0)
+1. The mindset is bearable as long as you **strictly** limit its duration. I didn't. It lead me to procrastination. Toggl hours went down, that raised the procrastination alarm. I promptly wrapped the development and published the extension. (That's why I've published version 0.7.2 instead of planned 1.0)
 
 ## Toggl Stats
 
