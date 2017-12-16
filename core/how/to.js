@@ -1,5 +1,4 @@
 // showcase version of action.js
-const elements = document.querySelectorAll('bracket-less');
 const optionsBtn = document.querySelector('#go-to-options');
 const collapsedNodes = document.querySelectorAll('.collapsed');
 
@@ -12,7 +11,12 @@ const simIcons = {
   pause: '../icons/pause32.png',
 };
 
-// ACTION.JS COPYPASTE //
+const basicMessage = document.querySelector('.basic-message');
+const basicBrackets = document.querySelector('.basic-bracket');
+
+/* ACTION.JS */
+const elements = document.querySelectorAll('bracket-less');
+
 function doAction(e) {
   if (e.target.tagName !== 'BRACKET-LESS') return;
 
@@ -21,7 +25,6 @@ function doAction(e) {
 }
 
 document.body.addEventListener('click', doAction);
-collapsedNodes.forEach(el => el.click());
 
 function activate(active) {
   if (active) { // Play
@@ -30,6 +33,21 @@ function activate(active) {
     elements.forEach(el => el.classList.remove('bracket-css'));
   }
 }
+/* ACTION.JS END */
+
+// Fake collapse notes
+collapsedNodes.forEach(el => el.click());
+
+
+basicBrackets.addEventListener('click', () => {
+  if (basicBrackets.classList.contains('bracket-css')) {
+    basicMessage.innerHTML = '<strong>Left click again</strong> text between brackets to collapse it.';
+    basicBrackets.classList.add('bracket-css');
+  } else {
+    basicMessage.innerHTML = '<strong>Left click again</strong> to display it.';
+    basicBrackets.classList.remove('bracket-css');
+  }
+});
 
 
 function updateSimulation(text, img, status) {
@@ -59,3 +77,4 @@ extensionSimulator9000.addEventListener('click', simulateExtension);
 optionsBtn.addEventListener('click', () => {
   chrome.runtime.openOptionsPage();
 });
+
