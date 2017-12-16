@@ -1,6 +1,6 @@
 {
   "name": "bracketless",
-  "version": "0.7.2",
+  "version": "0.8.0",
   "description": "A Chrome extension that makes text between brackets collapsible",
   "main": "core/manifest.json",
   "keywords": ["chrome-extension", "browser-extension", "javascript", "regex"],

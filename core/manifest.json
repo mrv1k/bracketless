@@ -1,7 +1,7 @@
 {
   "name": "Bracketless: Collapsible brackets",
   "short_name": "Bracketless",
-  "version": "0.7.2",
+  "version": "0.8.0",
   "description": "Make text between brackets collapsible",
   "homepage_url": "https://github.com/mrv1k/bracketless#readme",
   "author": "Viktor Khotimchenko",
