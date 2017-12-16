@@ -9,7 +9,7 @@ const saveStatus = document.querySelector('.toolbar .status');
 
 const saveBtn = document.querySelector('#save-btn');
 const resetBtn = document.querySelector('#reset-btn');
-
+const howToBtn = document.querySelector('#how-to-btn');
 
 function setSaveStatus(text, timeout = 2000, cb) {
   saveStatus.textContent = text;
@@ -151,6 +151,7 @@ function validateNumInput() {
 saveBtn.addEventListener('click', saveOptions);
 resetBtn.addEventListener('click', resetOptions);
 autoLoadBool.addEventListener('change', manageTabsWebNavPerm);
+howToBtn.addEventListener('click', () => { chrome.tabs.create({ url: '../../how/to.html' }); });
 
 // Invoked automatically
 lowerLimitNum.addEventListener('input', validateNumInput);
