@@ -4,14 +4,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
   <link rel="icon" href="../icons/bracketless16.png">
-
-  <title>How-to Bracketless</title>
-
+  <title>How-to</title>
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" rel="stylesheet">
-
   <style>
     .header {
       padding-bottom: 1rem;
@@ -24,6 +19,17 @@
       margin-bottom: 0;
       line-height: 3rem;
     }
+
+    .tooltip:hover:before{
+      border: solid;
+      border-color: #333 transparent;
+      border-width: 6px 6px 0 6px;
+      bottom: 20px;
+      content: "";
+      left: 50%;
+      position: absolute;
+      z-index: 99;
+    }
   </style>
   <link href="../css/action.css" rel="stylesheet">
 </head>
@@ -32,7 +38,7 @@
 
   <div class="container">
     <header class="header clearfix">
-      <h3 class="text-muted">how-to Bracketless</h3>
+      <h3 class="text-muted">how-to</h3>
     </header>
 
     <main role="main">
@@ -43,8 +49,11 @@
               <div class="lead">Does</div>
             </div>
             <div class="card-body text-dark">
-              <div class="card-text">It collapses text between brackets.</div>
-              <br>
+              <div class="card-text">
+                It collapses text between brackets.
+                <br>
+                All common symbols and a single digit are allowed in text.
+              </div>
             </div>
           </div>
         </div>
@@ -54,9 +63,10 @@
                 <div class="lead">Does not</div>
               </div>
               <div class="card-body text-dark">
-                <div class="card-text">It does not collapse links, code or emphasised text.
+                <div class="card-text">
+                  It does not collapse links, emphasised text or code.
                   <br>
-                  The reason being that they're likely to contain important information.
+                  These elements are likely to contain important information.
                 </div>
               </div>
             </div>
@@ -74,33 +84,17 @@
             </div>
             <div class="card-body text-dark">
               <div class="card-text">
-                <div class="basic-message"><strong>Left click</strong> text between brackets to collapse it.</div>
-                <span>(<bracket-less class="uncollapsed basic-bracket" data-bracketless="The farmers in the valley grew potatoes, peanuts, and bored.">The farmers in the valley grew potatoes, peanuts, and bored.</bracket-less>)</span>
-                <div><strong>Hover over</strong> collapsed text to display it.</div>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="basic-message"><strong>Left click</strong> text between brackets to collapse it or</div>
+                    <div><strong>Hover over</strong> three dots to display text back.</div>
+                  </div>
+                  <div class="col-6">
+                    (<bracket-less class="uncollapsed basic-bracket" data-bracketless="The farmers in the valley grew potatoes, peanuts, and bored.">The farmers in the valley grew potatoes, peanuts, and bored.</bracket-less>)
+                    (<bracket-less class="collapsed" data-bracketless="The gills kneading quietly, and the pectorals.">The gills kneading quietly, and the pectorals.</bracket-less>)
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-12">
-          <div class="card border-dark mb-3">
-            <div class="card-header">
-              <div class="lead text-center">Options</div>
-            </div>
-            <div class="card-body text-dark">
-              <div class="card-text">
-                <strong>Brackets matching limits:</strong> customize minimum and maximum amounts.
-                <br>
-                Defaults are 13 and 255 characters respectively.
-                (<bracket-less class="uncollapsed" data-bracketless="below 13 and above 255 will be ignored">below 13 and above 255 will be ignored</bracket-less>)
-                <br>
-                <strong>Automation:</strong> enable autoload and autoplay.
-              </div>
-            </div>
-            <div class="card-footer text-muted text-center">
-              <a id="go-to-options" class="btn btn-dark" href="" role="button">Open options</a>
             </div>
           </div>
         </div>
@@ -120,6 +114,62 @@
             <div class="card-footer text-muted">
               <div>Bracketless state: <span id="simulatorStatusText">not loaded</span> </div>
               <span id="simulatorStatus" class="d-none">notloaded</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card border-dark mb-3">
+            <div class="card-body text-dark">
+              <div class="card-text">
+                <p>In Chapter 1, we explored the terminology and concepts around asynchronous programming in JavaScript.
+                  Our focus is on understanding the single-threaded
+                  (<bracket-less class="uncollapsed" data-bracketless="one-at-a-time">one-at-a-time</bracket-less>)
+                  event loop queue that drives all "events"
+                  (<bracket-less class="uncollapsed" data-bracketless="async function invocations">async function invocations</bracket-less>).
+                  We also explored various ways that concurrency patterns explain the relationships
+                  <span title="Too short for current matching limit">(if any!)</span>
+                  between <em>simultaneously</em> running chains of events, or "processes"
+                  (<bracket-less class="uncollapsed" data-bracketless="tasks, function calls, etc.">tasks, function calls, etc.</bracket-less>).
+                </p>
+                <p class="mb-0">
+                  All our examples in Chapter 1 used the function as the individual, indivisible unit of operations,
+                  whereby inside the function, statements run in predictable order
+                  (<bracket-less class="uncollapsed" data-bracketless="above the compiler level!">above the compiler level!</bracket-less>),
+                  but at the function-ordering level, events
+                  (<bracket-less class="uncollapsed" data-bracketless="aka async function invocations">aka async function invocations</bracket-less>)
+                  can happen in a variety of orders.
+                </p>
+              </div>
+            </div>
+            <div class="card-footer text-muted">
+              Text is taken from
+              <u><a class="text-muted" href="https://github.com/getify/You-Dont-Know-JS/blob/master/async%20%26%20performance/ch2.md#chapter-2-callbacks">You Don't Know JS: Async &amp; Performance</a></u>
+              All rights belong Kyle Simpson (getify).
+            </div>
+          </div>
+        </div>
+        </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card border-dark mb-3">
+            <div class="card-header">
+              <div class="lead text-center">Options</div>
+            </div>
+            <div class="card-body text-dark">
+              <div class="card-text">
+                <strong>Brackets matching limits:</strong> customize minimum and maximum.
+                <br>
+                Default limits are 13 and 255 characters respectively.
+                <br>
+                <strong>Automation:</strong> enable/disable autoload and autoplay.
+              </div>
+            </div>
+            <div class="card-footer text-muted text-center">
+              <a id="go-to-options" class="btn btn-dark" href="" role="button">Open options</a>
             </div>
           </div>
         </div>
