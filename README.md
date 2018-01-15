@@ -8,11 +8,11 @@ This extension makes text between brackets collapsible.
 
 ## Execution flow
 
-Extension works via browser action (depicted above) or context menu (right click menu).
+The extension works via browser action (depicted above) or context menu (right click menu).
 
 Executions order:
 
-1. On first activation the extension loads. Matched text gets toggling functionality. After this step text can be folded and unfolded (by clicking on text between brackets).
+1. On first activation the extension loads. Matched text gets toggling functionality. After this step text can be folded and unfolded (by clicking on the text between brackets).
 
 1. On second action the extension plays. All matched text between brackets gets collapsed.
 
